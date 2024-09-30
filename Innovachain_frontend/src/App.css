@@ -1,0 +1,10 @@
+body {
+  background: #010101;
+}
+
+.GradientText {
+  background: linear-gradient(90deg, #C932F3 0%, #748BCF 39.62%, #30D8A5 79.23%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
