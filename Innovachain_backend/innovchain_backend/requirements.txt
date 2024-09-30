@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+pydantic
+sqlalchemy
+Pillow
+alembic
+opencv-python
+invisible-watermark
+python-multipart

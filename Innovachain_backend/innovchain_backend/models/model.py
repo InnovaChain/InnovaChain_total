@@ -1,0 +1,25 @@
+from sqlalchemy import Column, Integer, String, DateTime, func
+from sqlalchemy.ext.declarative import declarative_base
+from datetime import datetime
+
+Base = declarative_base()
+
+class Image(Base):
+    __tablename__ = "images"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer)
+    filename = Column(String, index=True)
+    image_path = Column(String)
+    prompt = Column(String)
+    source_image_id = Column(Integer)
+    watermark = Column(String)
+    name = Column(String)
+    description = Column(String)
+    created_at = Column(DateTime, default=func.now())
+    updated_at = Column(DateTime, default=func.now(), onupdate=func.now())
+
+class User(Base):
+    __tablename__ = "users"
+    id = Column(Integer, primary_key=True, index=True)
+    wallet_address = Column(String, index=True)
