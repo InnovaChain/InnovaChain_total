@@ -33,4 +33,30 @@ app.post("/imagine", async (c) => {
     }
 });
 
+app.post("/describe", async (c) => {
+    try {
+        const body = await c.req.json<{
+            imageUrl: string;
+        }>();
+
+        const imageUrl = body.imageUrl;
+
+        const client = await getClient();
+
+        const Describe = await client.Describe(imageUrl).catch((e) => {
+            return c.json({ message: e }, 500);
+        });
+
+        console.log(Describe);
+
+        if (!Describe) {
+            return c.json({ message: "No describe message" }, 500);
+        }
+
+        return c.json(Describe, 200);
+    } catch {
+        return c.json({ message: "Some thing went wrong" }, 400);
+    }
+});
+
 export default app;
