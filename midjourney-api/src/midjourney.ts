@@ -1,5 +1,7 @@
 import { Midjourney } from "midjourney";
 
+let midjourneyClient: Midjourney | null = null
+
 const client = new Midjourney({
     ServerId: <string>process.env.SERVER_ID,
     ChannelId: <string>process.env.CHANNEL_ID,
@@ -9,6 +11,9 @@ const client = new Midjourney({
 });
 
 export default async function getClient() {
-    await client.init();
-    return client;
+    if (!midjourneyClient) {
+        await client.init()
+        midjourneyClient = client
+    }
+    return midjourneyClient
 }
