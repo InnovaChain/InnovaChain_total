@@ -67,7 +67,7 @@ async def upload_image(
     us: UserService = Depends(get_user_service),
     imgs: ImageService = Depends(get_image_service)
 ):
-    target_directory = "test/"
+    target_directory = "data/"
     timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
     unique_filename = f"{timestamp}_{file.filename}"
     target_filepath = os.path.join(target_directory, unique_filename)
