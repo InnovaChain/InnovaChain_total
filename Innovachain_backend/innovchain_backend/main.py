@@ -26,7 +26,7 @@ app.add_middleware(
     allow_headers=["*"],  
 )
 
-DATABASE_URL = "sqlite:///data/innovachain.db"
+DATABASE_URL = "sqlite:///./innovachain.db"
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
