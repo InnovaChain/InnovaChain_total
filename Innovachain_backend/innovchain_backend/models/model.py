@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, DateTime, func
+from sqlalchemy import Boolean, Column, Integer, String, DateTime, func
 from sqlalchemy.ext.declarative import declarative_base
 from datetime import datetime
 
@@ -16,6 +16,7 @@ class Image(Base):
     watermark = Column(String)
     name = Column(String)
     description = Column(String)
+    is_active = Column(Boolean, default=True)
     created_at = Column(DateTime, default=func.now())
     updated_at = Column(DateTime, default=func.now(), onupdate=func.now())
 
