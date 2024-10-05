@@ -80,7 +80,7 @@ async def upload_image(
     
     processor = ImageWatermarkProcessor(
         image_path=target_filepath,
-        watermark_text=str(datetime.now()),
+        watermark_text = f"{wallet_address}_{timestamp}",
         output_image_path=target_filepath,
         embed_percentage=0.001
     )
@@ -150,9 +150,9 @@ async def read_image_info(image_id: int, imgs: ImageService = Depends(get_image_
     return image_info
 
 
-@app.put("/images/{image_id}")
-async def update_image_endpoint(image_id: int, watermark: str, imgs: ImageService = Depends(get_image_service)):
-    updated_image = await imgs.update_image(image_id, watermark)
+@app.post("/images/{image_id}/prompt")
+async def update_image_prompt(image_id: int, prompt: str = Form(...), imgs: ImageService = Depends(get_image_service)):
+    updated_image = await imgs.update_image(image_id, prompt)
     return updated_image
 
 

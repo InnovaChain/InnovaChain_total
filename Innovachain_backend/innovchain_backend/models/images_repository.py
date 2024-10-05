@@ -34,10 +34,10 @@ class ImageRepository:
     async def list(self, skip: int = 0, limit: int = 100):
         return self.db.query(Image).filter(Image.is_active == True).offset(skip).limit(limit).all()
 
-    async def update(self, image_id: int, watermark: str):
+    async def update(self, image_id: int, prompt: str):
         db_image = self.db.query(Image).filter(Image.id == image_id).first()
         if db_image:
-            db_image.watermark = watermark
+            db_image.prompt = prompt
             try:
                 self.db.commit()
                 self.db.refresh(db_image)
