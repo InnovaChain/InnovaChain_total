@@ -12,8 +12,8 @@ class ImageService:
     async def get_images(self, skip: int = 0, limit: int = 100):
         return await self.repository.list(skip, limit)
 
-    async def update_image(self, image_id: int, watermark: str):
-        return await self.repository.update(image_id, watermark)
+    async def update_image(self, image_id: int, prompt: str):
+        return await self.repository.update(image_id, prompt)
 
     async def delete_image(self, image_id: int):
         return await self.repository.delete(image_id)
