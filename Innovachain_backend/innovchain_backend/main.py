@@ -105,7 +105,7 @@ async def upload_image(
         name=name,
         description=description
     )
-    return {"filename": file.filename, "watermark": processor.watermark_text}
+    return {"filename": file.filename, "image_id": db_image.id, "watermark": processor.watermark_text}
 
 
 @app.get("/images/")
