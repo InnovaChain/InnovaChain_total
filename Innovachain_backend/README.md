@@ -46,7 +46,7 @@ Innovachain uses SQLAlchemy as the ORM and Alembic for database migration manage
 2. **Configure Database Connection**:
    Edit the `sqlalchemy.url` in the `alembic.ini` file to:
    ```ini
-   sqlalchemy.url = sqlite:///innovachain.db
+   sqlalchemy.url = sqlite:///data/innovachain.db
    ```
 
 3. **Generate Initial Migration Script**:
