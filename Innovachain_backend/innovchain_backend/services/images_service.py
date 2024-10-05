@@ -17,3 +17,6 @@ class ImageService:
 
     async def delete_image(self, image_id: int):
         return await self.repository.delete(image_id)
+
+    async def set_all_images_inactive(self):
+        await self.repository.set_all_inactive()

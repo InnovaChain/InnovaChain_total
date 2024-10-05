@@ -162,7 +162,8 @@ async def delete_image_endpoint(image_id: int, imgs: ImageService = Depends(get_
     return {"message": "Image deleted"}
 
 
-@app.delete("/images/set-all-inactive")
-async def delete_image_endpoint(imgs: ImageService = Depends(get_image_service)):
+@app.post("/images/set-all-inactive")
+async def set_all_images_inactive(imgs: ImageService = Depends(get_image_service)):
+    print("Received request to set all images inactive.")
     await imgs.set_all_images_inactive()
     return {"message": "All images set to inactive"}
