@@ -26,7 +26,7 @@ app.add_middleware(
     allow_headers=["*"],  
 )
 
-DATABASE_URL = "sqlite:///./innovachain.db"
+DATABASE_URL = "sqlite:///data/innovachain.db"
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
@@ -160,3 +160,10 @@ async def update_image_endpoint(image_id: int, watermark: str, imgs: ImageServic
 async def delete_image_endpoint(image_id: int, imgs: ImageService = Depends(get_image_service)):
     await imgs.delete_image(image_id)
     return {"message": "Image deleted"}
+
+
+@app.post("/images/set-all-inactive")
+async def set_all_images_inactive(imgs: ImageService = Depends(get_image_service)):
+    print("Received request to set all images inactive.")
+    await imgs.set_all_images_inactive()
+    return {"message": "All images set to inactive"}

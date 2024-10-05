@@ -32,7 +32,7 @@ class ImageRepository:
         return self.db.query(Image).filter(Image.id == image_id).first()
 
     async def list(self, skip: int = 0, limit: int = 100):
-        return self.db.query(Image).offset(skip).limit(limit).all()
+        return self.db.query(Image).filter(Image.is_active == True).offset(skip).limit(limit).all()
 
     async def update(self, image_id: int, watermark: str):
         db_image = self.db.query(Image).filter(Image.id == image_id).first()
@@ -55,3 +55,11 @@ class ImageRepository:
             except SQLAlchemyError as e:
                 self.db.rollback()
                 raise e
+
+    async def set_all_inactive(self):
+        try:
+            self.db.query(Image).filter(Image.is_active == True).update({Image.is_active: False}, synchronize_session=False)
+            self.db.commit()
+        except SQLAlchemyError as e:
+            self.db.rollback()
+            raise e
