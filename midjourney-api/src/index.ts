@@ -53,13 +53,15 @@ app.post("/describe", async (c) => {
             return c.json({ message: e }, 500);
         });
 
-        console.log(describe);
+        // console.log(describe);
 
         if (!describe) {
             return c.json({ message: "No describe message" }, 500);
         }
 
         const firstDescription = (describe as MJDescribe).descriptions[0].slice(2);
+
+        console.log({ firstDescription });
 
         const updatePromptResponse = await updatePrompt(imageId, firstDescription);
 

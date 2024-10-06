@@ -1,15 +1,23 @@
 // make post request to backend url
 
-const backendUrl = process.env.BACKEND_API_URL;
+const backendUrl = <string>process.env.BACKEND_API_URL;
 
 const updatePrompt = async (imageId: number, prompt: string) => {
-    const response = await fetch(`${backendUrl}/images/${imageId}/prompt`, {
-        method: "POST",
-        body: JSON.stringify({ image_id: imageId, prompt }),
-        headers: { "Content-Type": "application/json" },
-    });
+    const url = `${backendUrl}/images/${imageId}/prompt`;
 
-    const body = await response.json();
+    const formData = new FormData();
+    formData.append("prompt", prompt);
+    try {
+        const response = await fetch(url, {
+            method: "POST",
+            body: formData,
+        });
 
-    return body;
+        const body = await response.json();
+
+        return body;
+    } catch (e) {
+        console.error(e);
+        return { message: e };
+    }
 };
