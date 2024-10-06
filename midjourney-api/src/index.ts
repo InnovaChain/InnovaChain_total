@@ -2,6 +2,7 @@ import { Hono } from "hono";
 import { cors } from "hono/cors";
 import getClient from "./midjourney";
 import { MJDescribe } from "midjourney";
+import updatePrompt from "./sync";
 
 const app = new Hono();
 
@@ -53,13 +54,11 @@ app.post("/describe", async (c) => {
             return c.json({ message: e }, 500);
         });
 
-        // console.log(describe);
-
         if (!describe) {
             return c.json({ message: "No describe message" }, 500);
         }
 
-        const firstDescription = (describe as MJDescribe).descriptions[0].slice(2);
+        const firstDescription = (describe as MJDescribe).descriptions[0].slice(4);
 
         console.log({ firstDescription });
 
