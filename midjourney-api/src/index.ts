@@ -1,6 +1,7 @@
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 import getClient from "./midjourney";
+import { MJDescribe } from "midjourney";
 
 const app = new Hono();
 
@@ -40,23 +41,29 @@ app.post("/describe", async (c) => {
     try {
         const body = await c.req.json<{
             imageUrl: string;
+            imageId: number;
         }>();
 
         const imageUrl = body.imageUrl;
+        const imageId = body.imageId;
 
         const client = await getClient();
 
-        const Describe = await client.Describe(imageUrl).catch((e) => {
+        const describe = await client.Describe(imageUrl).catch((e) => {
             return c.json({ message: e }, 500);
         });
 
-        console.log(Describe);
+        console.log(describe);
 
-        if (!Describe) {
+        if (!describe) {
             return c.json({ message: "No describe message" }, 500);
         }
 
-        return c.json(Describe, 200);
+        const firstDescription = (describe as MJDescribe).descriptions[0].slice(2);
+
+        const updatePromptResponse = await updatePrompt(imageId, firstDescription);
+
+        return c.json({ updatePromptResponse, describe }, 200);
     } catch {
         return c.json({ message: "Some thing went wrong" }, 400);
     }
