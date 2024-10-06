@@ -167,3 +167,16 @@ async def set_all_images_inactive(imgs: ImageService = Depends(get_image_service
     print("Received request to set all images inactive.")
     await imgs.set_all_images_inactive()
     return {"message": "All images set to inactive"}
+
+
+@app.get("/users/{user_id}")
+async def get_user_by_id(user_id: int, us: UserService = Depends(get_user_service)):
+    user = await us.get_user_by_id(user_id)
+    print(user.id)
+    if user is None:
+        raise HTTPException(status_code=404, detail="User not found")
+    user_info = {
+        "id": user.id,
+        "wallet_address": user.wallet_address,
+    }
+    return user_info
