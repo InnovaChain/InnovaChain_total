@@ -26,5 +26,7 @@ RUN chmod +x /usr/src/app/start.sh
 # Expose port
 EXPOSE 8000
 
+VOLUME ["/var/data"]
+
 # CMD
 CMD ["/usr/src/app/start.sh"]
