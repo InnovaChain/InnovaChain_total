@@ -1,6 +1,6 @@
 import { Hono } from "hono";
 import { cors } from "hono/cors";
-import getClient from "./midjourney";
+import getClient, { client } from "./midjourney";
 import { MJDescribe } from "midjourney";
 import updatePrompt from "./sync";
 
@@ -70,6 +70,41 @@ app.post("/describe", async (c) => {
     }
 });
 
+app.post("/variation", async (c) => {
+    try {
+        const body = await c.req.json<{
+            index: 1 | 2 | 3 | 4;
+            msgId: string;
+            hash: string;
+            content?: string;
+            flags: number;
+        }>();
+
+        const { index, msgId, hash, content, flags } = body;
+
+        const client = await getClient();
+
+        const Variation = await client.Variation({
+            index: index,
+            msgId: msgId,
+            hash: hash,
+            flags: flags,
+            content: content,
+            loading: (uri: string, progress: string) => {
+                console.log("Variation.loading", uri, "progress", progress);
+            },
+        });
+
+        if (!Variation) {
+            return c.json({ message: "No variation message" }, 500);
+        }
+
+        return c.json(Variation, 200);
+    } catch {
+        return c.json({ message: "Some thing went wrong" }, 400);
+    }
+});
+
 app.post("/upscale", async (c) => {
     try {
         const body = await c.req.json<{
@@ -101,6 +136,30 @@ app.post("/upscale", async (c) => {
         }
 
         return c.json(upscale, 200);
+    } catch {
+        return c.json({ message: "Some thing went wrong" }, 400);
+    }
+});
+
+app.post("/connect", async (c) => {
+    try {
+        await client.init();
+
+        client.Connect();
+
+        return c.json({ message: "Connected" }, 200);
+    } catch {
+        return c.json({ message: "Some thing went wrong" }, 400);
+    }
+});
+
+app.post("/disconnect", async (c) => {
+    try {
+        const client = await getClient();
+
+        client.Close();
+
+        return c.json({ message: "Disconnected" }, 200);
     } catch {
         return c.json({ message: "Some thing went wrong" }, 400);
     }
