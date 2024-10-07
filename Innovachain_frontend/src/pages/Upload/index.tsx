@@ -8,250 +8,229 @@ import { useDropzone } from "react-dropzone";
 import { CardContainer } from "../../components/Card";
 import toast from "react-hot-toast";
 import { useAccount } from "wagmi";
-import { uploadImage } from "../../utils/api";
+// import { uploadImage } from "../../utils/api";
+import useUploadMutation from "../../hooks/useUploadMutation";
 
 const Upload = () => {
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [, setRoyalty] = useState("");
-  const [size, setSize] = useState("");
-  const [tags, setTags] = useState("");
-  const [copyrightPrice, setCopyrightPrice] = useState("");
-  const [copyrightOwner, setCopyrightOwner] = useState("");
+    const [name, setName] = useState("");
+    const [description, setDescription] = useState("");
+    const [, setRoyalty] = useState("");
+    const [size, setSize] = useState("");
+    const [tags, setTags] = useState("");
+    const [copyrightPrice, setCopyrightPrice] = useState("");
+    const [copyrightOwner, setCopyrightOwner] = useState("");
 
-  const [sourceImage, setSourceImage] = useState<File | null>(null);
+    const [sourceImage, setSourceImage] = useState<File | null>(null);
 
-  const { address } = useAccount();
-  async function onClickUpload() {
-    if (!name) {
-      toast.error("Please enter a name");
-      return;
+    const { mutateAsync } = useUploadMutation();
+
+    const { address } = useAccount();
+    async function onClickUpload() {
+        if (!name) {
+            toast.error("Please enter a name");
+            return;
+        }
+        if (!description) {
+            toast.error("Please enter a description");
+            return;
+        }
+        if (!sourceImage) {
+            toast.error("Please upload a source image");
+            return;
+        }
+        if (!address) {
+            toast.error("Please connect your wallet");
+            return;
+        }
+        try {
+            // await uploadImage({
+            //     name,
+            //     description,
+            //     file: sourceImage,
+            //     walletAddress: address,
+            // });
+            await mutateAsync({
+                name,
+                description,
+                file: sourceImage,
+                walletAddress: address,
+            });
+            toast.success("Uploaded successfully");
+        } catch (error) {
+            console.error(error);
+            toast.error("Failed to upload, image should be larger than 256x256");
+        }
     }
-    if (!description) {
-      toast.error("Please enter a description");
-      return;
-    }
-    if (!sourceImage) {
-      toast.error("Please upload a source image");
-      return;
-    }
-    if (!address) {
-      toast.error("Please connect your wallet");
-      return;
-    }
-    try {
-      await uploadImage({
-        name,
-        description,
-        file: sourceImage,
-        walletAddress: address,
-      });
-      toast.success("Uploaded successfully");
-    } catch (error) {
-      console.error(error);
-      toast.error("Failed to upload, image should be larger than 256x256");
-    }
-  }
-  return (
-    <Container>
-      <div className="flex justify-center items-center mt-[100px] pb-[80px]">
-        <Title>Upload Your Artwork</Title>
-      </div>
-      <div className="flex gap-8">
-        <CardContainer className="w-[60%]">
-          <CardTitle>Name</CardTitle>
-          <CardInput
-            className="mt-5"
-            placeholder="ArtWork Name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
-          <CardTitle className="mt-8">Description</CardTitle>
-          <CardInput
-            className="mt-5"
-            placeholder="Enter Your Description"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-          />
-          <div className="flex gap-8 mt-8">
+    return (
+        <Container>
+            <div className="flex justify-center items-center mt-[100px] pb-[80px]">
+                <Title>Upload Your Artwork</Title>
+            </div>
+            <div className="flex gap-8">
+                <CardContainer className="w-[60%]">
+                    <CardTitle>Name</CardTitle>
+                    <CardInput className="mt-5" placeholder="ArtWork Name" value={name} onChange={(e) => setName(e.target.value)} />
+                    <CardTitle className="mt-8">Description</CardTitle>
+                    <CardInput
+                        className="mt-5"
+                        placeholder="Enter Your Description"
+                        value={description}
+                        onChange={(e) => setDescription(e.target.value)}
+                    />
+                    <div className="flex gap-8 mt-8">
+                        <div>
+                            <CardTitle>Royalty</CardTitle>
+                            <CardSelector
+                                className="mt-5 min-w-[200px]"
+                                placeholder="Royalty"
+                                options={["xx1", "xx2", "xx3"]}
+                                onChange={(value) => setRoyalty(value)}
+                            />
+                        </div>
+                        <div>
+                            <CardTitle>Size</CardTitle>
+                            <CardInput className="mt-5" placeholder="Ex - 100x100" value={size} onChange={(e) => setSize(e.target.value)} />
+                        </div>
+                    </div>
+                    <CardTitle className="mt-8">Tags</CardTitle>
+                    <CardInput className="mt-5" placeholder="Beautiful Castle, Monkeys ETC" value={tags} onChange={(e) => setTags(e.target.value)} />
+                    <div className="flex gap-8 mt-8">
+                        <div className="flex-1">
+                            <CardTitle>Copyright Price</CardTitle>
+                            <SelectorInputGroup
+                                className="mt-5"
+                                selectorOptions={["ETH", "WETH", "USDT"]}
+                                selectorPlaceholder="ETH"
+                                inputPlaceholder="0.001 ETH"
+                                selectorValue={copyrightPrice}
+                                selectorOnChange={(value) => setCopyrightPrice(value)}
+                                inputValue={copyrightPrice}
+                                inputOnChange={(e) => setCopyrightPrice(e.target.value)}
+                            />
+                        </div>
+                        <div className="flex-1">
+                            <CardTitle>Copyright Owner</CardTitle>
+                            <CardInput
+                                className="mt-5"
+                                placeholder="Your Address"
+                                value={copyrightOwner}
+                                onChange={(e) => setCopyrightOwner(e.target.value)}
+                            />
+                        </div>
+                    </div>
+                </CardContainer>
+                <div className="flex flex-col flex-1 gap-8">
+                    <Uploader
+                        className="h-[30%]"
+                        file={sourceImage}
+                        onFileUpload={(file: File) => {
+                            setSourceImage(file);
+                        }}
+                    >
+                        PNG, GIF, WEBP.
+                    </Uploader>
+                    <Uploader
+                        className="h-[30%]"
+                        file={null}
+                        onFileUpload={(file) => {
+                            console.log(file);
+                        }}
+                    >
+                        Upload NFT
+                    </Uploader>
+                    <CardContainer className="flex-1 flex flex-col gap-10">
+                        <div className="flex justify-between items-center">
+                            <div className="flex flex-col gap-2">
+                                <CardTitle>Put On Sale</CardTitle>
+                                <CardDescription>People Will Bids On Your Copyright</CardDescription>
+                            </div>
+                            <Switcher />
+                        </div>
+                        <div className="flex justify-between items-center">
+                            <div className="flex flex-col gap-2">
+                                <CardTitle>Direct Sale</CardTitle>
+                                <CardDescription>No Bids - Only Direct Salling</CardDescription>
+                            </div>
+                            <Switcher />
+                        </div>
+                    </CardContainer>
+                </div>
+            </div>
             <div>
-              <CardTitle>Royalty</CardTitle>
-              <CardSelector
-                className="mt-5 min-w-[200px]"
-                placeholder="Royalty"
-                options={["xx1", "xx2", "xx3"]}
-                onChange={(value) => setRoyalty(value)}
-              />
+                <UploadButton onClickUpload={onClickUpload} />
             </div>
-            <div>
-              <CardTitle>Size</CardTitle>
-              <CardInput
-                className="mt-5"
-                placeholder="Ex - 100x100"
-                value={size}
-                onChange={(e) => setSize(e.target.value)}
-              />
-            </div>
-          </div>
-          <CardTitle className="mt-8">Tags</CardTitle>
-          <CardInput
-            className="mt-5"
-            placeholder="Beautiful Castle, Monkeys ETC"
-            value={tags}
-            onChange={(e) => setTags(e.target.value)}
-          />
-          <div className="flex gap-8 mt-8">
-            <div className="flex-1">
-              <CardTitle>Copyright Price</CardTitle>
-              <SelectorInputGroup
-                className="mt-5"
-                selectorOptions={["ETH", "WETH", "USDT"]}
-                selectorPlaceholder="ETH"
-                inputPlaceholder="0.001 ETH"
-                selectorValue={copyrightPrice}
-                selectorOnChange={(value) => setCopyrightPrice(value)}
-                inputValue={copyrightPrice}
-                inputOnChange={(e) => setCopyrightPrice(e.target.value)}
-              />
-            </div>
-            <div className="flex-1">
-              <CardTitle>Copyright Owner</CardTitle>
-              <CardInput
-                className="mt-5"
-                placeholder="Your Address"
-                value={copyrightOwner}
-                onChange={(e) => setCopyrightOwner(e.target.value)}
-              />
-            </div>
-          </div>
-        </CardContainer>
-        <div className="flex flex-col flex-1 gap-8">
-          <Uploader
-            className="h-[30%]"
-            file={sourceImage}
-            onFileUpload={(file: File) => {
-              setSourceImage(file);
-            }}
-          >
-            PNG, GIF, WEBP.
-          </Uploader>
-          <Uploader
-            className="h-[30%]"
-            file={null}
-            onFileUpload={(file) => {
-              console.log(file);
-            }}
-          >
-            Upload NFT
-          </Uploader>
-          <CardContainer className="flex-1 flex flex-col gap-10">
-            <div className="flex justify-between items-center">
-              <div className="flex flex-col gap-2">
-                <CardTitle>Put On Sale</CardTitle>
-                <CardDescription>
-                  People Will Bids On Your Copyright
-                </CardDescription>
-              </div>
-              <Switcher />
-            </div>
-            <div className="flex justify-between items-center">
-              <div className="flex flex-col gap-2">
-                <CardTitle>Direct Sale</CardTitle>
-                <CardDescription>No Bids - Only Direct Salling</CardDescription>
-              </div>
-              <Switcher />
-            </div>
-          </CardContainer>
-        </div>
-      </div>
-      <div>
-        <UploadButton onClickUpload={onClickUpload} />
-      </div>
-    </Container>
-  );
+        </Container>
+    );
 };
 
 const UploadButton = ({ onClickUpload }: { onClickUpload: () => void }) => {
-  return (
-    <button
-      className={clsx("w-full py-3 font-semibold rounded-xl bg-white mt-8")}
-      onClick={onClickUpload}
-    >
-      Verify & Upload
-    </button>
-  );
+    return (
+        <button className={clsx("w-full py-3 font-semibold rounded-xl bg-white mt-8")} onClick={onClickUpload}>
+            Verify & Upload
+        </button>
+    );
 };
 
 const Uploader = ({
-  children,
-  className,
-  file,
-  onFileUpload,
+    children,
+    className,
+    file,
+    onFileUpload,
 }: {
-  children: string;
-  className?: string;
-  file: File | null;
-  onFileUpload: (file: File) => void;
+    children: string;
+    className?: string;
+    file: File | null;
+    onFileUpload: (file: File) => void;
 }) => {
-  const onDrop = useCallback(
-    (acceptedFiles: File[]) => {
-      if (acceptedFiles.length > 0) {
-        onFileUpload(acceptedFiles[0]);
-      }
-    },
-    [onFileUpload],
-  );
+    const onDrop = useCallback(
+        (acceptedFiles: File[]) => {
+            if (acceptedFiles.length > 0) {
+                onFileUpload(acceptedFiles[0]);
+            }
+        },
+        [onFileUpload]
+    );
 
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
+    const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
-  return (
-    <CardContainer
-      {...getRootProps()}
-      className={clsx(
-        "grid place-items-center place-content-center cursor-pointer",
-        isDragActive && "border-2 border-dashed border-gray-400",
-        className,
-      )}
-    >
-      <input {...getInputProps()} />
-      <img className="w-[50px] h-[50px]" src={UploadImg} alt="Upload" />
-      <CardDescription className="mt-3">
-        {isDragActive && "Drop the file here"}
-        {file && file?.name}
-        {!isDragActive && !file && children}
-      </CardDescription>
-    </CardContainer>
-  );
+    return (
+        <CardContainer
+            {...getRootProps()}
+            className={clsx(
+                "grid place-items-center place-content-center cursor-pointer",
+                isDragActive && "border-2 border-dashed border-gray-400",
+                className
+            )}
+        >
+            <input {...getInputProps()} />
+            <img className="w-[50px] h-[50px]" src={UploadImg} alt="Upload" />
+            <CardDescription className="mt-3">
+                {isDragActive && "Drop the file here"}
+                {file && file?.name}
+                {!isDragActive && !file && children}
+            </CardDescription>
+        </CardContainer>
+    );
 };
 
 const Switcher = () => {
-  const [isChecked, setIsChecked] = useState(false);
+    const [isChecked, setIsChecked] = useState(false);
 
-  return (
-    <label className="flex items-center cursor-pointer">
-      <div className="relative">
-        <input
-          type="checkbox"
-          className="sr-only"
-          checked={isChecked}
-          onChange={() => setIsChecked(!isChecked)}
-        />
-        <div
-          className={clsx(
-            "block w-14 h-8 rounded-full duration-200",
-            isChecked ? "bg-[#000]" : "bg-[#E7E4E4]",
-          )}
-        ></div>
-        <div
-          className={clsx(
-            "absolute left-1 top-1 bg-white w-6 h-6 rounded-full",
-            "transition-transform duration-200 ease-in-out",
-            isChecked && "transform translate-x-6",
-          )}
-        ></div>
-      </div>
-    </label>
-  );
+    return (
+        <label className="flex items-center cursor-pointer">
+            <div className="relative">
+                <input type="checkbox" className="sr-only" checked={isChecked} onChange={() => setIsChecked(!isChecked)} />
+                <div className={clsx("block w-14 h-8 rounded-full duration-200", isChecked ? "bg-[#000]" : "bg-[#E7E4E4]")}></div>
+                <div
+                    className={clsx(
+                        "absolute left-1 top-1 bg-white w-6 h-6 rounded-full",
+                        "transition-transform duration-200 ease-in-out",
+                        isChecked && "transform translate-x-6"
+                    )}
+                ></div>
+            </div>
+        </label>
+    );
 };
 
 const CardDescription = twc.p`
@@ -259,40 +238,37 @@ const CardDescription = twc.p`
 `;
 
 const CardInput = ({
-  placeholder,
-  className,
-  roundedPosition,
-  value,
-  onChange,
+    placeholder,
+    className,
+    roundedPosition,
+    value,
+    onChange,
 }: {
-  placeholder: string;
-  className?: string;
-  roundedPosition?: "left" | "right";
-  value: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    placeholder: string;
+    className?: string;
+    roundedPosition?: "left" | "right";
+    value: string;
+    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }) => {
-  return (
-    <div
-      className={clsx(
-        "flex justify-between items-center",
-        "px-6 py-5 bg-[#EFEFEF]",
-        roundedPosition === "left" && "rounded-l-xl",
-        roundedPosition === "right" && "rounded-r-xl",
-        !roundedPosition && "rounded-xl",
-        className,
-      )}
-    >
-      <input
-        value={value}
-        onChange={onChange}
-        className={clsx(
-          "flex-1 bg-transparent outline-none",
-          "placeholder:text-[#9596A6] text-black text-opacity-60",
-        )}
-        placeholder={placeholder}
-      />
-    </div>
-  );
+    return (
+        <div
+            className={clsx(
+                "flex justify-between items-center",
+                "px-6 py-5 bg-[#EFEFEF]",
+                roundedPosition === "left" && "rounded-l-xl",
+                roundedPosition === "right" && "rounded-r-xl",
+                !roundedPosition && "rounded-xl",
+                className
+            )}
+        >
+            <input
+                value={value}
+                onChange={onChange}
+                className={clsx("flex-1 bg-transparent outline-none", "placeholder:text-[#9596A6] text-black text-opacity-60")}
+                placeholder={placeholder}
+            />
+        </div>
+    );
 };
 
 const CardTitle = twc.p`
@@ -305,117 +281,88 @@ text-white text-[45px] font-semibold
 `;
 
 const CardSelector = ({
-  options,
-  placeholder,
-  className,
-  roundedPosition,
-  onChange,
+    options,
+    placeholder,
+    className,
+    roundedPosition,
+    onChange,
 }: {
-  options: string[];
-  placeholder: string;
-  className?: string;
-  roundedPosition?: "left" | "right";
-  onChange: (value: string) => void;
+    options: string[];
+    placeholder: string;
+    className?: string;
+    roundedPosition?: "left" | "right";
+    onChange: (value: string) => void;
 }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [selectedOption, setSelectedOption] = useState("");
+    const [isOpen, setIsOpen] = useState(false);
+    const [selectedOption, setSelectedOption] = useState("");
 
-  useEffect(() => {
-    onChange(selectedOption);
-  }, [selectedOption]);
+    useEffect(() => {
+        onChange(selectedOption);
+    }, [selectedOption]);
 
-  return (
-    <div className={clsx("relative", className)}>
-      <div
-        className={clsx(
-          "flex justify-between items-center px-6 py-5",
-          "bg-[#EFEFEF] cursor-pointer",
-          roundedPosition === "left" && "rounded-l-xl",
-          roundedPosition === "right" && "rounded-r-xl",
-          !roundedPosition && "rounded-xl",
-        )}
-        onClick={() => setIsOpen(!isOpen)}
-      >
-        <span
-          className={`${selectedOption ? "text-black text-opacity-60" : "text-[#9596A6]"}`}
-        >
-          {selectedOption || placeholder}
-        </span>
-        <img
-          className={clsx(
-            "w-4 h-4 transition-transform duration-200",
-            isOpen && "rotate-180",
-          )}
-          src={ArrowDownImg}
-        />
-      </div>
-      {isOpen && (
-        <ul
-          className={clsx(
-            "border border-gray-300 border-opacity-60",
-            "absolute z-10 w-full mt-1",
-            "bg-white rounded-md shadow-lg",
-          )}
-        >
-          {options.map((option, index) => (
-            <li
-              key={index}
-              className={clsx(
-                "px-6 py-2 hover:bg-gray-100 cursor-pointer",
-                "text-black text-opacity-60",
-              )}
-              onClick={() => {
-                setSelectedOption(option);
-                setIsOpen(false);
-              }}
+    return (
+        <div className={clsx("relative", className)}>
+            <div
+                className={clsx(
+                    "flex justify-between items-center px-6 py-5",
+                    "bg-[#EFEFEF] cursor-pointer",
+                    roundedPosition === "left" && "rounded-l-xl",
+                    roundedPosition === "right" && "rounded-r-xl",
+                    !roundedPosition && "rounded-xl"
+                )}
+                onClick={() => setIsOpen(!isOpen)}
             >
-              {option}
-            </li>
-          ))}
-        </ul>
-      )}
-    </div>
-  );
+                <span className={`${selectedOption ? "text-black text-opacity-60" : "text-[#9596A6]"}`}>{selectedOption || placeholder}</span>
+                <img className={clsx("w-4 h-4 transition-transform duration-200", isOpen && "rotate-180")} src={ArrowDownImg} />
+            </div>
+            {isOpen && (
+                <ul className={clsx("border border-gray-300 border-opacity-60", "absolute z-10 w-full mt-1", "bg-white rounded-md shadow-lg")}>
+                    {options.map((option, index) => (
+                        <li
+                            key={index}
+                            className={clsx("px-6 py-2 hover:bg-gray-100 cursor-pointer", "text-black text-opacity-60")}
+                            onClick={() => {
+                                setSelectedOption(option);
+                                setIsOpen(false);
+                            }}
+                        >
+                            {option}
+                        </li>
+                    ))}
+                </ul>
+            )}
+        </div>
+    );
 };
 
 const SelectorInputGroup = ({
-  selectorOptions,
-  selectorPlaceholder,
-  inputPlaceholder,
-  className,
-  selectorOnChange,
-  inputValue,
-  inputOnChange,
+    selectorOptions,
+    selectorPlaceholder,
+    inputPlaceholder,
+    className,
+    selectorOnChange,
+    inputValue,
+    inputOnChange,
 }: {
-  selectorOptions: string[];
-  selectorPlaceholder: string;
-  inputPlaceholder: string;
-  className?: string;
-  selectorValue: string;
-  selectorOnChange: (value: string) => void;
-  inputValue: string;
-  inputOnChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    selectorOptions: string[];
+    selectorPlaceholder: string;
+    inputPlaceholder: string;
+    className?: string;
+    selectorValue: string;
+    selectorOnChange: (value: string) => void;
+    inputValue: string;
+    inputOnChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }) => {
-  return (
-    <div className={clsx("flex", className)}>
-      <div className="flex-1 border-r border-[#DADADA]">
-        <CardSelector
-          roundedPosition="left"
-          options={selectorOptions}
-          placeholder={selectorPlaceholder}
-          onChange={selectorOnChange}
-        />
-      </div>
-      <div className="flex-1">
-        <CardInput
-          roundedPosition="right"
-          placeholder={inputPlaceholder}
-          value={inputValue}
-          onChange={inputOnChange}
-        />
-      </div>
-    </div>
-  );
+    return (
+        <div className={clsx("flex", className)}>
+            <div className="flex-1 border-r border-[#DADADA]">
+                <CardSelector roundedPosition="left" options={selectorOptions} placeholder={selectorPlaceholder} onChange={selectorOnChange} />
+            </div>
+            <div className="flex-1">
+                <CardInput roundedPosition="right" placeholder={inputPlaceholder} value={inputValue} onChange={inputOnChange} />
+            </div>
+        </div>
+    );
 };
 
 export default Upload;
