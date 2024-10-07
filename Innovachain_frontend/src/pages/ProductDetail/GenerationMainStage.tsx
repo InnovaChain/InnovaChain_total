@@ -1,6 +1,6 @@
 import clsx from "clsx";
 import { HeartImg } from "../../assets/gallery";
-import { AvatarImg, Example4Img } from "../../assets/product-detail";
+import { AvatarImg } from "../../assets/product-detail";
 import { CardContainer } from "../../components/Card";
 import { useParams } from "react-router-dom";
 import { API_URL } from "../../constants";
