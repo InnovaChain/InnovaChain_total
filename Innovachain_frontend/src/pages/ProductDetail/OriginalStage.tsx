@@ -5,17 +5,17 @@ import { CardContainer } from "../../components/Card";
 import { twc } from "react-twc";
 import { ProductInfo } from "../../utils/api";
 
-const OriginalStage = ({ onClickRecreated, info }: { onClickRecreated?: () => void; info: ProductInfo }) => {
+const OriginalStage = ({ onClickRecreated, info }: { onClickRecreated?: () => void; info?: ProductInfo }) => {
     return (
         <CardContainer className="flex-1">
             {/* Choice Card */}
             <div className="flex justify-between items-end">
-                <h3 className="text-[#292B39] text-[50px] font-semibold font-poppins leading-[35px]">{info.name}</h3>
+                <h3 className="text-[#292B39] text-[50px] font-semibold font-poppins leading-[35px]">{info?.name}</h3>
                 <div className="flex gap-1">
                     <button className={clsx("bg-[#0066D4] px-2 py-1 rounded-full text-white font-medium")}>Verified</button>
                 </div>
             </div>
-            <p className="text-[#888888B2] text-xl mt-10 mb-20">{info.description}</p>
+            <p className="text-[#888888B2] text-xl mt-10 mb-20">{info?.description}</p>
             <div className="flex gap-2">
                 <img className="w-[65px] h-[65px] rounded-full" src={Avatar2Img} />
                 <div>
@@ -43,7 +43,7 @@ const OriginalStage = ({ onClickRecreated, info }: { onClickRecreated?: () => vo
             <div className="mt-5 flex flex-col gap-2">
                 <DarkButton>Purchase</DarkButton>
                 <DarkButton className="w-full h-20 rounded-[20px] bg-black text-white font-bold  text-lg" onClick={onClickRecreated}>
-                    Recreated
+                    Recreate
                 </DarkButton>
             </div>
         </CardContainer>

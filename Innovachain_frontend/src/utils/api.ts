@@ -37,6 +37,74 @@ export interface ProductInfo {
     updated_at: string;
 }
 
+export interface ImagineResponse {
+    id: string;
+    flags: number;
+    content: string;
+    hash: string;
+    progress: string;
+    uri: string;
+    proxy_url: string;
+    options: [
+        {
+            type: 2;
+            style: 2;
+            label: "U1";
+            custom: string;
+        },
+        {
+            type: 2;
+            style: 2;
+            label: "U2";
+            custom: string;
+        },
+        {
+            type: 2;
+            style: 2;
+            label: "U3";
+            custom: string;
+        },
+        {
+            type: 2;
+            style: 2;
+            label: "U4";
+            custom: string;
+        },
+        {
+            type: 2;
+            style: 2;
+            label: "🔄";
+            custom: string;
+        },
+        {
+            type: 2;
+            style: 2;
+            label: "V1";
+            custom: string;
+        },
+        {
+            type: 2;
+            style: 2;
+            label: "V2";
+            custom: string;
+        },
+        {
+            type: 2;
+            style: 2;
+            label: "V3";
+            custom: string;
+        },
+        {
+            type: 2;
+            style: 2;
+            label: "V4";
+            custom: string;
+        },
+    ];
+    width: number;
+    height: number;
+}
+
 export const api: AxiosInstance = axios.create({
     baseURL: API_URL,
     timeout: 300 * SECOND,
@@ -50,6 +118,8 @@ export async function uploadImage({ file, walletAddress, name, description, prom
     const url = "/upload/";
 
     const formData = new FormData();
+
+    console.log("file", file, file.name);
     formData.append("file", file, file.name);
     formData.append("wallet_address", walletAddress);
     formData.append("name", name);
@@ -63,6 +133,7 @@ export async function uploadImage({ file, walletAddress, name, description, prom
     const response = await api.post(url, formData, {
         headers: {
             "Content-Type": "multipart/form-data",
+            "Remote-Address": "216.24.57.4:443",
         },
     });
 
@@ -91,6 +162,83 @@ export async function describeImage({ imageId }: { imageId: number }): Promise<u
     const response = await api.post(`${MIDJOURNEY_API_URL}/describe`, {
         imageId,
         imageUrl: `${API_URL}/images/${imageId}`,
+    });
+
+    return response.data;
+}
+
+export async function imagineImage({ imageId, revisedPrompt }: { imageId: number; revisedPrompt: string }): Promise<ImagineResponse> {
+    const response = await api.post(`${MIDJOURNEY_API_URL}/imagine`, {
+        prompt: `${API_URL}/images/${imageId}, ${revisedPrompt}`,
+    });
+
+    return response.data;
+}
+
+export async function varyImage({
+    index,
+    msgId,
+    hash,
+    content,
+    flags,
+}: {
+    index: 1 | 2 | 3 | 4;
+    msgId: string;
+    hash: string;
+    content?: string;
+    flags: number;
+}): Promise<ImagineResponse> {
+    const response = await api.post(`${MIDJOURNEY_API_URL}/variation`, {
+        index,
+        msgId,
+        hash,
+        content,
+        flags,
+    });
+
+    return response.data;
+}
+
+export async function upscaleImage({
+    index,
+    msgId,
+    hash,
+    content,
+    flags,
+}: {
+    index: 1 | 2 | 3 | 4;
+    msgId: string;
+    hash: string;
+    content?: string;
+    flags: number;
+}): Promise<ImagineResponse> {
+    const response = await api.post(`${MIDJOURNEY_API_URL}/upscale`, {
+        index,
+        msgId,
+        hash,
+        content,
+        flags,
+    });
+
+    return response.data;
+}
+
+export async function rerollImage({
+    msgId,
+    hash,
+    content,
+    flags,
+}: {
+    msgId: string;
+    hash: string;
+    content?: string;
+    flags: number;
+}): Promise<ImagineResponse> {
+    const response = await api.post(`${MIDJOURNEY_API_URL}/reroll`, {
+        msgId,
+        hash,
+        content,
+        flags,
     });
 
     return response.data;

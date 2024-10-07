@@ -1,0 +1,67 @@
+{
+    "id": "1292882359519285293",
+    "flags": 0,
+    "content": "**<https://s.mj.run/UJQcmV9Fkg8> A simple cartoon drawing of an anime character with short hair, wearing sunglasses and smoking while holding their shoulder in the style of cyberpunk manga. The character is depicted wearing a white bucket hat and a grey coat against a dark blue background, with simple flat colors and minimalistic design. The person has red skin and a small black robot by their side that glows slightly. They have one hand resting against the robot's head, adding an element of mystery or detail. Vector art, line art, vector logo. --v 6.0** - <@941035452142604298> (fast)",
+    "hash": "a4454e8c-054f-43eb-ad91-9e2de816ebaa",
+    "progress": "done",
+    "uri": "https://cdn.discordapp.com/attachments/1288523822542094438/1292882359342993458/eureka0402_A_simple_cartoon_drawing_of_an_anime_character_with__a4454e8c-054f-43eb-ad91-9e2de816ebaa.png?ex=67055a07&is=67040887&hm=bea86006dfc215c2f5c003236291a149e288c6c190405585db363eb9e3a1e481&",
+    "proxy_url": "https://media.discordapp.net/attachments/1288523822542094438/1292882359342993458/eureka0402_A_simple_cartoon_drawing_of_an_anime_character_with__a4454e8c-054f-43eb-ad91-9e2de816ebaa.png?ex=67055a07&is=67040887&hm=bea86006dfc215c2f5c003236291a149e288c6c190405585db363eb9e3a1e481&",
+    "options": [
+        {
+            "type": 2,
+            "style": 2,
+            "label": "U1",
+            "custom": "MJ::JOB::upsample::1::a4454e8c-054f-43eb-ad91-9e2de816ebaa"
+        },
+        {
+            "type": 2,
+            "style": 2,
+            "label": "U2",
+            "custom": "MJ::JOB::upsample::2::a4454e8c-054f-43eb-ad91-9e2de816ebaa"
+        },
+        {
+            "type": 2,
+            "style": 2,
+            "label": "U3",
+            "custom": "MJ::JOB::upsample::3::a4454e8c-054f-43eb-ad91-9e2de816ebaa"
+        },
+        {
+            "type": 2,
+            "style": 2,
+            "label": "U4",
+            "custom": "MJ::JOB::upsample::4::a4454e8c-054f-43eb-ad91-9e2de816ebaa"
+        },
+        {
+            "type": 2,
+            "style": 2,
+            "label": "🔄",
+            "custom": "MJ::JOB::reroll::0::a4454e8c-054f-43eb-ad91-9e2de816ebaa::SOLO"
+        },
+        {
+            "type": 2,
+            "style": 2,
+            "label": "V1",
+            "custom": "MJ::JOB::variation::1::a4454e8c-054f-43eb-ad91-9e2de816ebaa"
+        },
+        {
+            "type": 2,
+            "style": 2,
+            "label": "V2",
+            "custom": "MJ::JOB::variation::2::a4454e8c-054f-43eb-ad91-9e2de816ebaa"
+        },
+        {
+            "type": 2,
+            "style": 2,
+            "label": "V3",
+            "custom": "MJ::JOB::variation::3::a4454e8c-054f-43eb-ad91-9e2de816ebaa"
+        },
+        {
+            "type": 2,
+            "style": 2,
+            "label": "V4",
+            "custom": "MJ::JOB::variation::4::a4454e8c-054f-43eb-ad91-9e2de816ebaa"
+        }
+    ],
+    "width": 2048,
+    "height": 2048
+}

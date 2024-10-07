@@ -1,11 +1,26 @@
 import clsx from "clsx";
-import { CardContainer } from "../../components/Card";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { twc } from "react-twc";
-import { useState } from "react";
+import { CardContainer } from "../../components/Card";
 
-const GenerationPromptStage = ({ originalPrompt }: { originalPrompt: string }) => {
+const GenerationPromptStage = ({
+    onClickGenerate,
+    originalPrompt,
+    setRevisedPrompt,
+}: {
+    onClickGenerate: () => void;
+    originalPrompt?: string;
+    setRevisedPrompt: Dispatch<SetStateAction<string>>;
+}) => {
     const [selectedRecreationModal, setSelectedRecreationModal] = useState("Use as promopt");
     const [selectedModel, setSelectedModel] = useState("Midjourney");
+
+    const [localRevisedPrompt, setLocalRevisedPrompt] = useState(originalPrompt ?? "");
+
+    useEffect(() => {
+        setRevisedPrompt(localRevisedPrompt);
+    }, [localRevisedPrompt, setRevisedPrompt]);
+
     return (
         <CardContainer className="flex-1">
             <TabSelector
@@ -23,14 +38,17 @@ const GenerationPromptStage = ({ originalPrompt }: { originalPrompt: string }) =
                 onClickTab={(option) => setSelectedModel(option)}
             />
             <PromptTitle>Prompt</PromptTitle>
-            <PromptInputArea className="mb-3 h-fit min-h-fit" disabled content={originalPrompt} />
+            <PromptInputArea className="mb-3" disabled content={originalPrompt ?? ""} />
             <PromptTitle>Revised Prompt</PromptTitle>
             <PromptInputArea
                 className="mb-8"
-                content={`A young woman with long hair, tied in a ponytail, holds the sword, wearing Japanese from the Edo period. She has a side profile view and is depicted as a character for the game 'Genshin Impact'. The background of her portrait should be simple to highlight her against a gray backdrop. Her expression appears confident or serious, reflecting anime-style features typical of characters found within this genre.`}
+                content={localRevisedPrompt ?? ""}
+                onChangeText={(value: string) => {
+                    setLocalRevisedPrompt(value);
+                }}
             />
             <div className="flex justify-end">
-                <GenerateButton />
+                <GenerateButton onClickGenerate={onClickGenerate} />
             </div>
         </CardContainer>
     );
@@ -76,18 +94,36 @@ const PromptTitle = twc.p`
   mb-1 text-base font-semibold leading-[22px] text-[#141414]
 `;
 
-const PromptInputArea = ({ content, disabled, className }: { content: string; disabled?: boolean; className?: string }) => {
+const PromptInputArea = ({
+    content,
+    disabled,
+    onChangeText,
+    className,
+}: {
+    content: string;
+    disabled?: boolean;
+    onChangeText?: (value: string) => void;
+    className?: string;
+}) => {
     return (
         <textarea
             disabled={disabled}
             className={clsx("bg-[#F6F6F6] rounded-lg p-3", "text-[#8D8D8D] text-sm", "resize-none w-full min-h-[180px]", className)}
-        >
-            {content}
-        </textarea>
+            value={content}
+            {...(onChangeText && {
+                onChange: (e) => {
+                    onChangeText(e.target.value);
+                },
+            })}
+        />
     );
 };
 
-const GenerateButton = () => {
-    return <button className={clsx("bg-[#141414] text-white", "text-base font-medium rounded-full", "px-12 py-2 rounded-lg")}>Generate</button>;
+const GenerateButton = ({ onClickGenerate }: { onClickGenerate: () => void }) => {
+    return (
+        <button className={clsx("bg-[#141414] text-white", "text-base font-medium rounded-full", "px-12 py-2 rounded-lg")} onClick={onClickGenerate}>
+            Generate
+        </button>
+    );
 };
 export default GenerationPromptStage;
