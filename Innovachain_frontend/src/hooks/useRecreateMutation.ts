@@ -1,13 +1,52 @@
-// import { useMutation } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
+import { imagineImage, uploadImage } from "../utils/api";
+import { convertUrlToFile } from "../utils/urlToFile";
 
-// export default function useRecreateMigration() {
-//     return useMutation({
-//         mutationKey: ["recreate"],
-//         mutationFn: (url: string) => {
-//         // return ky
-//         //     .post(`${NEXT_PUBLIC_BASE_URL}/api/fetch`, { json: url })
-//         //     .json<Partial<BookmarkCrawledProduct>>();
-//         // },
-//         return
-//     })
-// }
+export function useImagineMutation() {
+    return useMutation({
+        mutationKey: ["recreate"],
+        mutationFn: async ({ imageId, revisedPrompt }: { imageId: number; revisedPrompt: string }) => {
+            const recreateResponse = await imagineImage({
+                imageId,
+                revisedPrompt,
+            });
+            return recreateResponse;
+        },
+    });
+}
+
+export function useConfirmRecreateMutation() {
+    return useMutation({
+        mutationKey: ["confirmRecreate"],
+        mutationFn: async ({
+            imageUrl,
+            walletAddress,
+            name,
+            description,
+            revisedPrompt,
+            sourceImageId,
+        }: {
+            imageUrl: string;
+            walletAddress: string;
+            name: string;
+            description: string;
+            revisedPrompt: string;
+            sourceImageId: number;
+        }) => {
+            const file = await convertUrlToFile({ url: imageUrl, filename: name });
+
+            console.log("file", file);
+
+            const uploadResponse = await uploadImage({
+                file,
+                walletAddress,
+                name,
+                description,
+                prompt: revisedPrompt,
+                sourceImageId,
+            });
+
+            return uploadResponse;
+        },
+    });
+}

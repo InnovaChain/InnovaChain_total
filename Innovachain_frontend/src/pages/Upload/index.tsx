@@ -22,7 +22,7 @@ const Upload = () => {
 
     const [sourceImage, setSourceImage] = useState<File | null>(null);
 
-    const { mutateAsync } = useUploadMutation();
+    const { mutateAsync, isPending } = useUploadMutation();
 
     const { address } = useAccount();
     async function onClickUpload() {
@@ -157,16 +157,27 @@ const Upload = () => {
                 </div>
             </div>
             <div>
-                <UploadButton onClickUpload={onClickUpload} />
+                <UploadButton onClickUpload={onClickUpload} isPending={isPending} />
             </div>
         </Container>
     );
 };
 
-const UploadButton = ({ onClickUpload }: { onClickUpload: () => void }) => {
+const UploadButton = ({ onClickUpload, isPending }: { onClickUpload: () => void; isPending: boolean }) => {
     return (
-        <button className={clsx("w-full py-3 font-semibold rounded-xl bg-white mt-8")} onClick={onClickUpload}>
-            Verify & Upload
+        <button
+            disabled={isPending}
+            className={clsx("w-full py-3 font-semibold rounded-xl bg-white mt-8 disabled:bg-gray-300")}
+            onClick={onClickUpload}
+        >
+            {isPending ? (
+                <div className="flex justify-center items-center space-x-4">
+                    <div className="animate-spin rounded-full h-6 w-6 border-t-4 border-black border-opacity-70" />
+                    <p>Uploading...</p>
+                </div>
+            ) : (
+                "Verify & Upload"
+            )}
         </button>
     );
 };
