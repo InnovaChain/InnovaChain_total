@@ -70,6 +70,42 @@ app.post("/describe", async (c) => {
     }
 });
 
+app.post("/upscale", async (c) => {
+    try {
+        const body = await c.req.json<{
+            index: 1 | 2 | 3 | 4;
+            msgId: string;
+            hash: string;
+            content?: string;
+            flags: number;
+        }>();
+
+        const { index, msgId, hash, content, flags } = body;
+
+        const client = await getClient();
+
+        const upscale = await client
+            .Upscale({
+                index,
+                msgId,
+                hash,
+                content,
+                flags,
+            })
+            .catch((e) => {
+                return c.json({ message: e }, 500);
+            });
+
+        if (!upscale) {
+            return c.json({ message: "No upscale message" }, 500);
+        }
+
+        return c.json(upscale, 200);
+    } catch {
+        return c.json({ message: "Some thing went wrong" }, 400);
+    }
+});
+
 export default {
     port: 8080,
     fetch: app.fetch,
