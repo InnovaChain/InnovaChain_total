@@ -1,6 +1,6 @@
 import { Hono } from "hono";
 import { cors } from "hono/cors";
-import getClient, { client } from "./midjourney";
+import { getClient, resetClient } from "./midjourney";
 import { MJDescribe } from "midjourney";
 import updatePrompt from "./sync";
 
@@ -141,28 +141,42 @@ app.post("/upscale", async (c) => {
     }
 });
 
-app.post("/connect", async (c) => {
+app.post("/reroll", async (c) => {
     try {
-        await client.init();
+        const body = await c.req.json<{
+            msgId: string;
+            hash: string;
+            content?: string;
+            flags: number;
+        }>();
 
-        client.Connect();
+        const { msgId, hash, content, flags } = body;
 
-        return c.json({ message: "Connected" }, 200);
+        const client = await getClient();
+
+        const reroll = await client
+            .Reroll({
+                msgId,
+                hash,
+                content,
+                flags,
+            })
+            .catch((e) => {
+                return c.json({ message: e }, 500);
+            });
+
+        if (!reroll) {
+            return c.json({ message: "No reroll message" }, 500);
+        }
+
+        return c.json(reroll, 200);
     } catch {
         return c.json({ message: "Some thing went wrong" }, 400);
     }
 });
 
-app.post("/disconnect", async (c) => {
-    try {
-        const client = await getClient();
-
-        client.Close();
-
-        return c.json({ message: "Disconnected" }, 200);
-    } catch {
-        return c.json({ message: "Some thing went wrong" }, 400);
-    }
+app.post("/reset", async (c) => {
+    await resetClient();
 });
 
 export default {
