@@ -176,7 +176,12 @@ app.post("/reroll", async (c) => {
 });
 
 app.post("/reset", async (c) => {
-    await resetClient();
+    try {
+        await resetClient();
+        return c.json({ message: "Reset successful" }, 200);
+    } catch {
+        return c.json({ message: "Some thing went wrong" }, 400);
+    }
 });
 
 export default {

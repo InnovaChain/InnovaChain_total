@@ -28,4 +28,6 @@ export async function resetClient() {
     await reset();
 
     midjourneyClient = null;
+
+    return;
 }
