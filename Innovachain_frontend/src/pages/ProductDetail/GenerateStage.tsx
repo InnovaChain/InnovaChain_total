@@ -14,7 +14,7 @@ import useInsertWatermarkMutation from "../../hooks/useInsertWatermarkMutation";
 const GenerateStage = ({ imageId, revisedPrompt }: { imageId?: number; revisedPrompt: string }) => {
     const [customizedMakerText, setCustomizedMakerText] = useState<string>("");
     const { mutateAsync: imagineImage, isPending } = useImagineMutation();
-    // const { mutateAsync: upload } = useUploadMutation();
+
     const { mutateAsync: confirmRecreate, isPending: isMinting } = useConfirmRecreateMutation();
     const { mutateAsync: insertWatermark } = useInsertWatermarkMutation();
 
@@ -45,6 +45,7 @@ const GenerateStage = ({ imageId, revisedPrompt }: { imageId?: number; revisedPr
                 <AuthenticateAndMintButton
                     disabled={isPending || (isStarted && !upscaleDone) || isMinting}
                     upscaleDone={upscaleDone}
+                    isLoading={isPending || isMinting}
                     onClick={async () => {
                         if (!imageId) {
                             return;
@@ -132,10 +133,12 @@ const PromptInputArea = ({
 const AuthenticateAndMintButton = ({
     disabled,
     onClick,
+    isLoading,
     upscaleDone,
 }: {
     disabled: boolean;
     onClick: () => Promise<unknown>;
+    isLoading: boolean;
     upscaleDone: boolean;
 }) => {
     return (
@@ -144,7 +147,16 @@ const AuthenticateAndMintButton = ({
             className={clsx("bg-[#141414] text-white", "text-base font-medium rounded-full disabled:bg-gray-300", "px-12 py-2 rounded-lg")}
             onClick={onClick}
         >
-            {upscaleDone ? "Authenticate & Mint" : "Generate"}
+            {isLoading ? (
+                <div className="flex justify-center items-center space-x-2">
+                    <p>Making magic</p>
+                    <div className="animate-spin rounded-full h-5 w-5 border-t-4 border-white border-opacity-70" />
+                </div>
+            ) : upscaleDone ? (
+                "Authenticate & Mint"
+            ) : (
+                "Generate"
+            )}
         </button>
     );
 };

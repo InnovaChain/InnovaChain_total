@@ -9,21 +9,25 @@ export default function useInsertWatermarkMutation() {
     const { connection } = useConnection();
     const { publicKey, signAllTransactions, signTransaction } = useWallet();
 
-    if (!publicKey || !signAllTransactions || !signTransaction) {
-        throw new Error("Wallet not connected");
-    }
+    // if (!publicKey || !signAllTransactions || !signTransaction) {
+    //     throw new Error("Wallet not connected");
+    // }
 
-    const provider = new AnchorProvider(
-        connection,
-        {
-            publicKey,
-            signAllTransactions,
-            signTransaction,
-        },
-        {
-            preflightCommitment: "processed",
-        }
-    );
+    let provider: AnchorProvider | undefined;
+
+    if (publicKey && signAllTransactions && signTransaction) {
+        provider = new AnchorProvider(
+            connection,
+            {
+                publicKey,
+                signAllTransactions,
+                signTransaction,
+            },
+            {
+                preflightCommitment: "processed",
+            }
+        );
+    }
 
     return useMutation({
         mutationKey: ["insertWatermark"],
@@ -37,7 +41,7 @@ export default function useInsertWatermarkMutation() {
             const program = new Program(idl, PROGRAM_ID, provider);
 
             const [watermarkAccountPDA, bump] = PublicKey.findProgramAddressSync(
-                [Buffer.from("watermark_account"), publicKey.toBuffer()],
+                [Buffer.from("watermark_account"), publicKey!.toBuffer()],
                 program.programId
             );
 
@@ -50,7 +54,7 @@ export default function useInsertWatermarkMutation() {
                 .accounts({
                     systemProgram: web3.SystemProgram.programId,
                     watermarkAccount: watermarkAccountPDA,
-                    user: publicKey,
+                    user: publicKey!,
                 })
                 .rpc();
         },
