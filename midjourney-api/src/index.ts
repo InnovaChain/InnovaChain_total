@@ -185,27 +185,37 @@ app.post("/reset", async (c) => {
     }
 });
 
-app.post("/proxy-fetch", async(c) => {
-    try {
-        const body = await c.req.json<{
-            url: string;
-        }>();
-
-        const { url } = body;
-
-        const response = await axios.get(url, {
-            responseType: "arraybuffer"
-        })
-
-        const contentType = response.headers['content-type'];
-        const imageBuffer = new Uint8Array(response.data);
-        return new Response(imageBuffer, {
-            headers: { 'Content-Type': contentType }
-        });
-    } catch (e) {
-        return c.json({ message: "Some thing went wrong" }, 400);
+app.get('/proxy-fetch', async (c) => {
+    const imageUrl = c.req.query('url');
+  
+    if (!imageUrl) {
+      return c.json({ error: 'Image URL is required' }, 400);
     }
-})
+  
+    try {
+      // Fetch the image from the URL
+      const response = await fetch(imageUrl);
+  
+      // Check if the request was successful
+      if (!response.ok) {
+        return c.json({ error: 'Failed to fetch image' }, 500);
+      }
+  
+      // Get the image buffer and its content type
+      const contentType = response.headers.get('content-type') || 'application/octet-stream';
+      const imageBuffer = await response.arrayBuffer();
+  
+      // Return the image as a response
+      return new Response(imageBuffer, {
+        headers: {
+          'Content-Type': contentType,
+          'Cache-Control': 'no-store',  // Optional: control caching
+        },
+      });
+    } catch (error) {
+      return c.json({ error: 'Error fetching image' }, 500);
+    }
+  });
 
 export default {
     port: 8080,
