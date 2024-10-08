@@ -1,9 +1,8 @@
 import { Hono } from "hono";
 import { cors } from "hono/cors";
-import { getClient, resetClient } from "./midjourney";
 import { MJDescribe } from "midjourney";
+import { getClient, resetClient } from "./midjourney";
 import updatePrompt from "./sync";
-import axios from "axios";
 
 const app = new Hono();
 
@@ -184,43 +183,6 @@ app.post("/reset", async (c) => {
         return c.json({ message: "Some thing went wrong" }, 400);
     }
 });
-
-app.post('/proxy-fetch', async (c) => {
-    const body = await c.req.json<{
-        imageUrl: string;
-    }>();
-
-    const { imageUrl } = body;
-
-  
-    if (!imageUrl) {
-      return c.json({ error: 'Image URL is required' }, 400);
-    }
-  
-    try {
-      // Fetch the image from the URL
-      const response = await fetch(imageUrl);
-  
-      // Check if the request was successful
-      if (!response.ok) {
-        return c.json({ error: 'Failed to fetch image' }, 500);
-      }
-  
-      // Get the image buffer and its content type
-      const contentType = response.headers.get('content-type') || 'application/octet-stream';
-      const imageBuffer = await response.arrayBuffer();
-  
-      // Return the image as a response
-      return new Response(imageBuffer, {
-        headers: {
-          'Content-Type': contentType,
-          'Cache-Control': 'no-store',  // Optional: control caching
-        },
-      });
-    } catch (error) {
-      return c.json({ error: 'Error fetching image' }, 500);
-    }
-  });
 
 export default {
     port: 8080,
