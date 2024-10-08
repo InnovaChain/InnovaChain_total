@@ -31,7 +31,7 @@ export interface ProductInfo {
     user_id: number;
     filename: string;
     prompt: string;
-    source_image_id: string | null;
+    source_image_id: number | null;
     watermark: string;
     name: string;
     description: string;
@@ -151,7 +151,7 @@ export async function uploadImage({ file, image_url, walletAddress, name, descri
     return response.data;
 }
 
-async function getUserAddress(userId: number): Promise<{
+export async function getUserAddress(userId: number): Promise<{
     id: number;
     wallet_address: string;
 }> {
