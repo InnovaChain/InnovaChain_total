@@ -185,8 +185,13 @@ app.post("/reset", async (c) => {
     }
 });
 
-app.get('/proxy-fetch', async (c) => {
-    const imageUrl = c.req.query('url');
+app.post('/proxy-fetch', async (c) => {
+    const body = await c.req.json<{
+        imageUrl: string;
+    }>();
+
+    const { imageUrl } = body;
+
   
     if (!imageUrl) {
       return c.json({ error: 'Image URL is required' }, 400);
