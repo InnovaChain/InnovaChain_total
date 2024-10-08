@@ -255,7 +255,13 @@ export async function proxyFetch({
     //     }
     // });
 
-    const response = await fetch(`${MIDJOURNEY_API_URL}/proxy-fetch?url=${imageUrl}`);
+    const response = await fetch(`${MIDJOURNEY_API_URL}/proxy-fetch`, {
+        method: "POST",
+        body: JSON.stringify({ imageUrl }),
+        headers: {
+                "Content-Type": "image/png",
+        }
+    });
 
     return response.blob();
 }
