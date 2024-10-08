@@ -3,6 +3,7 @@ import { cors } from "hono/cors";
 import { getClient, resetClient } from "./midjourney";
 import { MJDescribe } from "midjourney";
 import updatePrompt from "./sync";
+import axios from "axios";
 
 const app = new Hono();
 
@@ -183,6 +184,28 @@ app.post("/reset", async (c) => {
         return c.json({ message: "Some thing went wrong" }, 400);
     }
 });
+
+app.post("/proxy-fetch", async(c) => {
+    try {
+        const body = await c.req.json<{
+            url: string;
+        }>();
+
+        const { url } = body;
+
+        const response = await axios.get(url, {
+            responseType: "arraybuffer"
+        })
+
+        const contentType = response.headers['content-type'];
+        const imageBuffer = new Uint8Array(response.data);
+        return new Response(imageBuffer, {
+            headers: { 'Content-Type': contentType }
+        });
+    } catch (e) {
+        return c.json({ message: "Some thing went wrong" }, 400);
+    }
+})
 
 export default {
     port: 8080,
