@@ -81,7 +81,7 @@ const GenerateStage = ({ imageId, revisedPrompt }: { imageId?: number; revisedPr
                             // });
 
                             await confirmRecreate({
-                                imageUrl: imagineResponse.uri,
+                                imageUrl: imagineResponse.proxy_url,
                                 walletAddress: "0xc09827893F5bda7feCB9BF1e0594e1453F7a61Cd",
                                 name: info.name,
                                 description: "customizedMakerText",
