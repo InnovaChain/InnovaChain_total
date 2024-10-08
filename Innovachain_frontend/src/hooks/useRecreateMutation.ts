@@ -34,9 +34,7 @@ export function useConfirmRecreateMutation() {
         }) => {
             // const file = await convertUrlToFile({ url: imageUrl, filename: name });
 
-            const response = await proxyFetch({ imageUrl });
-
-            const blob: Blob = response.data;
+            const blob = await proxyFetch({ imageUrl });
           
             const file = new File([blob], name, {
               type: blob.type,
