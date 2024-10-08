@@ -7,8 +7,7 @@ import { useCallback } from "react";
 import { useDropzone } from "react-dropzone";
 import { CardContainer } from "../../components/Card";
 import toast from "react-hot-toast";
-import { useAccount } from "wagmi";
-// import { uploadImage } from "../../utils/api";
+import { useWallet } from "@solana/wallet-adapter-react";
 import useUploadMutation from "../../hooks/useUploadMutation";
 
 const Upload = () => {
@@ -18,13 +17,13 @@ const Upload = () => {
     const [size, setSize] = useState("");
     const [tags, setTags] = useState("");
     const [copyrightPrice, setCopyrightPrice] = useState("");
-    const [copyrightOwner, setCopyrightOwner] = useState("");
+    // const [copyrightOwner, setCopyrightOwner] = useState("");
 
     const [sourceImage, setSourceImage] = useState<File | null>(null);
 
     const { mutateAsync, isPending } = useUploadMutation();
 
-    const { address } = useAccount();
+    const { publicKey, connected } = useWallet();
     async function onClickUpload() {
         if (!name) {
             toast.error("Please enter a name");
@@ -38,22 +37,16 @@ const Upload = () => {
             toast.error("Please upload a source image");
             return;
         }
-        if (!address) {
+        if (!connected || !publicKey) {
             toast.error("Please connect your wallet");
             return;
         }
         try {
-            // await uploadImage({
-            //     name,
-            //     description,
-            //     file: sourceImage,
-            //     walletAddress: address,
-            // });
             await mutateAsync({
                 name,
                 description,
                 file: sourceImage,
-                walletAddress: address,
+                walletAddress: publicKey.toBase58(),
             });
             toast.success("Uploaded successfully");
         } catch (error) {
@@ -113,8 +106,9 @@ const Upload = () => {
                             <CardInput
                                 className="mt-5"
                                 placeholder="Your Address"
-                                value={copyrightOwner}
-                                onChange={(e) => setCopyrightOwner(e.target.value)}
+                                disabled
+                                value={publicKey?.toBase58() ?? ""}
+                                // onChange={(e) => setCopyrightOwner(e.target.value)}
                             />
                         </div>
                     </div>
@@ -253,13 +247,15 @@ const CardInput = ({
     className,
     roundedPosition,
     value,
+    disabled,
     onChange,
 }: {
     placeholder: string;
     className?: string;
     roundedPosition?: "left" | "right";
     value: string;
-    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    disabled?: boolean;
+    onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }) => {
     return (
         <div
@@ -273,10 +269,14 @@ const CardInput = ({
             )}
         >
             <input
+                disabled={disabled}
                 value={value}
-                onChange={onChange}
-                className={clsx("flex-1 bg-transparent outline-none", "placeholder:text-[#9596A6] text-black text-opacity-60")}
+                // onChange={onChange}
+                className={clsx("flex-1 bg-transparent outline-none", "placeholder:text-[#9596A6] text-black text-opacity-60 ")}
                 placeholder={placeholder}
+                {...(onChange && {
+                    onChange: onChange,
+                })}
             />
         </div>
     );
