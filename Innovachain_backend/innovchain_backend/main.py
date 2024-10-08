@@ -14,6 +14,8 @@ from sqlalchemy.orm import Session
 from sqlalchemy.orm import sessionmaker
 from services.images_service import ImageService
 from services.users_service import UserService
+import requests
+from typing import Optional
 
 app = FastAPI()
 
@@ -58,25 +60,42 @@ async def get_image_service(db: Session = Depends(get_db)) -> ImageService:
 
 @app.post("/upload/")
 async def upload_image(
-    file: UploadFile = File(...),
+    file: Optional[UploadFile] = File(None),
     wallet_address: str = Form(...),
     prompt: str = Form(""),
     name: str = Form(""),
     description: str = Form(""),
-    source_image_id: int = Form(None),
+    source_image_id: Optional[int] = Form(None),
+    image_url: Optional[str] = Form(None),
     us: UserService = Depends(get_user_service),
     imgs: ImageService = Depends(get_image_service)
 ):
     target_directory = "data/"
     timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
-    unique_filename = f"{timestamp}_{file.filename}"
-    target_filepath = os.path.join(target_directory, unique_filename)
-
-    os.makedirs(target_directory, exist_ok=True)
     
-    contents = await file.read()
-    with open(target_filepath, "wb") as f:
-        f.write(contents)
+    if image_url:
+        response = requests.get(image_url, stream=True)
+        if not response.ok:
+            raise HTTPException(status_code=response.status_code, detail=f"Failed to fetch {image_url}")
+        
+        content_type = response.headers['content-type']
+        if 'image' not in content_type:
+            raise HTTPException(status_code=400, detail="The URL does not point to an image.")
+        
+        unique_filename = f"{timestamp}_{wallet_address}.png"
+        target_filepath = os.path.join(target_directory, unique_filename)
+        
+        with open(target_filepath, 'wb') as f:
+            for block in response.iter_content(1024):
+                f.write(block)
+    else:
+        unique_filename = f"{timestamp}_{file.filename}"
+        target_filepath = os.path.join(target_directory, unique_filename)
+
+        os.makedirs(target_directory, exist_ok=True)
+        contents = await file.read()
+        with open(target_filepath, "wb") as f:
+            f.write(contents)
     
     processor = ImageWatermarkProcessor(
         image_path=target_filepath,
@@ -96,7 +115,7 @@ async def upload_image(
         user = await us.create_user(wallet_address)
     
     db_image = await imgs.create_image(
-        filename=file.filename,
+        filename=unique_filename,
         watermark=processor.watermark_text,
         user_id=user.id,
         image_path=target_filepath,
@@ -105,7 +124,7 @@ async def upload_image(
         name=name,
         description=description
     )
-    return {"filename": file.filename, "image_id": db_image.id, "watermark": processor.watermark_text}
+    return {"filename": unique_filename, "image_id": db_image.id, "watermark": processor.watermark_text}
 
 
 @app.get("/images/")
