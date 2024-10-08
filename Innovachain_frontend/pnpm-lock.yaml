@@ -29,6 +29,9 @@ importers:
       '@tanstack/react-query':
         specifier: ^5.56.2
         version: 5.56.2(react@18.3.1)
+      '@vitejs/plugin-react':
+        specifier: ^4.3.2
+        version: 4.3.2(vite@5.4.3(@types/node@22.5.5)(terser@5.32.0))
       '@walletconnect/solana-adapter':
         specifier: ^0.0.6
         version: 0.0.6(@react-native-async-storage/async-storage@1.24.0(react-native@0.75.3(@babel/core@7.25.2)(@babel/preset-env@7.25.4(@babel/core@7.25.2))(@types/react@18.3.5)(bufferutil@4.0.8)(react@18.3.1)(typescript@5.6.2)(utf-8-validate@5.0.10)))(@solana/wallet-adapter-base@0.9.23(@solana/web3.js@1.95.3(bufferutil@4.0.8)(utf-8-validate@5.0.10)))(@solana/web3.js@1.95.3(bufferutil@4.0.8)(utf-8-validate@5.0.10))(@types/react@18.3.5)(bufferutil@4.0.8)(react@18.3.1)(utf-8-validate@5.0.10)
@@ -87,9 +90,6 @@ importers:
         specifier: ^2.12.11
         version: 2.12.13(@react-native-async-storage/async-storage@1.24.0(react-native@0.75.3(@babel/core@7.25.2)(@babel/preset-env@7.25.4(@babel/core@7.25.2))(@types/react@18.3.5)(bufferutil@4.0.8)(react@18.3.1)(typescript@5.6.2)(utf-8-validate@5.0.10)))(@tanstack/query-core@5.56.2)(@tanstack/react-query@5.56.2(react@18.3.1))(@types/react@18.3.5)(bufferutil@4.0.8)(react-dom@18.3.1(react@18.3.1))(react-native@0.75.3(@babel/core@7.25.2)(@babel/preset-env@7.25.4(@babel/core@7.25.2))(@types/react@18.3.5)(bufferutil@4.0.8)(react@18.3.1)(typescript@5.6.2)(utf-8-validate@5.0.10))(react@18.3.1)(rollup@4.21.2)(typescript@5.6.2)(utf-8-validate@5.0.10)(viem@2.21.11(bufferutil@4.0.8)(typescript@5.6.2)(utf-8-validate@5.0.10)(zod@3.22.4))(zod@3.22.4)
     devDependencies:
-      '@esbuild-plugins/node-globals-polyfill':
-        specifier: ^0.2.3
-        version: 0.2.3(esbuild@0.21.5)
       '@eslint/js':
         specifier: ^9.9.0
         version: 9.10.0
@@ -868,11 +868,6 @@ packages:
 
   '@emotion/unitless@0.8.1':
     resolution: {integrity: sha512-KOEGMu6dmJZtpadb476IsZBclKvILjopjUii3V+7MnXIQCYh8W3NgNcgwo21n9LXZX6EDIKvqfjYxXebDwxKmQ==}
-
-  '@esbuild-plugins/node-globals-polyfill@0.2.3':
-    resolution: {integrity: sha512-r3MIryXDeXDOZh7ih1l/yE9ZLORCd5e8vWg02azWRGj5SPTuoh69A2AIyn0Z31V/kHBfZ4HgWJ+OK3GTTwLmnw==}
-    peerDependencies:
-      esbuild: '*'
 
   '@esbuild/aix-ppc64@0.21.5':
     resolution: {integrity: sha512-1SDgH6ZSPTlggy1yI6+Dbkiz8xzpHJEVAlF/AM1tHPLsf5STom9rwtjE4hKAF20FfXXNTFqEYXyJNWh1GiZedQ==}
@@ -1852,6 +1847,18 @@ packages:
     peerDependencies:
       react: ^18 || ^19
 
+  '@types/babel__core@7.20.5':
+    resolution: {integrity: sha512-qoQprZvz5wQFJwMDqeseRXWv3rqMvhgpbXFfVyWhbx9X47POIA6i/+dXefEmZKoAgOaTdaIgNSMqMIU61yRyzA==}
+
+  '@types/babel__generator@7.6.8':
+    resolution: {integrity: sha512-ASsj+tpEDsEiFr1arWrlN6V3mdfjRMZt6LtK/Vp/kreFLnr5QH5+DhvD5nINYZXzwJvXeGq+05iUXcAzVrqWtw==}
+
+  '@types/babel__template@7.4.4':
+    resolution: {integrity: sha512-h/NUaSyG5EyxBIp8YRxo4RMe2/qQgvyowRwVMzhYhBCONbW8PUsg4lkFMrhgZhUe5z3L3MiLDuvyJ/CaPa2A8A==}
+
+  '@types/babel__traverse@7.20.6':
+    resolution: {integrity: sha512-r1bzfrm0tomOI8g1SzvCaQHo6Lcv6zu0EA+W2kHrt8dyrHQxGzBBL4kdkzIS+jBMV+EYcMAEAqXqYaLJq5rOZg==}
+
   '@types/connect@3.4.38':
     resolution: {integrity: sha512-K6uROf1LD88uDQqJCktA4yzL1YYAK6NgfsI0v/mTgyPKWsX1CnJ0XPSDhViejru1GcRkLWb8RlzFYJRqGUbaug==}
 
@@ -1991,6 +1998,12 @@ packages:
     resolution: {integrity: sha512-yrknSb3Dci6svCd/qhHqhFPDSw0QtjumcqdKMoNNzmOl5lMXTTiqzjWtG4Qask2HdvvzaNgSunbQGet8/GrKdA==}
     peerDependencies:
       vite: ^4 || ^5
+
+  '@vitejs/plugin-react@4.3.2':
+    resolution: {integrity: sha512-hieu+o05v4glEBucTcKMK3dlES0OeJlD9YVOAPraVMOInBCwzumaIFiUjr4bHK7NPgnAHgiskUoceKercrN8vg==}
+    engines: {node: ^14.18.0 || >=16.0.0}
+    peerDependencies:
+      vite: ^4.2.0 || ^5.0.0
 
   '@wagmi/connectors@5.1.12':
     resolution: {integrity: sha512-w/MCH+J/sdqfy9ZFoEA3YKnJWlaExTCjMN4qjVNGsRtvy4ADz//zjQsmOZx51oa5xt42hv3fITN36aYZe/rO7g==}
@@ -6546,10 +6559,6 @@ snapshots:
 
   '@emotion/unitless@0.8.1': {}
 
-  '@esbuild-plugins/node-globals-polyfill@0.2.3(esbuild@0.21.5)':
-    dependencies:
-      esbuild: 0.21.5
-
   '@esbuild/aix-ppc64@0.21.5':
     optional: true
 
@@ -7796,6 +7805,27 @@ snapshots:
       '@tanstack/query-core': 5.56.2
       react: 18.3.1
 
+  '@types/babel__core@7.20.5':
+    dependencies:
+      '@babel/parser': 7.25.6
+      '@babel/types': 7.25.6
+      '@types/babel__generator': 7.6.8
+      '@types/babel__template': 7.4.4
+      '@types/babel__traverse': 7.20.6
+
+  '@types/babel__generator@7.6.8':
+    dependencies:
+      '@babel/types': 7.25.6
+
+  '@types/babel__template@7.4.4':
+    dependencies:
+      '@babel/parser': 7.25.6
+      '@babel/types': 7.25.6
+
+  '@types/babel__traverse@7.20.6':
+    dependencies:
+      '@babel/types': 7.25.6
+
   '@types/connect@3.4.38':
     dependencies:
       '@types/node': 22.5.5
@@ -7962,6 +7992,17 @@ snapshots:
       vite: 5.4.3(@types/node@22.5.5)(terser@5.32.0)
     transitivePeerDependencies:
       - '@swc/helpers'
+
+  '@vitejs/plugin-react@4.3.2(vite@5.4.3(@types/node@22.5.5)(terser@5.32.0))':
+    dependencies:
+      '@babel/core': 7.25.2
+      '@babel/plugin-transform-react-jsx-self': 7.24.7(@babel/core@7.25.2)
+      '@babel/plugin-transform-react-jsx-source': 7.24.7(@babel/core@7.25.2)
+      '@types/babel__core': 7.20.5
+      react-refresh: 0.14.2
+      vite: 5.4.3(@types/node@22.5.5)(terser@5.32.0)
+    transitivePeerDependencies:
+      - supports-color
 
   '@wagmi/connectors@5.1.12(@react-native-async-storage/async-storage@1.24.0(react-native@0.75.3(@babel/core@7.25.2)(@babel/preset-env@7.25.4(@babel/core@7.25.2))(@types/react@18.3.5)(bufferutil@4.0.8)(react@18.3.1)(typescript@5.6.2)(utf-8-validate@5.0.10)))(@types/react@18.3.5)(@wagmi/core@2.13.6(@tanstack/query-core@5.56.2)(@types/react@18.3.5)(react@18.3.1)(typescript@5.6.2)(viem@2.21.11(bufferutil@4.0.8)(typescript@5.6.2)(utf-8-validate@5.0.10)(zod@3.22.4)))(bufferutil@4.0.8)(react-dom@18.3.1(react@18.3.1))(react-native@0.75.3(@babel/core@7.25.2)(@babel/preset-env@7.25.4(@babel/core@7.25.2))(@types/react@18.3.5)(bufferutil@4.0.8)(react@18.3.1)(typescript@5.6.2)(utf-8-validate@5.0.10))(react@18.3.1)(rollup@4.21.2)(typescript@5.6.2)(utf-8-validate@5.0.10)(viem@2.21.11(bufferutil@4.0.8)(typescript@5.6.2)(utf-8-validate@5.0.10)(zod@3.22.4))(zod@3.22.4)':
     dependencies:
