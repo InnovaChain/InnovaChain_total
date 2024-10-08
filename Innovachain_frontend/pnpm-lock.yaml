@@ -29,6 +29,9 @@ importers:
       '@tanstack/react-query':
         specifier: ^5.56.2
         version: 5.56.2(react@18.3.1)
+      '@uiw/react-watermark':
+        specifier: ^1.0.1
+        version: 1.0.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@vitejs/plugin-react':
         specifier: ^4.3.2
         version: 4.3.2(vite@5.4.3(@types/node@22.5.5)(terser@5.32.0))
@@ -1993,6 +1996,15 @@ packages:
   '@typescript-eslint/visitor-keys@8.5.0':
     resolution: {integrity: sha512-yTPqMnbAZJNy2Xq2XU8AdtOW9tJIr+UQb64aXB9f3B1498Zx9JorVgFJcZpEc9UBuCCrdzKID2RGAMkYcDtZOw==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+
+  '@uiw/react-watermark@1.0.1':
+    resolution: {integrity: sha512-vgredbDTD0YUjLICXiAFEt7z+lmBGAos+iApedsBdEBkkTxxINCsA3cNYKGJTohMOfa4kFQ/+RR7ygVSsisnfw==}
+    peerDependencies:
+      react: '>=16.9.0'
+      react-dom: '>=16.9.0'
+
+  '@uiw/watermark.js@1.0.1':
+    resolution: {integrity: sha512-ymn0LPfp9f4UhMIFonSEHtRnuF32OCLieQs3dQu0gJpXXqz4bnAdMU4Gx+qLr2oWdS6l3IMrDQLEYAhDytxLuA==}
 
   '@vitejs/plugin-react-swc@3.7.0':
     resolution: {integrity: sha512-yrknSb3Dci6svCd/qhHqhFPDSw0QtjumcqdKMoNNzmOl5lMXTTiqzjWtG4Qask2HdvvzaNgSunbQGet8/GrKdA==}
@@ -7985,6 +7997,14 @@ snapshots:
     dependencies:
       '@typescript-eslint/types': 8.5.0
       eslint-visitor-keys: 3.4.3
+
+  '@uiw/react-watermark@1.0.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+    dependencies:
+      '@uiw/watermark.js': 1.0.1
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+
+  '@uiw/watermark.js@1.0.1': {}
 
   '@vitejs/plugin-react-swc@3.7.0(@swc/helpers@0.5.13)(vite@5.4.3(@types/node@22.5.5)(terser@5.32.0))':
     dependencies:

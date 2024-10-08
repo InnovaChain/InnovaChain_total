@@ -11,6 +11,7 @@ import { useUpscaleMutation } from "../../hooks/useUpscaleMutation";
 import { useRerollMutation } from "../../hooks/useRerollMutation";
 // import useSWR from "swr";
 // import { readImageInfo } from "../../utils/api";
+import Watermark from "@uiw/react-watermark";
 
 const GenerationMainStage = ({ name }: { name?: string }) => {
     const { id } = useParams();
@@ -37,17 +38,29 @@ const GenerationMainStage = ({ name }: { name?: string }) => {
 
             {/* <img className="w-full h-auto rounded-[20px] mt-10" src={`${API_URL}/images/${id}`} /> */}
             <div className="relative w-full h-auto mt-10">
-                <img
-                    className="w-full h-auto rounded-[20px] aspect-square"
-                    src={isRecreated ? imagineResponse.uri : `${API_URL}/images/${id}`}
-                    alt="image"
-                />
+                <Watermark
+                    content={["InnovaChain", "Solana Radar"]}
+                    gapY={220}
+                    gapX={120}
+                    width={80}
+                    height={1}
+                    fontSize={24}
+                    fontColor="#ffffff30"
+                    fontFamily="Impact, fantasy"
+                    fontStyle="oblique"
+                >
+                    <img
+                        className="w-full h-auto rounded-[20px] aspect-square"
+                        src={isRecreated ? imagineResponse.uri : `${API_URL}/images/${id}`}
+                        alt="image"
+                    />
 
-                {isLoading && (
-                    <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 rounded-[20px]">
-                        <div className="animate-spin rounded-full h-10 w-10 border-t-4 border-white border-opacity-70"></div>
-                    </div>
-                )}
+                    {isLoading && (
+                        <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 rounded-[20px]">
+                            <div className="animate-spin rounded-full h-10 w-10 border-t-4 border-white border-opacity-70"></div>
+                        </div>
+                    )}
+                </Watermark>
             </div>
             {!isRecreated ? (
                 <div className="mt-5 flex justify-between items-end">
