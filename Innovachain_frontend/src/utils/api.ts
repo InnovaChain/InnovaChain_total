@@ -242,3 +242,16 @@ export async function rerollImage({
 
     return response.data;
 }
+
+
+export async function proxyFetch({
+    imageUrl
+}: {
+    imageUrl: string
+}) {
+    const response = await api.post<Blob>(`${MIDJOURNEY_API_URL}/proxy-fetch`, {
+        url: imageUrl
+    });
+
+    return response;
+}
