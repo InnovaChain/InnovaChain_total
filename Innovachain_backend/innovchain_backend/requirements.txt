@@ -7,3 +7,4 @@ alembic
 opencv-python
 invisible-watermark
 python-multipart
+requests
