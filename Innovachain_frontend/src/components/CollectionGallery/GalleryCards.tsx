@@ -1,11 +1,10 @@
-import { HeartImg, UserImg } from "../../assets/gallery";
-import { getImages, ImageType } from "../../utils/api";
-import useSWR from "swr";
 import dayjs from "dayjs";
-import toShortAddress from "../../utils/toShortAddress";
-import { useWallet } from "@solana/wallet-adapter-react";
-import { API_URL } from "../../constants";
 import { useNavigate } from "react-router-dom";
+import useSWR from "swr";
+import { HeartImg, UserImg } from "../../assets/gallery";
+import { API_URL } from "../../constants";
+import { getImages, ImageType } from "../../utils/api";
+import toShortAddress from "../../utils/toShortAddress";
 
 const GalleryCards = () => {
     const { data } = useSWR<ImageType[]>("getImages", getImages);
@@ -14,14 +13,17 @@ const GalleryCards = () => {
     return (
         <div className="grid grid-cols-3 xl:grid-cols-4 gap-10">
             {data.map((image) => (
-                <GalleryCard key={image.id} image={image} />
+                <GalleryCard
+                    creator={image.user_address && image.user_address !== "" ? image.user_address : "Anonymous user"}
+                    key={image.id}
+                    image={image}
+                />
             ))}
         </div>
     );
 };
 
-const GalleryCard = ({ image }: { image: ImageType }) => {
-    const { publicKey } = useWallet();
+const GalleryCard = ({ creator, image }: { creator: string; image: ImageType }) => {
     const { name, created_at, id } = image;
     const navigate = useNavigate();
 
@@ -34,7 +36,7 @@ const GalleryCard = ({ image }: { image: ImageType }) => {
             </div>
             <div className="flex justify-between items-center">
                 <div className="flex flex-col gap-2">
-                    <p className="text-[#94A3B8] text-sm">{toShortAddress(publicKey?.toBase58() ?? "")}</p>
+                    <p className="text-[#94A3B8] text-sm">{creator === "Anonymous user" ? "Anonymous user" : toShortAddress(creator)}</p>
                     <div className="flex gap-9 text-base font-medium text-[#8e8e8e]">
                         <div className="flex gap-2 items-center">
                             <p>12</p>

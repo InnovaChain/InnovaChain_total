@@ -40,12 +40,10 @@ export default function useInsertWatermarkMutation() {
 
             const program = new Program(idl, PROGRAM_ID, provider);
 
-            const [watermarkAccountPDA, bump] = PublicKey.findProgramAddressSync(
+            const [watermarkAccountPDA] = PublicKey.findProgramAddressSync(
                 [Buffer.from("watermark_account"), publicKey!.toBuffer()],
                 program.programId
             );
-
-            console.log("bump", bump);
 
             console.log("Watermark account PDA", watermarkAccountPDA);
 

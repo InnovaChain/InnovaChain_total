@@ -22,6 +22,7 @@ export interface ImageType {
     source_image_id: number;
     updated_at: string;
     user_id: number;
+    user_address?: string;
     watermark: string;
 }
 
@@ -150,10 +151,36 @@ export async function uploadImage({ file, image_url, walletAddress, name, descri
     return response.data;
 }
 
+async function getUserAddress(userId: number): Promise<{
+    id: number;
+    wallet_address: string;
+}> {
+    const url = `/users/${userId}`;
+    const response = await api.get(url);
+    return response.data;
+}
+
 export async function getImages(): Promise<ImageType[]> {
     const url = "/images/";
     const response = await api.get<ImageType[]>(url);
-    return response.data;
+
+    const images = response.data;
+
+    const imagesWithUserAddress = await Promise.all(
+        images.map(async (image) => {
+            const userId = image.user_id;
+
+            const userResponse = await getUserAddress(userId);
+            const userAddress = userResponse.wallet_address;
+
+            return {
+                ...image,
+                user_address: userAddress, // Assuming the response contains the address field
+            };
+        })
+    );
+
+    return imagesWithUserAddress;
 }
 
 export async function getImageById(id: number): Promise<Blob> {
