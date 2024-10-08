@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import { imagineImage, uploadImage } from "../utils/api";
+import { imagineImage, proxyFetch, uploadImage } from "../utils/api";
 import { convertUrlToFile } from "../utils/urlToFile";
 
 export function useImagineMutation() {
@@ -33,9 +33,16 @@ export function useConfirmRecreateMutation() {
             revisedPrompt: string;
             sourceImageId: number;
         }) => {
-            const file = await convertUrlToFile({ url: imageUrl, filename: name });
+            // const file = await convertUrlToFile({ url: imageUrl, filename: name });
 
-            console.log("file", file);
+            const response = await proxyFetch({ imageUrl });
+
+            const blob: Blob = response.data;
+          
+            const file = new File([blob], name, {
+              type: blob.type,
+              lastModified: new Date().getTime(), // Timestamp
+            });
 
             const uploadResponse = await uploadImage({
                 file,
