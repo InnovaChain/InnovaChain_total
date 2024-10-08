@@ -10,14 +10,12 @@ import "@solana/wallet-adapter-react-ui/styles.css";
 import { WalletConnectWalletAdapter } from "@walletconnect/solana-adapter";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
-const toggleNetwork = (network: Networks) => (network === WalletAdapterNetwork.Devnet ? WalletAdapterNetwork.Mainnet : WalletAdapterNetwork.Devnet);
-
 type Networks = WalletAdapterNetwork.Devnet | WalletAdapterNetwork.Mainnet;
 
 export const SolanaContext = ({ children }: { children: ReactNode }) => {
     const queryClient = new QueryClient();
 
-    const [currentNetwork, setCurrentNetwork] = useState<Networks>(WalletAdapterNetwork.Devnet);
+    const [currentNetwork] = useState<Networks>(WalletAdapterNetwork.Devnet);
     // The network can be set to 'devnet', 'testnet', or 'mainnet-beta'.
 
     // You can also provide a custom RPC endpoint.
