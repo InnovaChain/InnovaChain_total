@@ -133,7 +133,6 @@ export async function uploadImage({ file, walletAddress, name, description, prom
     const response = await api.post(url, formData, {
         headers: {
             "Content-Type": "multipart/form-data",
-            "Remote-Address": "216.24.57.4:443",
         },
     });
 
