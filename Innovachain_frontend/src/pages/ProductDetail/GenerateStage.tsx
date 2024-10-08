@@ -5,16 +5,16 @@ import { useContext, useState } from "react";
 import { useConfirmRecreateMutation, useImagineMutation } from "../../hooks/useRecreateMutation";
 import { RecreateContext } from ".";
 import { getUIdsVIdsAndRecreateId } from "../../utils/getUV";
-
 import { useNavigate, useParams } from "react-router-dom";
 import useProductInfoById from "../../hooks/useProductInfo";
 import toast from "react-hot-toast";
+import { useWallet } from "@solana/wallet-adapter-react";
 
 const GenerateStage = ({ imageId, revisedPrompt }: { imageId?: number; revisedPrompt: string }) => {
     const [customizedMakerText, setCustomizedMakerText] = useState<string>("");
     const { mutateAsync: imagineImage, isPending } = useImagineMutation();
     // const { mutateAsync: upload } = useUploadMutation();
-    const { mutateAsync: confirmRecreate } = useConfirmRecreateMutation();
+    const { mutateAsync: confirmRecreate, isPending: isMinting } = useConfirmRecreateMutation();
 
     const navigate = useNavigate();
 
@@ -23,6 +23,8 @@ const GenerateStage = ({ imageId, revisedPrompt }: { imageId?: number; revisedPr
     const { id } = useParams<{ id: string }>();
 
     const { data: info } = useProductInfoById({ imageId: parseInt(id!) });
+
+    const { publicKey } = useWallet();
 
     return (
         <CardContainer className="flex-1">
@@ -39,7 +41,7 @@ const GenerateStage = ({ imageId, revisedPrompt }: { imageId?: number; revisedPr
             />
             <div className="flex justify-end w-full">
                 <AuthenticateAndMintButton
-                    disabled={isPending || (isStarted && !upscaleDone)}
+                    disabled={isPending || (isStarted && !upscaleDone) || isMinting}
                     upscaleDone={upscaleDone}
                     onClick={async () => {
                         if (!imageId) {
@@ -82,7 +84,7 @@ const GenerateStage = ({ imageId, revisedPrompt }: { imageId?: number; revisedPr
 
                             await confirmRecreate({
                                 imageUrl: imagineResponse.proxy_url,
-                                walletAddress: "",
+                                walletAddress: publicKey?.toBase58() ?? "",
                                 name: info.name,
                                 description: customizedMakerText,
                                 revisedPrompt: revisedPrompt,
