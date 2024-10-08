@@ -1,17 +1,28 @@
 import styled from "styled-components";
-import { Example2Img, Example3Img, ExampleImg } from "../../assets/product-detail";
+// import { Example2Img, Example3Img, ExampleImg } from "../../assets/product-detail";
+import { API_URL } from "../../constants";
 
-const GenerationGallery = () => {
-    const galleryExampleImages = [ExampleImg, Example2Img, Example3Img];
+const GenerationGallery = ({ sourceId }: { sourceId: number | null | undefined }) => {
+    // const galleryExampleImages = [ExampleImg, Example2Img, Example3Img];
 
     return (
         <div>
             {/* Generation Gallery */}
             <GenerationButton>Generation</GenerationButton>
-            <GalleryContainer className="py-5 px-8 flex flex-col gap-8">
-                {galleryExampleImages.map((image, index) => (
+            <GalleryContainer className="py-5 px-8 flex flex-col gap-8 h-full justify-center items-center">
+                {/* {galleryExampleImages.map((image, index) => (
                     <img src={image} key={index} className="w-[170px] h-[170px] rounded-[30px]" />
-                ))}
+                ))} */}
+                {sourceId ? (
+                    <a href={`/product/${sourceId}`}>
+                        <img src={`${API_URL}/images/${sourceId}`} className="w-[170px] h-[170px] rounded-[30px]" />
+                    </a>
+                ) : (
+                    <div className="flex flex-col space-y-2">
+                        <p className="text-gray-400 text-lg text-center">This is first of its kind.</p>
+                        <p className="text-gray-400 text-lg text-center">Get creative!</p>
+                    </div>
+                )}
             </GalleryContainer>
         </div>
     );

@@ -3,9 +3,35 @@ import { HeartImg, UserImg } from "../../assets/gallery";
 import { Avatar2Img, AvatarImg } from "../../assets/product-detail";
 import { CardContainer } from "../../components/Card";
 import { twc } from "react-twc";
-import { ProductInfo } from "../../utils/api";
+import { getUserAddress, ProductInfo } from "../../utils/api";
+import useProductInfoById from "../../hooks/useProductInfo";
+import { useEffect, useState } from "react";
+import toShortAddress from "../../utils/toShortAddress";
 
-const OriginalStage = ({ onClickRecreated, info }: { onClickRecreated?: () => void; info?: ProductInfo }) => {
+const OriginalStage = ({ onClickRecreated, info }: { onClickRecreated?: () => void; info?: ProductInfo | null }) => {
+    const { data: previous } = useProductInfoById({ imageId: info?.source_image_id });
+    const [previousCreator, setPreviousCreator] = useState<string>("");
+    const [currentCreator, setCurrentCreator] = useState<string>("");
+
+    useEffect(() => {
+        const getCreator = async (id: number) => {
+            const res = await getUserAddress(id);
+            return res;
+        };
+
+        if (info?.source_image_id && previous) {
+            getCreator(previous.user_id).then((res) => {
+                setPreviousCreator(res.wallet_address);
+            });
+        }
+
+        if (info?.user_id) {
+            getCreator(info.user_id).then((res) => {
+                setCurrentCreator(res.wallet_address);
+            });
+        }
+    }, [info?.source_image_id, info?.user_id, previous]);
+
     return (
         <CardContainer className="flex-1">
             {/* Choice Card */}
@@ -16,18 +42,21 @@ const OriginalStage = ({ onClickRecreated, info }: { onClickRecreated?: () => vo
                 </div>
             </div>
             <p className="text-[#888888B2] text-xl mt-10 mb-20">{info?.description}</p>
-            <div className="flex gap-2">
-                <img className="w-[65px] h-[65px] rounded-full" src={Avatar2Img} />
-                <div>
-                    <p className="text-lg text-[#8d8d8d]">Former creator</p>
-                    <p className="text-2xl font-semibold">Perperzon</p>
+            {info?.source_image_id && (
+                <div className="flex gap-2">
+                    <img className="w-[65px] h-[65px] rounded-full" src={Avatar2Img} />
+                    <div>
+                        <p className="text-lg text-[#8d8d8d]">Former creator</p>
+                        <p className="text-2xl font-semibold">{previousCreator === "" ? "Anonymous creator" : toShortAddress(previousCreator)}</p>
+                    </div>
                 </div>
-            </div>
+            )}
+
             <div className="flex gap-2 mt-4">
                 <img className="w-[65px] h-[65px] rounded-full" src={AvatarImg} />
                 <div>
                     <p className="text-lg text-[#8d8d8d]">Current creator</p>
-                    <p className="text-2xl font-semibold">Videz</p>
+                    <p className="text-2xl font-semibold">{currentCreator === "" ? "Anonymous creator" : toShortAddress(currentCreator)}</p>
                 </div>
             </div>
             <div className="flex justify-end gap-4 my-6">

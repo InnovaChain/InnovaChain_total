@@ -5,16 +5,18 @@ import { useContext, useState } from "react";
 import { useConfirmRecreateMutation, useImagineMutation } from "../../hooks/useRecreateMutation";
 import { RecreateContext } from ".";
 import { getUIdsVIdsAndRecreateId } from "../../utils/getUV";
-
 import { useNavigate, useParams } from "react-router-dom";
 import useProductInfoById from "../../hooks/useProductInfo";
 import toast from "react-hot-toast";
+import { useWallet } from "@solana/wallet-adapter-react";
+import useInsertWatermarkMutation from "../../hooks/useInsertWatermarkMutation";
 
 const GenerateStage = ({ imageId, revisedPrompt }: { imageId?: number; revisedPrompt: string }) => {
     const [customizedMakerText, setCustomizedMakerText] = useState<string>("");
     const { mutateAsync: imagineImage, isPending } = useImagineMutation();
-    // const { mutateAsync: upload } = useUploadMutation();
-    const { mutateAsync: confirmRecreate } = useConfirmRecreateMutation();
+
+    const { mutateAsync: confirmRecreate, isPending: isMinting } = useConfirmRecreateMutation();
+    const { mutateAsync: insertWatermark } = useInsertWatermarkMutation();
 
     const navigate = useNavigate();
 
@@ -23,6 +25,8 @@ const GenerateStage = ({ imageId, revisedPrompt }: { imageId?: number; revisedPr
     const { id } = useParams<{ id: string }>();
 
     const { data: info } = useProductInfoById({ imageId: parseInt(id!) });
+
+    const { publicKey } = useWallet();
 
     return (
         <CardContainer className="flex-1">
@@ -39,8 +43,9 @@ const GenerateStage = ({ imageId, revisedPrompt }: { imageId?: number; revisedPr
             />
             <div className="flex justify-end w-full">
                 <AuthenticateAndMintButton
-                    disabled={isPending || (isStarted && !upscaleDone)}
+                    disabled={isPending || (isStarted && !upscaleDone) || isMinting}
                     upscaleDone={upscaleDone}
+                    isLoading={isPending || isMinting}
                     onClick={async () => {
                         if (!imageId) {
                             return;
@@ -69,25 +74,21 @@ const GenerateStage = ({ imageId, revisedPrompt }: { imageId?: number; revisedPr
                             if (!imagineResponse || !info) {
                                 return;
                             }
-                            // authenticate and mint
-                            // const file = await urlToFile({ url: imagineResponse.content, filename: info!.name });
-                            // await upload({
-                            //     file,
-                            //     walletAddress: "",
-                            //     name: info.name,
-                            //     description: customizedMakerText,
-                            //     prompt: revisedPrompt,
-                            //     sourceImageId: info.id,
-                            // });
 
-                            await confirmRecreate({
+                            const res = await confirmRecreate({
                                 imageUrl: imagineResponse.proxy_url,
-                                walletAddress: "",
+                                walletAddress: publicKey?.toBase58() ?? "",
                                 name: info.name,
                                 description: customizedMakerText,
                                 revisedPrompt: revisedPrompt,
                                 sourceImageId: info.id,
                             });
+
+                            await insertWatermark({ watermark: res.watermark })
+                                .then(() => console.log("Watermark inserted successfully"))
+                                .catch((error: Error) => {
+                                    console.error(error);
+                                });
 
                             toast.success("Recreated and uploaded successfully");
 
@@ -132,10 +133,12 @@ const PromptInputArea = ({
 const AuthenticateAndMintButton = ({
     disabled,
     onClick,
+    isLoading,
     upscaleDone,
 }: {
     disabled: boolean;
     onClick: () => Promise<unknown>;
+    isLoading: boolean;
     upscaleDone: boolean;
 }) => {
     return (
@@ -144,7 +147,16 @@ const AuthenticateAndMintButton = ({
             className={clsx("bg-[#141414] text-white", "text-base font-medium rounded-full disabled:bg-gray-300", "px-12 py-2 rounded-lg")}
             onClick={onClick}
         >
-            {upscaleDone ? "Authenticate & Mint" : "Generate"}
+            {isLoading ? (
+                <div className="flex justify-center items-center space-x-2">
+                    <p>Making magic</p>
+                    <div className="animate-spin rounded-full h-5 w-5 border-t-4 border-white border-opacity-70" />
+                </div>
+            ) : upscaleDone ? (
+                "Authenticate & Mint"
+            ) : (
+                "Generate"
+            )}
         </button>
     );
 };

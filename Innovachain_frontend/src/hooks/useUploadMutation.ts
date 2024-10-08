@@ -18,7 +18,7 @@ export default function useUploadMutation() {
                 imageId: uploadResponse.image_id,
             });
 
-            return describeResponse;
+            return { uploadResponse, describeResponse };
         },
     });
 }

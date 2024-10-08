@@ -2,7 +2,8 @@ import axios, { type AxiosInstance } from "axios";
 import { SECOND } from "./time";
 import { API_URL, MIDJOURNEY_API_URL } from "../constants";
 export interface UploadImageParams {
-    file: File;
+    file?: File;
+    image_url?: string;
     walletAddress: string;
     name: string;
     description: string;
@@ -21,6 +22,7 @@ export interface ImageType {
     source_image_id: number;
     updated_at: string;
     user_id: number;
+    user_address?: string;
     watermark: string;
 }
 
@@ -29,7 +31,7 @@ export interface ProductInfo {
     user_id: number;
     filename: string;
     prompt: string;
-    source_image_id: string | null;
+    source_image_id: number | null;
     watermark: string;
     name: string;
     description: string;
@@ -110,7 +112,7 @@ export const api: AxiosInstance = axios.create({
     timeout: 300 * SECOND,
 });
 
-export async function uploadImage({ file, walletAddress, name, description, prompt = "", sourceImageId }: UploadImageParams): Promise<{
+export async function uploadImage({ file, image_url, walletAddress, name, description, prompt = "", sourceImageId }: UploadImageParams): Promise<{
     image_id: number;
     watermark: string;
     filename: string;
@@ -119,8 +121,18 @@ export async function uploadImage({ file, walletAddress, name, description, prom
 
     const formData = new FormData();
 
-    console.log("file", file, file.name);
-    formData.append("file", file, file.name);
+    if ((file === undefined && image_url === undefined) || (file !== undefined && image_url !== undefined)) {
+        throw new Error("Either file or image_url must be provided, but not both.");
+    }
+
+    if (file) {
+        formData.append("file", file, file.name);
+    }
+
+    if (image_url) {
+        formData.append("image_url", image_url);
+    }
+
     formData.append("wallet_address", walletAddress);
     formData.append("name", name);
     formData.append("description", description);
@@ -139,10 +151,36 @@ export async function uploadImage({ file, walletAddress, name, description, prom
     return response.data;
 }
 
+export async function getUserAddress(userId: number): Promise<{
+    id: number;
+    wallet_address: string;
+}> {
+    const url = `/users/${userId}`;
+    const response = await api.get(url);
+    return response.data;
+}
+
 export async function getImages(): Promise<ImageType[]> {
     const url = "/images/";
     const response = await api.get<ImageType[]>(url);
-    return response.data;
+
+    const images = response.data;
+
+    const imagesWithUserAddress = await Promise.all(
+        images.map(async (image) => {
+            const userId = image.user_id;
+
+            const userResponse = await getUserAddress(userId);
+            const userAddress = userResponse.wallet_address;
+
+            return {
+                ...image,
+                user_address: userAddress, // Assuming the response contains the address field
+            };
+        })
+    );
+
+    return imagesWithUserAddress;
 }
 
 export async function getImageById(id: number): Promise<Blob> {
@@ -241,27 +279,4 @@ export async function rerollImage({
     });
 
     return response.data;
-}
-
-
-export async function proxyFetch({
-    imageUrl
-}: {
-    imageUrl: string
-}) {
-    // const response = await api.get<Blob>(`${MIDJOURNEY_API_URL}/proxy-fetch`, {
-    //     params: {
-    //         url: imageUrl
-    //     }
-    // });
-
-    const response = await fetch(`${MIDJOURNEY_API_URL}/proxy-fetch`, {
-        method: "POST",
-        body: JSON.stringify({ imageUrl }),
-        headers: {
-                "Content-Type": "image/png",
-        }
-    });
-
-    return response.blob();
 }

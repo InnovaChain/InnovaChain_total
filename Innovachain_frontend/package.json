@@ -11,10 +11,18 @@
         "prepare": "cd .. && husky install Innovachain_frontend"
     },
     "dependencies": {
+        "@coral-xyz/anchor": "0.29",
         "@radix-ui/react-slot": "^1.1.0",
+        "@solana/wallet-adapter-base": "^0.9.23",
+        "@solana/wallet-adapter-react": "^0.15.35",
+        "@solana/wallet-adapter-react-ui": "^0.9.35",
+        "@solana/web3.js": "^1.95.3",
         "@tanstack/react-query": "^5.56.2",
+        "@vitejs/plugin-react": "^4.3.2",
+        "@walletconnect/solana-adapter": "^0.0.6",
         "@web3modal/wagmi": "^5.1.8",
         "axios": "^1.7.7",
+        "buffer": "^6.0.3",
         "clsx": "^2.1.1",
         "dayjs": "^1.11.13",
         "lucide-react": "^0.447.0",

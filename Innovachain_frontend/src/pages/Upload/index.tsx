@@ -1,15 +1,15 @@
-import { twc } from "react-twc";
-import Container from "../../components/Container";
+import { useWallet } from "@solana/wallet-adapter-react";
 import clsx from "clsx";
-import { ArrowDownImg, UploadImg } from "../../assets/upload";
-import { useEffect, useState } from "react";
-import { useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
-import { CardContainer } from "../../components/Card";
 import toast from "react-hot-toast";
-import { useAccount } from "wagmi";
-// import { uploadImage } from "../../utils/api";
+import { twc } from "react-twc";
+import { ArrowDownImg, UploadImg } from "../../assets/upload";
+import { CardContainer } from "../../components/Card";
+import Container from "../../components/Container";
 import useUploadMutation from "../../hooks/useUploadMutation";
+
+import useInsertWatermarkMutation from "../../hooks/useInsertWatermarkMutation";
 
 const Upload = () => {
     const [name, setName] = useState("");
@@ -18,13 +18,16 @@ const Upload = () => {
     const [size, setSize] = useState("");
     const [tags, setTags] = useState("");
     const [copyrightPrice, setCopyrightPrice] = useState("");
-    const [copyrightOwner, setCopyrightOwner] = useState("");
+    // const [copyrightOwner, setCopyrightOwner] = useState("");
 
     const [sourceImage, setSourceImage] = useState<File | null>(null);
 
-    const { mutateAsync, isPending } = useUploadMutation();
+    const { publicKey, connected } = useWallet();
 
-    const { address } = useAccount();
+    const { mutateAsync: uploadImage, isPending } = useUploadMutation();
+
+    const { mutateAsync: insertWatermark } = useInsertWatermarkMutation();
+
     async function onClickUpload() {
         if (!name) {
             toast.error("Please enter a name");
@@ -38,24 +41,24 @@ const Upload = () => {
             toast.error("Please upload a source image");
             return;
         }
-        if (!address) {
+        if (!connected || !publicKey) {
             toast.error("Please connect your wallet");
             return;
         }
         try {
-            // await uploadImage({
-            //     name,
-            //     description,
-            //     file: sourceImage,
-            //     walletAddress: address,
-            // });
-            await mutateAsync({
+            const res = await uploadImage({
                 name,
                 description,
                 file: sourceImage,
-                walletAddress: address,
+                walletAddress: publicKey.toBase58(),
             });
-            toast.success("Uploaded successfully");
+
+            await insertWatermark({ watermark: res.uploadResponse.watermark })
+                .then(() => console.log("Watermark inserted successfully"))
+                .catch((error: Error) => {
+                    console.error(error);
+                });
+            toast.success("Uploaded and generated watermark successfully");
         } catch (error) {
             console.error(error);
             toast.error("Failed to upload, image should be larger than 256x256");
@@ -113,8 +116,9 @@ const Upload = () => {
                             <CardInput
                                 className="mt-5"
                                 placeholder="Your Address"
-                                value={copyrightOwner}
-                                onChange={(e) => setCopyrightOwner(e.target.value)}
+                                disabled
+                                value={publicKey?.toBase58() ?? ""}
+                                // onChange={(e) => setCopyrightOwner(e.target.value)}
                             />
                         </div>
                     </div>
@@ -253,13 +257,15 @@ const CardInput = ({
     className,
     roundedPosition,
     value,
+    disabled,
     onChange,
 }: {
     placeholder: string;
     className?: string;
     roundedPosition?: "left" | "right";
     value: string;
-    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    disabled?: boolean;
+    onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }) => {
     return (
         <div
@@ -273,10 +279,14 @@ const CardInput = ({
             )}
         >
             <input
+                disabled={disabled}
                 value={value}
-                onChange={onChange}
-                className={clsx("flex-1 bg-transparent outline-none", "placeholder:text-[#9596A6] text-black text-opacity-60")}
+                // onChange={onChange}
+                className={clsx("flex-1 bg-transparent outline-none", "placeholder:text-[#9596A6] text-black text-opacity-60 ")}
                 placeholder={placeholder}
+                {...(onChange && {
+                    onChange: onChange,
+                })}
             />
         </div>
     );
