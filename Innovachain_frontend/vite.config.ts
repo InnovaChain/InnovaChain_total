@@ -31,5 +31,19 @@ export default defineConfig(({ mode }) => {
                 ],
             },
         },
+        build: {
+            rollupOptions: {
+                // Node.js global to browser globalThis
+                define: {
+                    global: "globalThis",
+                },
+                // Enable esbuild polyfill plugins
+                plugins: [
+                    NodeGlobalsPolyfillPlugin({
+                        buffer: true,
+                    }),
+                ],
+            },
+        },
     };
 });
