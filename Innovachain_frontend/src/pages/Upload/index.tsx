@@ -1,14 +1,15 @@
-import { twc } from "react-twc";
-import Container from "../../components/Container";
-import clsx from "clsx";
-import { ArrowDownImg, UploadImg } from "../../assets/upload";
-import { useEffect, useState } from "react";
-import { useCallback } from "react";
-import { useDropzone } from "react-dropzone";
-import { CardContainer } from "../../components/Card";
-import toast from "react-hot-toast";
 import { useWallet } from "@solana/wallet-adapter-react";
+import clsx from "clsx";
+import { useCallback, useEffect, useState } from "react";
+import { useDropzone } from "react-dropzone";
+import toast from "react-hot-toast";
+import { twc } from "react-twc";
+import { ArrowDownImg, UploadImg } from "../../assets/upload";
+import { CardContainer } from "../../components/Card";
+import Container from "../../components/Container";
 import useUploadMutation from "../../hooks/useUploadMutation";
+
+import useInsertWatermarkMutation from "../../hooks/useInsertWatermarkMutation";
 
 const Upload = () => {
     const [name, setName] = useState("");
@@ -21,9 +22,12 @@ const Upload = () => {
 
     const [sourceImage, setSourceImage] = useState<File | null>(null);
 
-    const { mutateAsync, isPending } = useUploadMutation();
-
     const { publicKey, connected } = useWallet();
+
+    const { mutateAsync: uploadImage, isPending } = useUploadMutation();
+
+    const { mutateAsync: insertWatermark } = useInsertWatermarkMutation();
+
     async function onClickUpload() {
         if (!name) {
             toast.error("Please enter a name");
@@ -42,13 +46,19 @@ const Upload = () => {
             return;
         }
         try {
-            await mutateAsync({
+            const res = await uploadImage({
                 name,
                 description,
                 file: sourceImage,
                 walletAddress: publicKey.toBase58(),
             });
-            toast.success("Uploaded successfully");
+
+            await insertWatermark({ watermark: res.uploadResponse.watermark })
+                .then(() => console.log("Watermark inserted successfully"))
+                .catch((error: Error) => {
+                    console.error(error);
+                });
+            toast.success("Uploaded and generated watermark successfully");
         } catch (error) {
             console.error(error);
             toast.error("Failed to upload, image should be larger than 256x256");

@@ -9,12 +9,14 @@ import { useNavigate, useParams } from "react-router-dom";
 import useProductInfoById from "../../hooks/useProductInfo";
 import toast from "react-hot-toast";
 import { useWallet } from "@solana/wallet-adapter-react";
+import useInsertWatermarkMutation from "../../hooks/useInsertWatermarkMutation";
 
 const GenerateStage = ({ imageId, revisedPrompt }: { imageId?: number; revisedPrompt: string }) => {
     const [customizedMakerText, setCustomizedMakerText] = useState<string>("");
     const { mutateAsync: imagineImage, isPending } = useImagineMutation();
     // const { mutateAsync: upload } = useUploadMutation();
     const { mutateAsync: confirmRecreate, isPending: isMinting } = useConfirmRecreateMutation();
+    const { mutateAsync: insertWatermark } = useInsertWatermarkMutation();
 
     const navigate = useNavigate();
 
@@ -71,18 +73,8 @@ const GenerateStage = ({ imageId, revisedPrompt }: { imageId?: number; revisedPr
                             if (!imagineResponse || !info) {
                                 return;
                             }
-                            // authenticate and mint
-                            // const file = await urlToFile({ url: imagineResponse.content, filename: info!.name });
-                            // await upload({
-                            //     file,
-                            //     walletAddress: "",
-                            //     name: info.name,
-                            //     description: customizedMakerText,
-                            //     prompt: revisedPrompt,
-                            //     sourceImageId: info.id,
-                            // });
 
-                            await confirmRecreate({
+                            const res = await confirmRecreate({
                                 imageUrl: imagineResponse.proxy_url,
                                 walletAddress: publicKey?.toBase58() ?? "",
                                 name: info.name,
@@ -90,6 +82,12 @@ const GenerateStage = ({ imageId, revisedPrompt }: { imageId?: number; revisedPr
                                 revisedPrompt: revisedPrompt,
                                 sourceImageId: info.id,
                             });
+
+                            await insertWatermark({ watermark: res.watermark })
+                                .then(() => console.log("Watermark inserted successfully"))
+                                .catch((error: Error) => {
+                                    console.error(error);
+                                });
 
                             toast.success("Recreated and uploaded successfully");
 
