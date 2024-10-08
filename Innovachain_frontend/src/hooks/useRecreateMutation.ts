@@ -1,6 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
 import { imagineImage, proxyFetch, uploadImage } from "../utils/api";
-import { convertUrlToFile } from "../utils/urlToFile";
 
 export function useImagineMutation() {
     return useMutation({
