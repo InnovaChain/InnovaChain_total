@@ -138,7 +138,7 @@ const ProductDetail = () => {
                     }}
                 >
                     <GenerationGallery sourceId={info?.source_image_id} />
-                    <GenerationMainStage name={info?.name} />
+                    <GenerationMainStage creator={info?.user.wallet_address} name={info?.name} />
 
                     {stage === "Original" && <OriginalStage onClickRecreated={() => setStage("GenerationPrompt")} info={info} />}
                     {stage === "GenerationPrompt" && (
