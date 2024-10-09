@@ -26,7 +26,7 @@ const OriginalStage = ({ onClickRecreated, info }: { onClickRecreated?: () => vo
                     <div>
                         <p className="text-lg text-[#8d8d8d]">Former creator</p>
                         <p className="text-2xl font-semibold">
-                            {previous?.wallet_address === "" ? "Anonymous creator" : toShortAddress(previous?.wallet_address)}
+                            {previous?.user.wallet_address === "" ? "Anonymous creator" : toShortAddress(previous?.user.wallet_address)}
                         </p>
                     </div>
                 </div>
@@ -37,7 +37,7 @@ const OriginalStage = ({ onClickRecreated, info }: { onClickRecreated?: () => vo
                 <div>
                     <p className="text-lg text-[#8d8d8d]">Current creator</p>
                     <p className="text-2xl font-semibold">
-                        {info?.wallet_address === "" ? "Anonymous creator" : toShortAddress(info?.wallet_address)}
+                        {info?.user.wallet_address === "" ? "Anonymous creator" : toShortAddress(info?.user.wallet_address)}
                     </p>
                 </div>
             </div>

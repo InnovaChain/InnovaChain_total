@@ -9,6 +9,7 @@ import { RecreateContext } from ".";
 import { useVariationMutation } from "../../hooks/useVariationMutation";
 import { useUpscaleMutation } from "../../hooks/useUpscaleMutation";
 import { useRerollMutation } from "../../hooks/useRerollMutation";
+import toShortAddress from "../../utils/toShortAddress";
 // import useSWR from "swr";
 // import { readImageInfo } from "../../utils/api";
 
@@ -55,7 +56,9 @@ const GenerationMainStage = ({ creator, name }: { creator?: string; name?: strin
                         <img className="w-auto h-full rounded-full" src={AvatarImg} />
                         <div className="flex flex-col gap-3 h-full">
                             <p className="text-[#8D8D8D] text-lg">Current creator</p>
-                            <p className="text-black text-[24px] font-medium font-poppins leading-[20px]">{creator ?? "Anonymous creator"}</p>
+                            <p className="text-black text-[24px] font-medium font-poppins leading-[20px]">
+                                {toShortAddress(creator) ?? "Anonymous creator"}
+                            </p>
                         </div>
                     </div>
                     <FollowButton />

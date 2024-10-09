@@ -22,14 +22,20 @@ export interface ImageType {
     source_image_id: number;
     updated_at: string;
     user_id: number;
-    wallet_address: string;
+    user: {
+        id: number;
+        wallet_address: string;
+    };
     watermark: string;
 }
 
 export interface ProductInfo {
     id: number;
     user_id: number;
-    wallet_address: string;
+    user: {
+        id: number;
+        wallet_address: string;
+    };
     filename: string;
     prompt: string;
     source_image_id: number | null;
