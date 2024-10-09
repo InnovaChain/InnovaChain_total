@@ -1,36 +1,14 @@
 import clsx from "clsx";
+import { twc } from "react-twc";
 import { HeartImg, UserImg } from "../../assets/gallery";
 import { Avatar2Img, AvatarImg } from "../../assets/product-detail";
 import { CardContainer } from "../../components/Card";
-import { twc } from "react-twc";
-import { getUserAddress, ProductInfo } from "../../utils/api";
 import useProductInfoById from "../../hooks/useProductInfo";
-import { useEffect, useState } from "react";
+import { ProductInfo } from "../../utils/api";
 import toShortAddress from "../../utils/toShortAddress";
 
 const OriginalStage = ({ onClickRecreated, info }: { onClickRecreated?: () => void; info?: ProductInfo | null }) => {
     const { data: previous } = useProductInfoById({ imageId: info?.source_image_id });
-    const [previousCreator, setPreviousCreator] = useState<string>("");
-    const [currentCreator, setCurrentCreator] = useState<string>("");
-
-    useEffect(() => {
-        const getCreator = async (id: number) => {
-            const res = await getUserAddress(id);
-            return res;
-        };
-
-        if (info?.source_image_id && previous) {
-            getCreator(previous.user_id).then((res) => {
-                setPreviousCreator(res.wallet_address);
-            });
-        }
-
-        if (info?.user_id) {
-            getCreator(info.user_id).then((res) => {
-                setCurrentCreator(res.wallet_address);
-            });
-        }
-    }, [info?.source_image_id, info?.user_id, previous]);
 
     return (
         <CardContainer className="flex-1">
@@ -47,7 +25,9 @@ const OriginalStage = ({ onClickRecreated, info }: { onClickRecreated?: () => vo
                     <img className="w-[65px] h-[65px] rounded-full" src={Avatar2Img} />
                     <div>
                         <p className="text-lg text-[#8d8d8d]">Former creator</p>
-                        <p className="text-2xl font-semibold">{previousCreator === "" ? "Anonymous creator" : toShortAddress(previousCreator)}</p>
+                        <p className="text-2xl font-semibold">
+                            {previous?.wallet_address === "" ? "Anonymous creator" : toShortAddress(previous?.wallet_address)}
+                        </p>
                     </div>
                 </div>
             )}
@@ -56,7 +36,9 @@ const OriginalStage = ({ onClickRecreated, info }: { onClickRecreated?: () => vo
                 <img className="w-[65px] h-[65px] rounded-full" src={AvatarImg} />
                 <div>
                     <p className="text-lg text-[#8d8d8d]">Current creator</p>
-                    <p className="text-2xl font-semibold">{currentCreator === "" ? "Anonymous creator" : toShortAddress(currentCreator)}</p>
+                    <p className="text-2xl font-semibold">
+                        {info?.wallet_address === "" ? "Anonymous creator" : toShortAddress(info?.wallet_address)}
+                    </p>
                 </div>
             </div>
             <div className="flex justify-end gap-4 my-6">

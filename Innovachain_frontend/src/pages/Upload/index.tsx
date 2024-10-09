@@ -102,9 +102,9 @@ const Upload = () => {
                             <CardTitle>Copyright Price</CardTitle>
                             <SelectorInputGroup
                                 className="mt-5"
-                                selectorOptions={["ETH", "WETH", "USDT"]}
-                                selectorPlaceholder="ETH"
-                                inputPlaceholder="0.001 ETH"
+                                selectorOptions={["SOL", "JitoSOL", "JUP", "USDC"]}
+                                selectorPlaceholder="SOL"
+                                inputPlaceholder="0.001 SOL"
                                 selectorValue={copyrightPrice}
                                 selectorOnChange={(value) => setCopyrightPrice(value)}
                                 inputValue={copyrightPrice}

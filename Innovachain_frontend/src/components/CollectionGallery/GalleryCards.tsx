@@ -14,7 +14,7 @@ const GalleryCards = () => {
         <div className="grid grid-cols-3 xl:grid-cols-4 gap-10">
             {data.map((image) => (
                 <GalleryCard
-                    creator={image.user_address && image.user_address !== "" ? image.user_address : "Anonymous user"}
+                    creator={image.wallet_address && image.wallet_address !== "" ? image.wallet_address : "Anonymous user"}
                     key={image.id}
                     image={image}
                 />
