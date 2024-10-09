@@ -1,5 +1,6 @@
 from sqlalchemy import Boolean, Column, Integer, String, DateTime, func
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import relationship
 from datetime import datetime
 
 Base = declarative_base()
@@ -9,6 +10,7 @@ class Image(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer)
+    user = relationship("User", back_populates="images")
     filename = Column(String, index=True)
     image_path = Column(String)
     prompt = Column(String)

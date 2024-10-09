@@ -152,21 +152,7 @@ async def read_image_info(image_id: int, imgs: ImageService = Depends(get_image_
     image = await imgs.get_image(image_id)
     if not image:
         return Response(status_code=404)
-
-    image_info = {
-        "id": image.id,
-        "user_id": image.user_id,
-        "filename": image.filename,
-        "prompt": image.prompt,
-        "source_image_id": image.source_image_id,
-        "watermark": image.watermark,
-        "name": image.name,
-        "description": image.description,
-        "created_at": image.created_at,
-        "updated_at": image.updated_at
-    }
-
-    return image_info
+    return image
 
 
 @app.post("/images/{image_id}/prompt")

@@ -1,7 +1,7 @@
 # from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import SQLAlchemyError
-from .model import Image
+from .model import Image, User
 
 class ImageRepository:
 
@@ -29,10 +29,34 @@ class ImageRepository:
         return db_image
 
     async def get(self, image_id: int):
-        return self.db.query(Image).filter(Image.id == image_id).first()
+        image_with_user = self.db.execute(
+            self.db.query(Image, User).
+            join(User, Image.user_id == User.id).
+            filter(Image.id == image_id)
+        )
+        
+        image, user = image_with_user.first()
+        
+        if image and user:
+            image.user = user
+        
+        return image
 
     async def list(self, skip: int = 0, limit: int = 100):
-        return self.db.query(Image).filter(Image.is_active == True).offset(skip).limit(limit).all()
+        images_with_users = self.db.execute(
+            self.db.query(Image, User).
+            join(User, Image.user_id == User.id).
+            filter(Image.is_active == True).
+            offset(skip).
+            limit(limit)
+        )
+
+        images = []
+        for image, user in images_with_users.all():
+            image.user = user
+            images.append(image)
+        
+        return images
 
     async def update(self, image_id: int, prompt: str):
         db_image = self.db.query(Image).filter(Image.id == image_id).first()
