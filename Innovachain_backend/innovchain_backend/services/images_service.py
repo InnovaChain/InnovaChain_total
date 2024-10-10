@@ -20,3 +20,6 @@ class ImageService:
 
     async def set_all_images_inactive(self):
         await self.repository.set_all_inactive()
+
+    async def get_image_source_ids(self, image_id: int):
+        return await self.repository.get_image_source_ids(image_id)
