@@ -172,7 +172,7 @@ export async function getImageById(id: number): Promise<Blob> {
 }
 
 export async function getSourceImageIdList(id: number) {
-    const url = `/images/source/{${id}`;
+    const url = `/images/source/${id}`;
     const response = await api.get<{
         source_image_id_list: number[];
     }>(url);
