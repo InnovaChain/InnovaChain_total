@@ -1,22 +1,30 @@
 import styled from "styled-components";
 // import { Example2Img, Example3Img, ExampleImg } from "../../assets/product-detail";
 import { API_URL } from "../../constants";
+import useSourceImageIdList from "../../hooks/useSourceImageIdList";
 
-const GenerationGallery = ({ sourceId }: { sourceId: number | null | undefined }) => {
+const GenerationGallery = ({ id }: { id: number | null | undefined }) => {
     // const galleryExampleImages = [ExampleImg, Example2Img, Example3Img];
+    const { data: sourceImageIdList, isPending } = useSourceImageIdList({ imageId: id });
 
     return (
         <div>
             {/* Generation Gallery */}
-            <GenerationButton>Generation</GenerationButton>
+            <GenerationButton>Generations</GenerationButton>
             <GalleryContainer className="py-5 px-8 flex flex-col gap-8 h-full justify-center items-center">
                 {/* {galleryExampleImages.map((image, index) => (
                     <img src={image} key={index} className="w-[170px] h-[170px] rounded-[30px]" />
                 ))} */}
-                {sourceId ? (
-                    <a href={`/product/${sourceId}`}>
-                        <img src={`${API_URL}/images/${sourceId}`} className="w-[170px] h-[170px] rounded-[30px]" />
-                    </a>
+                {isPending ? (
+                    <div className="animate-spin rounded-full h-5 w-5 border-t-4 border-white border-opacity-70" />
+                ) : sourceImageIdList?.source_image_id_list && sourceImageIdList.source_image_id_list.length > 0 ? (
+                    <div className="flex flex-col justify-center items-center space-y-4">
+                        {sourceImageIdList?.source_image_id_list.map((sourceId, index) => (
+                            <a key={index} href={`/product/${sourceId}`}>
+                                <img src={`${API_URL}/images/${sourceId}`} className="w-[170px] h-[170px] rounded-[30px]" />
+                            </a>
+                        ))}
+                    </div>
                 ) : (
                     <div className="flex flex-col space-y-2">
                         <p className="text-gray-400 text-lg text-center">This is first of its kind.</p>
