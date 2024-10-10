@@ -10,16 +10,16 @@ const GenerationGallery = ({ id }: { id: number | null | undefined }) => {
     return (
         <div>
             {/* Generation Gallery */}
-            <GenerationButton>Generation</GenerationButton>
+            <GenerationButton>Generations</GenerationButton>
             <GalleryContainer className="py-5 px-8 flex flex-col gap-8 h-full justify-center items-center">
                 {/* {galleryExampleImages.map((image, index) => (
                     <img src={image} key={index} className="w-[170px] h-[170px] rounded-[30px]" />
                 ))} */}
                 {isPending ? (
                     <div className="animate-spin rounded-full h-5 w-5 border-t-4 border-white border-opacity-70" />
-                ) : sourceImageIdList ? (
+                ) : sourceImageIdList?.source_image_id_list && sourceImageIdList.source_image_id_list.length > 0 ? (
                     <div className="flex flex-col justify-center items-center space-y-4">
-                        {sourceImageIdList.source_image_id_list.map((sourceId, index) => (
+                        {sourceImageIdList?.source_image_id_list.map((sourceId, index) => (
                             <a key={index} href={`/product/${sourceId}`}>
                                 <img src={`${API_URL}/images/${sourceId}`} className="w-[170px] h-[170px] rounded-[30px]" />
                             </a>
