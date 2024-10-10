@@ -155,6 +155,12 @@ async def read_image_info(image_id: int, imgs: ImageService = Depends(get_image_
     return image
 
 
+@app.get("/images/source/{image_id}")
+async def read_image_source_list(image_id: int, imgs: ImageService = Depends(get_image_service)):
+    source_image_id_list = await imgs.get_image_source_ids(image_id)
+    return {"source_image_id_list": source_image_id_list}
+
+
 @app.post("/images/{image_id}/prompt")
 async def update_image_prompt(image_id: int, prompt: str = Form(...), imgs: ImageService = Depends(get_image_service)):
     updated_image = await imgs.update_image(image_id, prompt)

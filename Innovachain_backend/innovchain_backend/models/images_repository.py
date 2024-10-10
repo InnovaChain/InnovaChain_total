@@ -87,3 +87,20 @@ class ImageRepository:
         except SQLAlchemyError as e:
             self.db.rollback()
             raise e
+
+    async def get_image_source_ids(self, image_id: int):
+        source_ids = []
+        current_id = image_id
+        depth = 0
+
+        while current_id and depth < 4:
+            current_image = self.db.query(Image).filter(Image.id == current_id).first()
+            if not current_image:
+                break
+            if depth > 0:
+                source_ids.append(current_image.id)
+
+            current_id = current_image.source_image_id
+            depth += 1
+        
+        return list(reversed(source_ids))
