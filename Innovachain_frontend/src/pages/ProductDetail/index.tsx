@@ -137,7 +137,7 @@ const ProductDetail = () => {
                         setUpscaleDone,
                     }}
                 >
-                    <GenerationGallery sourceId={info?.source_image_id} />
+                    <GenerationGallery id={info?.id} />
                     <GenerationMainStage creator={info?.user.wallet_address} name={info?.name} />
 
                     {stage === "Original" && <OriginalStage onClickRecreated={() => setStage("GenerationPrompt")} info={info} />}
