@@ -58,43 +58,43 @@
   <summary>Table of Contents</summary>
     <ol>
         <li>
-            <a href="#1.-about-the-project">About The Project</a>
+            <a href="#1-about-the-project">About The Project</a>
             <ul>
-                <li><a href="#1.1.-built-with">Built With</a></li>
+                <li><a href="#11-built-with">Built With</a></li>
             </ul>
         </li>
         <li>
-            <a href="#2.-getting-started">Getting Started</a>
+            <a href="#2-getting-started">Getting Started</a>
             <ul>
-                <li><a href="#2.1.-local-setup">Local Setup</a>
+                <li><a href="#21-local-setup">Local Setup</a>
                     <ul>
-                        <li><a href="#2.1.1.-back-end-setup">Back-end Setup</a>
+                        <li><a href="#211-back-end-setup">Back-end Setup</a>
                             <ul>
-                                <li><a href="#2.1.1.1.-prerequisites">Prerequisites</a></li>
-                                <li><a href="#2.1.1.2.-installation">Installation</a></li>
-                                <li><a href="#2.1.1.3.-database-initialization">Database Initialization</a></li>
-                                <li><a href="#2.1.1.4.-running-the-application">Running the Application</a></li>
+                                <li><a href="#2111-prerequisites">Prerequisites</a></li>
+                                <li><a href="#2112-installation">Installation</a></li>
+                                <li><a href="#2113-database-initialization">Database Initialization</a></li>
+                                <li><a href="#2114-running-the-application">Running the Application</a></li>
                             </ul>
                         </li>
-                        <li><a href="#2.1.2.-front-end-setup">Front-end Setup</a>
+                        <li><a href="#212-front-end-setup">Front-end Setup</a>
                             <ul>
-                                <li><a href="#2.1.2.1.-prerequisites">Prerequisites</a></li>
-                                <li><a href="#2.1.2.2.-installation">Installation</a></li>
-                                <li><a href="#2.1.2.3.-development">Development</a></li>
-                                <li><a href="#2.1.2.4.-building-for-production">Building for Production</a></li>
+                                <li><a href="#2121-prerequisites">Prerequisites</a></li>
+                                <li><a href="#2122-installation">Installation</a></li>
+                                <li><a href="#2123-development">Development</a></li>
+                                <li><a href="#2124-building-for-production">Building for Production</a></li>
                             </ul>
                         </li>
                     </ul>
                 </li>
-                <li><a href="#2.2.-online-demo">Online Demo</a></li>
+                <li><a href="#22-online-demo">Online Demo</a></li>
             </ul>
         </li>
-        <li><a href="#3.-usage">Usage</a></li>
-        <li><a href="#4.-roadmap">Roadmap</a></li>
-        <li><a href="#5.-contributing">Contributing</a></li>
-        <li><a href="#6.-license">License</a></li>
-        <li><a href="#7.-contact">Contact</a></li>
-        <li><a href="#8.-acknowledgments">Acknowledgments</a></li>
+        <li><a href="#3-usage">Usage</a></li>
+        <li><a href="#4-roadmap">Roadmap</a></li>
+        <li><a href="#5-contributing">Contributing</a></li>
+        <li><a href="#6-license">License</a></li>
+        <li><a href="#7-contact">Contact</a></li>
+        <li><a href="#8-acknowledgments">Acknowledgments</a></li>
     </ol>
 </details>
 
