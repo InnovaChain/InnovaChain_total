@@ -131,6 +131,7 @@ Here's a blank template to get started: To avoid retyping too much info. Do a se
 * Invisible Watermark
   * OpenCV
   * Tensorflow
+* Docker
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
