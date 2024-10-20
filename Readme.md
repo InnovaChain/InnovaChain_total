@@ -115,16 +115,21 @@ Here's a blank template to get started: To avoid retyping too much info. Do a se
 ### 1.1. Built With
 
 * Front-end
-  * React Router
-  * TypeScript
+  * React 18
   * Vite
+  * TypeScript
+  * React Router
+  * React Query
   * Tailwind CSS
-  * Node.js
 * Back-end
   * Anchor CLI
   * Database
     * SQLAlchemy
     * Alembic 
+* Text-to-Image
+  * Midjourney
+  * Bun
+  * Hono
 * Solana
   * Solana Web3.js
   * Solana CLI
@@ -224,33 +229,42 @@ uvicorn main:app --reload
 This will start a development server locally, defaulting to port 8000. You can access the application by visiting `http://127.0.0.1:8000/`
 
 ### 2.1.2. Front-end Setup
-
 #### 2.1.2.1. Prerequisites
 
-- Node.js (v14 or later)
+Before you begin, make sure you have the following installed:
+
+- Node.js (v18 or later)
 - pnpm
+
 
 #### 2.1.2.2. Installation
 
-1. Clone the repository:
+Ensure that your system has Node.js installed. Follow these steps to set up the development environment:
+
+1. Make sure you are in the frontend directory:
 
    ```
-   git clone https://github.com/your-username/innova-chain-frontend.git
-   cd innova-chain-frontend
+   cd Innovachain_frontend
    ```
 
-2. Install dependencies:
+2. **Install dependencies**:
 
    ```
    pnpm install
    ```
 
-3. Create a `.env` file in the root directory and add necessary environment variables:
+3. **Add environment variables**:
 
-   ```
-   VITE_INNOVA_CHAIN_ENV=devnet
-   VITE_DISABLED_POLYFILLS=false
-   ```
+    Create a `.env` file in the frontend directory and add the following environment variables:
+  
+    ```
+    VITE_INNOVA_CHAIN_ENV=devnet
+    VITE_DISABLED_POLYFILLS=false
+    VITE_API_URL=***
+    VITE_MIDJOURNEY_API_URL=***
+    ```
+
+    Note that the `VITE_API_URL` and `VITE_MIDJOURNEY_API_URL` should point to the backend and Midjourney API URLs respectively. We redacted the actual URLs for security and rate limiting reasons. We encourage you to set up your own backend and Midjourney API services with docker.
 
 #### 2.1.2.3. Development
 
@@ -260,17 +274,56 @@ To run the development server:
 pnpm dev
 ```
 
-The application will be available at `http://localhost:5173`.
+The application will be available at the default vite local server or `http://localhost:5173`.
 
-#### 2.1.2.4. Building for Production
 
-To create a production build:
+### 2.1.3 Text-to-Image Setup
+
+#### 2.1.3.1. Prerequisites
+
+Before you begin, make sure you have the following installed:
+
+- Bun (v1.1.29 or later)
+
+#### 2.1.3.2 Installation
+
+Ensure that your system has Bun installed. Follow these steps to set up the development environment:
+
+1. Make sure you are in the mijourney directory:
+
+   ```
+   cd midjourney-api
+   ```
+
+2. **Install dependencies**:
+
+   ```
+   bun install
+   ```
+
+3. **Add environment variables**:
+
+    Create a `.env` file in the frontend directory and add the following environment variables:
+  
+    ```
+    SERVER_ID=***
+    CHANNEL_ID=***
+    SALAI_TOKEN=***
+    BACKEND_API_URL=***
+    ```
+
+    All the environment variables are redacted for security reasons. We encourage you to set up your own midjourney token on Discord. `BACKEND_API_URL` should point to the backend API URL.
+
+#### 2.1.3.3. Development
+
+To run the development server:
 
 ```
-pnpm build
+bun dev
 ```
 
-The built files will be in the `dist` directory.
+The application will be available at `http://localhost:8080`.
+
 
 ## 2.2. Online Demo
 
