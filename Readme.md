@@ -281,7 +281,7 @@ There is an online demo available on https://innovachain.pages.dev/, directly tr
 
 <!-- USAGE EXAMPLES -->
 
-## Usage
+## 3. Usage
 
 Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
 
@@ -293,7 +293,7 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 
 <!-- ROADMAP -->
 
-## Roadmap
+## 4. Roadmap
 
 - [x] Back-end Development
 - [x] Front-end Development
@@ -311,7 +311,7 @@ See the [open issues](https://github.com/InnovaChain/InnovaChain_total/issues) f
 
 
 <!-- CONTRIBUTING -->
-## Contributing
+## 5. Contributing
 
 Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
 
@@ -326,7 +326,7 @@ Don't forget to give the project a star! Thanks again!
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-### Top contributors:
+### 6. Top contributors:
 
 <a href="https://github.com/InnovaChain/InnovaChain_total/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=InnovaChain/InnovaChain_total" alt="contrib.rocks image" />
@@ -336,7 +336,7 @@ Don't forget to give the project a star! Thanks again!
 
 <!-- LICENSE -->
 
-## License
+## 7. License
 
 Distributed under the MIT License. See `LICENSE.txt` for more information.
 
@@ -346,7 +346,7 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 
 <!-- CONTACT -->
 
-## Contact
+## 8. Contact
 
 Alex - [@alexwang024](https://twitter.com/alexwang024) - alexwangim@gmail.com
 
@@ -357,7 +357,7 @@ Project Link: [https://github.com/InnovaChain/InnovaChain_total](https://github.
 
 
 <!-- ACKNOWLEDGMENTS -->
-## Acknowledgments
+## 9. Acknowledgments
 
 * []()
 * []()
