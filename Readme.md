@@ -339,17 +339,35 @@ There is an online demo available on https://innovachain.pages.dev/, directly tr
 
 Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
 
-### 3.1. Homepage Creatorspace
+### 3.1. Upload
 First, you'll go to the homepage called creatorspace, where you can see many of the works that have been uploaded by original creators or that have been recreated by others.
 
-![creatorspace](./images/creatorspace.png)
+![Upload](./images/Upload.png)
 
 ### 3.2. Homepage Creatorspace
 Then, you'll go to the homepage called creatorspace, where you can see many of the works that have been uploaded by original creators or that have been recreated by others. In the bottom of this page, you can find the work upload just now.
 
-
 ![creatorspace](./images/creatorspace.png)
 
+### 3.3. Work Detail
+Then, you'll go to the homepage called creatorspace, where you can see many of the works that have been uploaded by original creators or that have been recreated by others. In the bottom of this page, you can find the work upload just now.
+
+![detail](./images/detail.png)
+
+### 3.4. Revise Prompt
+Then, you'll go to the homepage called creatorspace, where you can see many of the works that have been uploaded by original creators or that have been recreated by others. In the bottom of this page, you can find the work upload just now.
+
+![Recreate1](./images/Recreate1.png)
+
+### 3.5. Generate Image & Choose Version
+Then, you'll go to the homepage called creatorspace, where you can see many of the works that have been uploaded by original creators or that have been recreated by others. In the bottom of this page, you can find the work upload just now.
+
+![Recreate2](./images/Recreate2.png)
+
+### 3.2. Add Customize Maker Text & Authenticate to get digital watermark & Mint it on Chain
+Then, you'll go to the homepage called creatorspace, where you can see many of the works that have been uploaded by original creators or that have been recreated by others. In the bottom of this page, you can find the work upload just now.
+
+![Recreate3](./images/Recreate3.png)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
