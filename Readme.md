@@ -104,9 +104,9 @@
 
 # 1. About The Project
 
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
+![demopage](./images/demopage.png)
 
-Here's a blank template to get started: To avoid retyping too much info. Do a search and replace with your text editor for the following: `InnovaChain`, `InnovaChain`, `twitter_handle`, `linkedin_username`, `email_client`, `email`, `InnovaChain`, `project_description`
+Our platform helps creators protect their intellectual property in the world of AI-generated content. With the rise of AI image generation tools, it’s become very easy for anyone to replicate others art without permission, leading to issues of copyright infringement. Innovachain transforming AI-Generated content into secure, traceable, collaborative creations, which create a new generation of creator ecosystem.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -390,6 +390,7 @@ You can write some introduction to your work, or some personalized content. Then
 - [x] Project Online Test
 - [x] User Test
 - [ ] More Specific Features Regarding User Needs
+- [ ] Large-scale application
 
 See the [open issues](https://github.com/InnovaChain/InnovaChain_total/issues) for a full list of proposed features (and known issues).
 
@@ -436,6 +437,9 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 ## 8. Contact
 
 Alex - [@alexwang024](https://twitter.com/alexwang024) - alexwangim@gmail.com
+Tron - [@chuanglyu0402](https://x.com/Eureka_Lyu_eth) - chuanglyu010402@gmail.com
+9te - [@9teMare](https://x.com/0x9te) - wangzihao139@gmail.com
+yyy - [@0xy0ung](https://x.com/0x9te) - chuanglyu010402@gmail.com
 
 Project Link: [https://github.com/InnovaChain/InnovaChain_total](https://github.com/InnovaChain/InnovaChain_total)
 
