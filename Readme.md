@@ -416,12 +416,9 @@ Don't forget to give the project a star! Thanks again!
 
 ### 6. Top contributors:
 
-<a href="https://github.com/InnovaChain/InnovaChain_total/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=InnovaChain/InnovaChain_total" alt="contrib.rocks image" />
-</a>
 
-- [Alex](https://github.com/alexwang024) - Technical framework and digital watermark
-- [Tron](https://github.com/chuanglyu010402) - Product management and uiux design
+- [Alex](https://github.com/AWI-20) - Technical framework and digital watermark
+- [Tron](https://github.com/chuanglyu0402) - Product management and uiux design
 - [9te](https://github.com/9teMare) - frontend
 - [yyy](https://github.com/0xy0ung) - backend and smart contract
 
