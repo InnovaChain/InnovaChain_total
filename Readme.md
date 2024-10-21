@@ -339,13 +339,18 @@ There is an online demo available on https://innovachain.pages.dev/, directly tr
 
 Use this space to show useful examples of how a project can be used. 
 
+### 3.1. Wallet Setting
+First, you need to link to Solana's wallet. During the testing phase, it is recommended to use the Phantom Wallet, switch to developer mode, and choose Devnet for the network
+
+![walletsetting](./images/walletsetting.png)
+
 ### 3.1. Upload
-First, you'll go to the homepage called creatorspace, where you can see many of the works that have been uploaded by original creators or that have been recreated by others.
+Then you can click upload in the navigation bar, select an image or NFT (in the demo, only upload images function are available), and fill in some basic information. Click the button and waitting for some seconds to waitting for the wallet to signature.
 
 ![Upload](./images/Upload.png)
 
 ### 3.2. Homepage Creatorspace
-Then, you'll go to the homepage called creatorspace, where you can see many of the works that have been uploaded by original creators or that have been recreated by others. In the bottom of this page, you can find the work upload just now.
+Then, you'll go to the homepage called creatorspace, where you can see many of the works that have been uploaded by original creators or that have been recreated by others. In the bottom of this page, you can find the work upload just now. Choose one that you like.
 
 ![creatorspace](./images/creatorspace.png)
 
