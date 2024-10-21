@@ -420,6 +420,11 @@ Don't forget to give the project a star! Thanks again!
   <img src="https://contrib.rocks/image?repo=InnovaChain/InnovaChain_total" alt="contrib.rocks image" />
 </a>
 
+- [Alex](https://github.com/alexwang024) - Technical framework and digital watermark
+- [Tron](https://github.com/chuanglyu010402) - Product management and uiux design
+- [9te](https://github.com/9teMare) - frontend
+- [yyy](https://github.com/0xy0ung) - backend and smart contract
+
 
 
 <!-- LICENSE -->
@@ -436,13 +441,8 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 
 ## 8. Contact
 
-Alex - [@alexwang024](https://twitter.com/alexwang024) - alexwangim@gmail.com
-
 Tron - [@chuanglyu0402](https://x.com/Eureka_Lyu_eth) - chuanglyu010402@gmail.com
 
-9te - [@9teMare](https://x.com/0x9te) - wangzihao139@gmail.com
-
-yyy - [@0xy0ung](https://x.com/0x9te) - chuanglyu010402@gmail.com
 
 Project Link: [https://github.com/InnovaChain/InnovaChain_total](https://github.com/InnovaChain/InnovaChain_total)
 
@@ -453,9 +453,14 @@ Project Link: [https://github.com/InnovaChain/InnovaChain_total](https://github.
 <!-- ACKNOWLEDGMENTS -->
 ## 9. Acknowledgments
 
-* []()
-* []()
-* []()
+We would like to extend our heartfelt thanks to the following organizations and teams for their invaluable support throughout the development of this project:
+
+* **Solana Foundation** - For providing technical guidance and resources that greatly contributed to the success of our blockchain implementation.
+* **Franklin Team** - For their strategic insights and continuous encouragement, helping us refine and strengthen our vision.
+* **HackerQuest** - For creating an inspiring and collaborative environment that pushed us to innovate and achieve new heights.
+
+Your contributions have been instrumental in bringing this project to life, and we are deeply grateful for your support.
+
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
