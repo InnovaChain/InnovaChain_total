@@ -103,10 +103,10 @@
 <!-- ABOUT THE PROJECT -->
 
 # 1. About The Project
+Our platform helps creators protect their intellectual property in the world of AI-generated content. With the rise of AI image generation tools, it’s become very easy for anyone to replicate others art without permission, leading to issues of copyright infringement. Innovachain transforming AI-Generated content into secure, traceable, collaborative creations, which create a new generation of creator ecosystem.
 
 ![demopage](./images/demopage.png)
 
-Our platform helps creators protect their intellectual property in the world of AI-generated content. With the rise of AI image generation tools, it’s become very easy for anyone to replicate others art without permission, leading to issues of copyright infringement. Innovachain transforming AI-Generated content into secure, traceable, collaborative creations, which create a new generation of creator ecosystem.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -437,8 +437,11 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 ## 8. Contact
 
 Alex - [@alexwang024](https://twitter.com/alexwang024) - alexwangim@gmail.com
+
 Tron - [@chuanglyu0402](https://x.com/Eureka_Lyu_eth) - chuanglyu010402@gmail.com
+
 9te - [@9teMare](https://x.com/0x9te) - wangzihao139@gmail.com
+
 yyy - [@0xy0ung](https://x.com/0x9te) - chuanglyu010402@gmail.com
 
 Project Link: [https://github.com/InnovaChain/InnovaChain_total](https://github.com/InnovaChain/InnovaChain_total)
