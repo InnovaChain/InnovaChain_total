@@ -339,7 +339,14 @@ There is an online demo available on https://innovachain.pages.dev/, directly tr
 
 Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
 
-First, you'll go to the homepage called creatorspace, where you can see many of the works that have been uploaded by others or that have been created by chance.
+### 3.1. Homepage Creatorspace
+First, you'll go to the homepage called creatorspace, where you can see many of the works that have been uploaded by original creators or that have been recreated by others.
+
+![creatorspace](./images/creatorspace.png)
+
+### 3.2. Homepage Creatorspace
+Then, you'll go to the homepage called creatorspace, where you can see many of the works that have been uploaded by original creators or that have been recreated by others. In the bottom of this page, you can find the work upload just now.
+
 
 ![creatorspace](./images/creatorspace.png)
 
