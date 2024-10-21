@@ -355,22 +355,22 @@ Then, you'll go to the homepage called creatorspace, where you can see many of t
 ![creatorspace](./images/creatorspace.png)
 
 ### 3.3. Work Detail
-Then, you'll go to the homepage called creatorspace, where you can see many of the works that have been uploaded by original creators or that have been recreated by others. In the bottom of this page, you can find the work upload just now.
+In the details page, you can see the work clearly, as well as the previous generations of the work. And information about the previous and current author of the current work. Click the create button to go to re-create with this work.
 
 ![detail](./images/detail.png)
 
 ### 3.4. Revise Prompt
-Then, you'll go to the homepage called creatorspace, where you can see many of the works that have been uploaded by original creators or that have been recreated by others. In the bottom of this page, you can find the work upload just now.
+On this page, you can select the AI model you want to use and modify the current promot. Here I change from smoking to holding the sword. Next, click generate button. This process will take some time.
 
 ![Recreate1](./images/Recreate1.png)
 
 ### 3.5. Generate Image & Choose Version
-Then, you'll go to the homepage called creatorspace, where you can see many of the works that have been uploaded by original creators or that have been recreated by others. In the bottom of this page, you can find the work upload just now.
+Now you have four generated images, select different V buttons to generate different variation images corresponding to the number, select U button to generate the corresponding final result. For example, I choose U2, which means that the second image is generated into the final version.
 
 ![Recreate2](./images/Recreate2.png)
 
 ### 3.2. Add Customize Maker Text & Authenticate to get digital watermark & Mint it on Chain
-Then, you'll go to the homepage called creatorspace, where you can see many of the works that have been uploaded by original creators or that have been recreated by others. In the bottom of this page, you can find the work upload just now.
+You can write some introduction to your work, or some personalized content. Then you can click Authenticate & Mint. In this process, we will add a hidden digital watermark to your work, wait a few seconds to complete the signature in the wallet, at which point you have finished uploading the information to Solana. You can find the corresponding information in Solscan. When someone steals your work, you can use it as proof.
 
 ![Recreate3](./images/Recreate3.png)
 
@@ -388,7 +388,7 @@ Then, you'll go to the homepage called creatorspace, where you can see many of t
 - [x] Solana Contract Development & Deployment
 - [x] Project Local Test
 - [x] Project Online Test
-- [ ] User Test
+- [x] User Test
 - [ ] More Specific Features Regarding User Needs
 
 See the [open issues](https://github.com/InnovaChain/InnovaChain_total/issues) for a full list of proposed features (and known issues).
