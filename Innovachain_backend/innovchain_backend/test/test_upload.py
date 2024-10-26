@@ -52,4 +52,4 @@ def test_upload_image_with_url(image_url, wallet_address, name, description, pro
 if __name__ == "__main__":
     test_upload_image(file_path="../innovation.png", wallet_address="test address", name="test name", description="test description", prompt="test prompt", source_image_id=2)
 
-    test_upload_image_with_url(image_url="https://media.discordapp.net/attachments/1288523822542094438/1293031830530035763/eureka0402_An_anime-style_profile_picture_of_a_character_with_w_2ab70016-2fae-47a1-ad42-1e0df079941b.png?ex=6705e53b&is=670493bb&hm=1543d3086a7d640c1fd47fe69b97d30bfc1e1d1fbb998f0d7b3cb587b7d83ba6&", wallet_address="test address", name="test name", description="test description", prompt="test prompt", source_image_id=2)
+    # test_upload_image_with_url(image_url="https://media.discordapp.net/attachments/1288523822542094438/1293031830530035763/eureka0402_An_anime-style_profile_picture_of_a_character_with_w_2ab70016-2fae-47a1-ad42-1e0df079941b.png?ex=6705e53b&is=670493bb&hm=1543d3086a7d640c1fd47fe69b97d30bfc1e1d1fbb998f0d7b3cb587b7d83ba6&", wallet_address="test address", name="test name", description="test description", prompt="test prompt", source_image_id=2)

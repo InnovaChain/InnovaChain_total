@@ -8,12 +8,14 @@ from sqlalchemy.orm import Session
 from models.model import Base, Image
 from models.images_repository import ImageRepository
 from models.users_repository import UserRepository
+from models.user_stats_repository import UserStatsRepository
 from watermark_test import ImageWatermarkProcessor
 from datetime import datetime
 from sqlalchemy.orm import Session
 from sqlalchemy.orm import sessionmaker
 from services.images_service import ImageService
 from services.users_service import UserService
+from services.user_stats_service import UserStatsService
 import requests
 from typing import Optional
 
@@ -51,6 +53,10 @@ def get_db():
 async def get_user_service(db: Session = Depends(get_db)) -> UserService:
     repository = UserRepository(db)
     return UserService(repository)
+
+async def get_user_stats_service(db: Session = Depends(get_db)) -> UserStatsService:
+    repository = UserStatsRepository(db)
+    return UserStatsService(repository)
 
 
 async def get_image_service(db: Session = Depends(get_db)) -> ImageService:
@@ -191,3 +197,27 @@ async def get_user_by_id(user_id: int, us: UserService = Depends(get_user_servic
         "wallet_address": user.wallet_address,
     }
     return user_info
+
+
+@app.post("/images/{image_id}/like/increment")
+async def increment_image_like_count(image_id: int, imgs: ImageService = Depends(get_image_service)):
+    updated_image = await imgs.increment_like_count(image_id)
+    if updated_image is None:
+        raise HTTPException(status_code=404, detail="Image not found")
+    return updated_image
+
+
+@app.post("/images/{image_id}/like/decrement")
+async def decrement_image_like_count(image_id: int, imgs: ImageService = Depends(get_image_service)):
+    updated_image = await imgs.decrement_like_count(image_id)
+    if updated_image is None:
+        raise HTTPException(status_code=404, detail="Image not found")
+    return updated_image
+
+
+@app.post("/images/{image_id}/reference/increment")
+async def increment_image_reference_count(image_id: int, imgs: ImageService = Depends(get_image_service)):
+    updated_image = await imgs.increment_reference_count(image_id)
+    if updated_image is None:
+        raise HTTPException(status_code=404, detail="Image not found")
+    return updated_image

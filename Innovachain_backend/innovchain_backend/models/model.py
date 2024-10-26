@@ -21,9 +21,18 @@ class Image(Base):
     is_active = Column(Boolean, default=True)
     created_at = Column(DateTime, default=func.now())
     updated_at = Column(DateTime, default=func.now(), onupdate=func.now())
+    reference_count = Column(Integer, default=0)
+    like_count = Column(Integer, default=0)
 
 class User(Base):
     __tablename__ = "users"
     id = Column(Integer, primary_key=True, index=True)
     wallet_address = Column(String, index=True)
     images = relationship("Image", back_populates="user")
+
+class UserStats(Base):
+    __tablename__ = "user_stats"
+
+    user_id = Column(Integer, ForeignKey('users.id'), primary_key=True)
+    total_likes = Column(Integer, default=0)
+    total_references = Column(Integer, default=0)

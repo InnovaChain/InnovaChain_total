@@ -23,3 +23,12 @@ class ImageService:
 
     async def get_image_source_ids(self, image_id: int):
         return await self.repository.get_image_source_ids(image_id)
+
+    async def increment_like_count(self, image_id: int):
+        return await self.repository.increment_like_count(image_id)
+
+    async def decrement_like_count(self, image_id: int):
+        return await self.repository.decrement_like_count(image_id)
+
+    async def increment_reference_count(self, image_id: int):
+        return await self.repository.increment_reference_count(image_id)
