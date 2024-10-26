@@ -104,3 +104,40 @@ class ImageRepository:
             depth += 1
         
         return list(reversed(source_ids))
+
+    async def increment_like_count(self, image_id: int):
+        db_image = self.db.query(Image).filter(Image.id == image_id).first()
+        if db_image:
+            db_image.like_count += 1
+            try:
+                self.db.commit()
+                self.db.refresh(db_image)
+            except SQLAlchemyError as e:
+                self.db.rollback()
+                raise e
+        return db_image
+
+    async def decrement_like_count(self, image_id: int):
+        db_image = self.db.query(Image).filter(Image.id == image_id).first()
+        if db_image and db_image.like_count > 0:
+            db_image.like_count -= 1
+            try:
+                self.db.commit()
+                self.db.refresh(db_image)
+            except SQLAlchemyError as e:
+                self.db.rollback()
+                raise e
+        return db_image
+
+    async def increment_reference_count(self, image_id: int):
+        db_image = self.db.query(Image).filter(Image.id == image_id).first()
+        if db_image:
+            db_image.reference_count += 1
+            try:
+                self.db.commit()
+                self.db.refresh(db_image)
+            except SQLAlchemyError as e:
+                self.db.rollback()
+                raise e
+        return db_image
+    
