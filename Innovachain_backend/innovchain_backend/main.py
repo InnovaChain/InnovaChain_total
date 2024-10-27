@@ -206,7 +206,7 @@ async def get_user_by_id(user_id: int, us: UserService = Depends(get_user_servic
 
 
 @app.post("/images/{image_id}/like/increment")
-async def increment_image_like_count(image_id: int, imgs: ImageService = Depends(get_image_service), db: Session = Depends(get_db)):
+async def increment_image_like_count(image_id: int, imgs: ImageService = Depends(get_image_service)):
     updated_image = await imgs.increment_like_count(image_id)
     if updated_image is None:
         raise HTTPException(status_code=404, detail="Image not found")
