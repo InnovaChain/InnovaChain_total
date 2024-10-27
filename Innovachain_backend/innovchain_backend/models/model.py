@@ -1,4 +1,4 @@
-from sqlalchemy import Boolean, Column, Integer, String, DateTime, ForeignKey, func
+from sqlalchemy import Boolean, Column, Integer, String, DateTime, ForeignKey, func, Numeric
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from datetime import datetime
@@ -23,6 +23,7 @@ class Image(Base):
     updated_at = Column(DateTime, default=func.now(), onupdate=func.now())
     reference_count = Column(Integer, default=0)
     like_count = Column(Integer, default=0)
+    reward = Column(Numeric(precision=10, scale=2), default=0.0)
 
 class User(Base):
     __tablename__ = "users"
@@ -36,3 +37,4 @@ class UserStats(Base):
     user_id = Column(Integer, ForeignKey('users.id'), primary_key=True)
     total_likes = Column(Integer, default=0)
     total_references = Column(Integer, default=0)
+    total_rewards = Column(Numeric(precision=10, scale=2), default=0.0)

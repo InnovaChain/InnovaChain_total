@@ -3,14 +3,14 @@ import os
 from fastapi import FastAPI, Form, HTTPException, Response, UploadFile, File, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
-from sqlalchemy import create_engine, select
+from sqlalchemy import create_engine, select, func
 from sqlalchemy.orm import Session
-from models.model import Base, Image
+from models.model import Base, Image, UserStats
 from models.images_repository import ImageRepository
 from models.users_repository import UserRepository
 from models.user_stats_repository import UserStatsRepository
 from watermark_test import ImageWatermarkProcessor
-from datetime import datetime
+from datetime import datetime, timedelta
 from sqlalchemy.orm import Session
 from sqlalchemy.orm import sessionmaker
 from services.images_service import ImageService
@@ -18,6 +18,9 @@ from services.users_service import UserService
 from services.user_stats_service import UserStatsService
 import requests
 from typing import Optional
+from utils.pagerank_calculator import PageRankCalculator
+from pydantic import BaseModel
+import schedule
 
 app = FastAPI()
 
@@ -35,6 +38,9 @@ engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 Base.metadata.create_all(bind=engine)
+
+class TotalRewardsUpdate(BaseModel):
+    total_rewards: float = 0.0
 
 @app.on_event("startup")
 def on_startup():
@@ -200,10 +206,11 @@ async def get_user_by_id(user_id: int, us: UserService = Depends(get_user_servic
 
 
 @app.post("/images/{image_id}/like/increment")
-async def increment_image_like_count(image_id: int, imgs: ImageService = Depends(get_image_service)):
+async def increment_image_like_count(image_id: int, imgs: ImageService = Depends(get_image_service), db: Session = Depends(get_db)):
     updated_image = await imgs.increment_like_count(image_id)
     if updated_image is None:
         raise HTTPException(status_code=404, detail="Image not found")
+    
     return updated_image
 
 
@@ -212,6 +219,7 @@ async def decrement_image_like_count(image_id: int, imgs: ImageService = Depends
     updated_image = await imgs.decrement_like_count(image_id)
     if updated_image is None:
         raise HTTPException(status_code=404, detail="Image not found")
+
     return updated_image
 
 
@@ -220,4 +228,23 @@ async def increment_image_reference_count(image_id: int, imgs: ImageService = De
     updated_image = await imgs.increment_reference_count(image_id)
     if updated_image is None:
         raise HTTPException(status_code=404, detail="Image not found")
+    
     return updated_image
+
+
+@app.post("/users/{user_id}/stats")
+async def update_user_stats_total_rewards(user_id: int, body: TotalRewardsUpdate, uss: UserStatsService = Depends(get_user_stats_service)):
+    total_rewards = body.total_rewards
+    result = await uss.update_user_stats_total_rewards(user_id, total_rewards)
+
+    if result is None:
+        raise HTTPException(status_code=404, detail="User stats not found")
+    return result
+
+
+@app.get("/users/{user_id}/stats")
+async def get_user_stats(user_id: int, uss: UserStatsService = Depends(get_user_stats_service)):
+    user_stats = await uss.get_user_stats(user_id)
+    if user_stats is None:
+        raise HTTPException(status_code=404, detail="User stats not found")
+    return user_stats
