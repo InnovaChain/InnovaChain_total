@@ -10,7 +10,7 @@ class UserStatsRepository:
     async def get_user_stats(self, user_id: int):
         return self.db.query(UserStats).filter_by(user_id=user_id).first()
     
-    def _get_or_create_user_stats(self, user_id: int):
+    async def get_or_create_user_stats(self, user_id: int):
         user_stats = self.db.query(UserStats).filter_by(user_id=user_id).first()
         if user_stats is None:
             total_references = (
@@ -30,19 +30,26 @@ class UserStatsRepository:
                 total_rewards=total_rewards
             )
             self.db.add(user_stats)
+            self.db.commit()
+            self.db.refresh(user_stats)
         return user_stats
 
     async def update_user_stats_likes(self, user_id: int, change: int):
-        user_stats = self._get_or_create_user_stats(user_id)
+        user_stats = await self.get_or_create_user_stats(user_id)
         user_stats.total_likes += change
         return user_stats
 
     async def update_user_stats_references(self, user_id: int, change: int):
-        user_stats = self._get_or_create_user_stats(user_id)
+        user_stats = await self.get_or_create_user_stats(user_id)
         user_stats.total_references += change
         return user_stats
 
-    async def update_user_stats_total_rewards(self, user_id: int, change: float):
-        user_stats = self._get_or_create_user_stats(user_id)
-        user_stats.total_rewards += change
+    async def update_user_stats_total_rewards(self, user_id: int):
+        user_stats = await self.get_or_create_user_stats(user_id)
+        total_rewards = (
+            self.db.query(func.sum(Image.reward))
+            .filter(Image.user_id == user_id)
+            .scalar() or 0
+        )
+        user_stats.total_rewards = total_rewards
         return user_stats

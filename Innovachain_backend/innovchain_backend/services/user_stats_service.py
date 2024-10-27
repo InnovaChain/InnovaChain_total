@@ -13,8 +13,8 @@ class UserStatsService:
     async def update_user_stats_references(self, user_id: int, change: int):
         return await self.repository.update_user_stats_references(user_id, change)
 
-    async def update_user_stats_total_rewards(self, user_id: int, change: float):
-        return await self.repository.update_user_stats_total_rewards(user_id, change)
+    async def update_user_stats_total_rewards(self, user_id: int):
+        return await self.repository.update_user_stats_total_rewards(user_id)
 
-    async def get_user_stats(self, user_id: int):
-        return await self.repository.get_user_stats(user_id)
+    async def get_or_create_user_stats(self, user_id: int):
+        return await self.repository.get_or_create_user_stats(user_id)
