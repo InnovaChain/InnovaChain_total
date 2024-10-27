@@ -49,3 +49,5 @@ class PageRankCalculator:
             pagerank /= pagerank_sum
         else:
             pagerank = np.ones(num_images) / num_images
+        
+        return pagerank

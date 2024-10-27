@@ -1,4 +1,5 @@
 # from sqlalchemy.ext.asyncio import AsyncSession
+from decimal import Decimal
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import SQLAlchemyError
 from .model import Image, User
@@ -167,4 +168,35 @@ class ImageRepository:
                 self.db.rollback()
                 raise e
         return db_image
-    
+
+    async def increment_reference_count(self, image_id: int):
+        db_image = self.db.query(Image).filter(Image.id == image_id).first()
+        if db_image:
+            if db_image.reference_count == 0:
+                reference_count = (
+                    self.db.query(func.count(Image.id))
+                    .filter(Image.source_image_id == db_image.id)
+                    .scalar() or 0
+                )
+                db_image.reference_count = reference_count
+            db_image.reference_count += 1
+            try:
+                await self.user_stats_repo.update_user_stats_references(db_image.user_id, 1)
+                self.db.commit()
+                self.db.refresh(db_image)
+            except SQLAlchemyError as e:
+                self.db.rollback()
+                raise e
+        return db_image
+
+    async def update_image_reward(self, image_id: int, reward: float):
+        db_image = self.db.query(Image).filter(Image.id == image_id).one_or_none()
+        if db_image:
+            db_image.reward += Decimal(reward)
+
+            await self.user_stats_repo.update_user_stats_total_rewards(db_image.user_id)
+            
+            self.db.commit()
+            self.db.refresh(db_image)
+            return db_image
+        return None

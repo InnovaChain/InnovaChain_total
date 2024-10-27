@@ -38,3 +38,9 @@ class UserStats(Base):
     total_likes = Column(Integer, default=0)
     total_references = Column(Integer, default=0)
     total_rewards = Column(Numeric(precision=10, scale=2), default=0.0)
+
+class LastExecution(Base):
+    __tablename__ = 'last_executions'
+
+    id = Column(Integer, primary_key=True)
+    last_execution_time = Column(DateTime, default=lambda: datetime(1970, 1, 1))

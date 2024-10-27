@@ -9,6 +9,7 @@ from models.model import Base, Image, UserStats
 from models.images_repository import ImageRepository
 from models.users_repository import UserRepository
 from models.user_stats_repository import UserStatsRepository
+from models.last_execution_repository import LastExecutionRepository
 from watermark_test import ImageWatermarkProcessor
 from datetime import datetime, timedelta
 from sqlalchemy.orm import Session
@@ -16,6 +17,7 @@ from sqlalchemy.orm import sessionmaker
 from services.images_service import ImageService
 from services.users_service import UserService
 from services.user_stats_service import UserStatsService
+from services.last_execution_service import LastExecutionService
 import requests
 from typing import Optional
 from utils.pagerank_calculator import PageRankCalculator
@@ -32,6 +34,8 @@ app.add_middleware(
     allow_methods=["*"], 
     allow_headers=["*"],  
 )
+
+DAILY_TOTAL_REWARDS = 1000
 
 DATABASE_URL = "sqlite:///data/innovachain.db"
 engine = create_engine(DATABASE_URL)
@@ -68,6 +72,10 @@ async def get_user_stats_service(db: Session = Depends(get_db)) -> UserStatsServ
 async def get_image_service(db: Session = Depends(get_db)) -> ImageService:
     repository = ImageRepository(db)
     return ImageService(repository)
+
+async def get_last_execution_service(db: Session = Depends(get_db)) -> LastExecutionService:
+    repository = LastExecutionRepository(db)
+    return LastExecutionService(repository)
 
 
 @app.post("/upload/")
@@ -233,9 +241,9 @@ async def increment_image_reference_count(image_id: int, imgs: ImageService = De
 
 
 @app.post("/users/{user_id}/stats")
-async def update_user_stats_total_rewards(user_id: int, body: TotalRewardsUpdate, uss: UserStatsService = Depends(get_user_stats_service)):
-    total_rewards = body.total_rewards
-    result = await uss.update_user_stats_total_rewards(user_id, total_rewards)
+async def update_user_stats_total_rewards(user_id: int, uss: UserStatsService = Depends(get_user_stats_service)):
+    """only for test"""
+    result = await uss.update_user_stats_total_rewards(user_id)
 
     if result is None:
         raise HTTPException(status_code=404, detail="User stats not found")
@@ -243,11 +251,23 @@ async def update_user_stats_total_rewards(user_id: int, body: TotalRewardsUpdate
 
 
 @app.get("/users/{user_id}/stats")
-async def get_user_stats(user_id: int, uss: UserStatsService = Depends(get_user_stats_service), imgs: ImageService = Depends(get_image_service)):
-    images = await imgs.get_images_all()
-    pr_calculator = PageRankCalculator()
-    await pr_calculator.calculate_pagerank(images)
-    user_stats = await uss.get_user_stats(user_id)
+async def get_user_stats(
+    user_id: int, 
+    uss: UserStatsService = Depends(get_user_stats_service), 
+    imgs: ImageService = Depends(get_image_service), 
+    les: LastExecutionService = Depends(get_last_execution_service)
+):
+    if await les.check_if_needs_execution():
+        images = await imgs.get_images_all()
+        pr_calculator = PageRankCalculator()
+        pageranks = await pr_calculator.calculate_pagerank(images)
+
+        for i, img in enumerate(images):
+            await imgs.update_image_reward(img.id, round(pageranks[i] * DAILY_TOTAL_REWARDS, 2))
+
+        await les.set_last_execution_time()
+    
+    user_stats = await uss.get_or_create_user_stats(user_id)
     if user_stats is None:
         raise HTTPException(status_code=404, detail="User stats not found")
     return user_stats
