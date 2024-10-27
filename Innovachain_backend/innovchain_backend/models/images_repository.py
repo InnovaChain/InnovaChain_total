@@ -2,11 +2,14 @@
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import SQLAlchemyError
 from .model import Image, User
+from .user_stats_repository import UserStatsRepository
+from sqlalchemy import func, Numeric
 
 class ImageRepository:
 
     def __init__(self, db: Session):
         self.db = db
+        self.user_stats_repo = UserStatsRepository(db)
 
     async def create(self, filename: str, watermark: str, user_id: int, image_path: str, prompt: str, source_image_id: int, name: str, description: str):
         db_image = Image(
@@ -41,6 +44,20 @@ class ImageRepository:
             image.user = user
         
         return image
+
+    async def list_all(self):
+        images_with_users = self.db.execute(
+            self.db.query(Image, User).
+            join(User, Image.user_id == User.id).
+            filter(Image.is_active == True)
+        )
+
+        images = []
+        for image, user in images_with_users.all():
+            image.user = user
+            images.append(image)
+        
+        return images
 
     async def list(self, skip: int = 0, limit: int = 100):
         images_with_users = self.db.execute(
@@ -110,6 +127,7 @@ class ImageRepository:
         if db_image:
             db_image.like_count += 1
             try:
+                await self.user_stats_repo.update_user_stats_likes(db_image.user_id, 1)
                 self.db.commit()
                 self.db.refresh(db_image)
             except SQLAlchemyError as e:
@@ -122,6 +140,7 @@ class ImageRepository:
         if db_image and db_image.like_count > 0:
             db_image.like_count -= 1
             try:
+                await self.user_stats_repo.update_user_stats_likes(db_image.user_id, -1)
                 self.db.commit()
                 self.db.refresh(db_image)
             except SQLAlchemyError as e:
@@ -132,8 +151,16 @@ class ImageRepository:
     async def increment_reference_count(self, image_id: int):
         db_image = self.db.query(Image).filter(Image.id == image_id).first()
         if db_image:
+            if db_image.reference_count == 0:
+                reference_count = (
+                    self.db.query(func.count(Image.id))
+                    .filter(Image.source_image_id == db_image.id)
+                    .scalar() or 0
+                )
+                db_image.reference_count = reference_count
             db_image.reference_count += 1
             try:
+                await self.user_stats_repo.update_user_stats_references(db_image.user_id, 1)
                 self.db.commit()
                 self.db.refresh(db_image)
             except SQLAlchemyError as e:
