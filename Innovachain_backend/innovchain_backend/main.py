@@ -243,7 +243,10 @@ async def update_user_stats_total_rewards(user_id: int, body: TotalRewardsUpdate
 
 
 @app.get("/users/{user_id}/stats")
-async def get_user_stats(user_id: int, uss: UserStatsService = Depends(get_user_stats_service)):
+async def get_user_stats(user_id: int, uss: UserStatsService = Depends(get_user_stats_service), imgs: ImageService = Depends(get_image_service)):
+    images = await imgs.get_images_all()
+    pr_calculator = PageRankCalculator()
+    await pr_calculator.calculate_pagerank(images)
     user_stats = await uss.get_user_stats(user_id)
     if user_stats is None:
         raise HTTPException(status_code=404, detail="User stats not found")
