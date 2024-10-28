@@ -25,11 +25,14 @@ class Image(Base):
     like_count = Column(Integer, default=0)
     reward = Column(Numeric(precision=10, scale=2), default=0.0)
 
+    likes = relationship("Likes", back_populates="image")
+
 class User(Base):
     __tablename__ = "users"
     id = Column(Integer, primary_key=True, index=True)
     wallet_address = Column(String, index=True)
     images = relationship("Image", back_populates="user")
+    likes = relationship("Likes", back_populates="user")
 
 class UserStats(Base):
     __tablename__ = "user_stats"

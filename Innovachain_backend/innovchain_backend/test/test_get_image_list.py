@@ -1,8 +1,13 @@
 import requests
 
-def test_read_images():
+def test_read_images(user_id=None):
     url = "http://localhost:8000/images/"
-    response = requests.get(url)
+    params = {}
+
+    if user_id is not None:
+        params['user_id'] = user_id
+
+    response = requests.get(url, params=params)
 
     print(f"Response status code: {response.status_code}")
 
@@ -29,3 +34,4 @@ def test_read_images():
 
 if __name__ == "__main__":
     test_read_images()
+    test_read_images(2)

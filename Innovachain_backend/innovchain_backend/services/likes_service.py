@@ -1,6 +1,6 @@
 from models.likes_repository import LikesRepository
 
-class ImageService:
+class LikesService:
     def __init__(self, repository: LikesRepository):
         self.repository = repository
     async def get_like(self, user_id: int, image_id: int):

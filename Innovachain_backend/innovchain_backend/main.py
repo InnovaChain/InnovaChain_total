@@ -10,6 +10,7 @@ from models.images_repository import ImageRepository
 from models.users_repository import UserRepository
 from models.user_stats_repository import UserStatsRepository
 from models.last_execution_repository import LastExecutionRepository
+from models.likes_repository import LikesRepository
 from watermark_test import ImageWatermarkProcessor
 from datetime import datetime, timedelta
 from sqlalchemy.orm import Session
@@ -18,6 +19,7 @@ from services.images_service import ImageService
 from services.users_service import UserService
 from services.user_stats_service import UserStatsService
 from services.last_execution_service import LastExecutionService
+from services.likes_service import LikesService
 import requests
 from typing import Optional
 from utils.pagerank_calculator import PageRankCalculator
@@ -45,6 +47,10 @@ Base.metadata.create_all(bind=engine)
 
 class TotalRewardsUpdate(BaseModel):
     total_rewards: float = 0.0
+
+class UserCreate(BaseModel):
+    wallet_address: str
+
 
 @app.on_event("startup")
 def on_startup():
@@ -77,6 +83,26 @@ async def get_last_execution_service(db: Session = Depends(get_db)) -> LastExecu
     repository = LastExecutionRepository(db)
     return LastExecutionService(repository)
 
+
+async def get_likes_service(db: Session = Depends(get_db)) -> LikesService:
+    repository = LikesRepository(db)
+    return LikesService(repository)
+
+@app.post("/users/")
+async def create_user(
+    user_data: UserCreate,
+    us: UserService = Depends(get_user_service),
+):
+    wallet_address = user_data.wallet_address
+    if wallet_address is None:
+        raise HTTPException(status_code=400, detail="Missing required field 'wallet_address'")
+    
+    user = await us.get_user_by_wallet_address(wallet_address)
+    
+    if user is None:
+        user = await us.create_user(wallet_address)
+    
+    return {"user_id": user.id}
 
 @app.post("/upload/")
 async def upload_image(
@@ -134,6 +160,10 @@ async def upload_image(
     if user is None:
         user = await us.create_user(wallet_address)
     
+    # Check if source_image_id is provided and not equal to 0
+    if source_image_id is not None and source_image_id != 0:
+        await increment_image_reference_count(source_image_id, imgs)
+        
     db_image = await imgs.create_image(
         filename=unique_filename,
         watermark=processor.watermark_text,
@@ -148,8 +178,17 @@ async def upload_image(
 
 
 @app.get("/images/")
-async def read_images(skip: int = 0, limit: int = 100, imgs: ImageService = Depends(get_image_service)):
+async def read_images(skip: int = 0, limit: int = 100, user_id: Optional[int] = None, imgs: ImageService = Depends(get_image_service), lks: LikesService = Depends(get_likes_service)):
     images = await imgs.get_images(skip=skip, limit=limit)
+
+    for image in images:
+        is_liked_by_user = False
+        if user_id is not None:
+            like_record = await lks.get_like(user_id, image.id)
+            is_liked_by_user = like_record is not None
+        
+        image.is_liked_by_user = is_liked_by_user
+    
     return images
 
 
@@ -168,10 +207,18 @@ async def read_image(image_id: int, imgs: ImageService = Depends(get_image_servi
 
 
 @app.get("/images/info/{image_id}")
-async def read_image_info(image_id: int, imgs: ImageService = Depends(get_image_service)):
+async def read_image_info(image_id: int, user_id: Optional[int] = None, imgs: ImageService = Depends(get_image_service), lks: LikesService = Depends(get_likes_service)):
     image = await imgs.get_image(image_id)
     if not image:
         return Response(status_code=404)
+
+    is_liked_by_user = False
+    if user_id is not None:
+        like_record = await lks.get_like(user_id, image_id)
+        is_liked_by_user = like_record is not None
+    
+    image.is_liked_by_user = is_liked_by_user
+    
     return image
 
 
@@ -214,8 +261,9 @@ async def get_user_by_id(user_id: int, us: UserService = Depends(get_user_servic
 
 
 @app.post("/images/{image_id}/like/increment")
-async def increment_image_like_count(image_id: int, imgs: ImageService = Depends(get_image_service)):
-    updated_image = await imgs.increment_like_count(image_id)
+async def increment_image_like_count(image_id: int, user_id: int, imgs: ImageService = Depends(get_image_service), lks: LikesService = Depends(get_likes_service)):
+    await lks.get_like(user_id, image_id)
+    updated_image = await imgs.increment_like_count_with_user(user_id, image_id)
     if updated_image is None:
         raise HTTPException(status_code=404, detail="Image not found")
     
@@ -223,8 +271,8 @@ async def increment_image_like_count(image_id: int, imgs: ImageService = Depends
 
 
 @app.post("/images/{image_id}/like/decrement")
-async def decrement_image_like_count(image_id: int, imgs: ImageService = Depends(get_image_service)):
-    updated_image = await imgs.decrement_like_count(image_id)
+async def decrement_image_like_count(image_id: int, user_id: int, imgs: ImageService = Depends(get_image_service)):
+    updated_image = await imgs.decrement_like_count_with_user(user_id, image_id)
     if updated_image is None:
         raise HTTPException(status_code=404, detail="Image not found")
 
@@ -271,3 +319,11 @@ async def get_user_stats(
     if user_stats is None:
         raise HTTPException(status_code=404, detail="User stats not found")
     return user_stats
+
+@app.get("/images/{image_id}/like/status")
+async def get_like_status(image_id: int, user_id: int, likes_service: LikesService = Depends(get_likes_service)):
+    """only for test"""
+    like_record = await likes_service.get_like(user_id, image_id)
+    if like_record is not None:
+        return {"status": True}
+    return {"status": False}

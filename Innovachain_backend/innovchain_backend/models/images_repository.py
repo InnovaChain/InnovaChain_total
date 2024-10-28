@@ -4,6 +4,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy.exc import SQLAlchemyError
 from .model import Image, User, Likes
 from .user_stats_repository import UserStatsRepository
+from .likes_repository import LikesRepository
 from sqlalchemy import func, Numeric
 
 class ImageRepository:
@@ -11,6 +12,7 @@ class ImageRepository:
     def __init__(self, db: Session):
         self.db = db
         self.user_stats_repo = UserStatsRepository(db)
+        self.likes_repo = LikesRepository(db)
 
     async def create(self, filename: str, watermark: str, user_id: int, image_path: str, prompt: str, source_image_id: int, name: str, description: str):
         db_image = Image(
@@ -123,20 +125,14 @@ class ImageRepository:
         
         return list(reversed(source_ids))
 
-    async def increment_like_count_with_user(self, image_id: int, user_id: int):
+    async def increment_like_count_with_user(self, user_id: int, image_id: int):
         db_image = self.db.query(Image).filter(Image.id == image_id).first()
         if db_image:
-            existing_like = self.db.query(Likes).filter(
-                Likes.user_id == user_id,
-                Likes.image_id == image_id,
-                Likes.is_active == True
-            ).first()
-            if existing_like is None:
+            existing_like, increment = await self.likes_repo.create_like(user_id, image_id)
+            if increment:
                 db_image.like_count += 1
                 try:
                     await self.user_stats_repo.update_user_stats_likes(db_image.user_id, 1)
-                    new_like = Likes(user_id=user_id, image_id=image_id, is_active=True)
-                    self.db.add(new_like)
                     self.db.commit()
                     self.db.refresh(db_image)
                 except SQLAlchemyError as e:
@@ -144,19 +140,14 @@ class ImageRepository:
                     raise e
         return db_image
 
-    async def decrement_like_count_with_user(self, image_id: int, user_id: int):
+    async def decrement_like_count_with_user(self, user_id: int, image_id: int):
         db_image = self.db.query(Image).filter(Image.id == image_id).first()
         if db_image:
-            existing_like = self.db.query(Likes).filter(
-                Likes.user_id == user_id,
-                Likes.image_id == image_id,
-                Likes.is_active == True
-            ).first()
-            if existing_like is not None:
+            existing_like, decrement = await self.likes_repo.deactivate_like(user_id, image_id)
+            if decrement:
                 db_image.like_count -= 1
                 try:
                     await self.user_stats_repo.update_user_stats_likes(db_image.user_id, -1)
-                    existing_like.is_active = False
                     self.db.commit()
                     self.db.refresh(db_image)
                 except SQLAlchemyError as e:
