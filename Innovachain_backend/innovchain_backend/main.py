@@ -261,8 +261,22 @@ async def get_user_by_id(user_id: int, us: UserService = Depends(get_user_servic
 
 
 @app.post("/images/{image_id}/like/increment")
-async def increment_image_like_count(image_id: int, user_id: int, imgs: ImageService = Depends(get_image_service), lks: LikesService = Depends(get_likes_service)):
-    await lks.get_like(user_id, image_id)
+async def increment_image_like_count(
+    image_id: int, 
+    user_id: int, 
+    imgs: ImageService = Depends(get_image_service), 
+    les: LastExecutionService = Depends(get_last_execution_service)
+):
+    if await les.check_if_needs_execution():
+        images = await imgs.get_images_all()
+        pr_calculator = PageRankCalculator()
+        pageranks = await pr_calculator.calculate_pagerank(images)
+
+        for i, img in enumerate(images):
+            await imgs.update_image_reward(img.id, round(pageranks[i] * DAILY_TOTAL_REWARDS, 2))
+
+        await les.set_last_execution_time()
+
     updated_image = await imgs.increment_like_count_with_user(user_id, image_id)
     if updated_image is None:
         raise HTTPException(status_code=404, detail="Image not found")
@@ -271,7 +285,22 @@ async def increment_image_like_count(image_id: int, user_id: int, imgs: ImageSer
 
 
 @app.post("/images/{image_id}/like/decrement")
-async def decrement_image_like_count(image_id: int, user_id: int, imgs: ImageService = Depends(get_image_service)):
+async def decrement_image_like_count(
+    image_id: int, 
+    user_id: int, 
+    imgs: ImageService = Depends(get_image_service), 
+    les: LastExecutionService = Depends(get_last_execution_service)
+):
+    if await les.check_if_needs_execution():
+        images = await imgs.get_images_all()
+        pr_calculator = PageRankCalculator()
+        pageranks = await pr_calculator.calculate_pagerank(images)
+
+        for i, img in enumerate(images):
+            await imgs.update_image_reward(img.id, round(pageranks[i] * DAILY_TOTAL_REWARDS, 2))
+
+        await les.set_last_execution_time()
+
     updated_image = await imgs.decrement_like_count_with_user(user_id, image_id)
     if updated_image is None:
         raise HTTPException(status_code=404, detail="Image not found")
@@ -281,6 +310,7 @@ async def decrement_image_like_count(image_id: int, user_id: int, imgs: ImageSer
 
 @app.post("/images/{image_id}/reference/increment")
 async def increment_image_reference_count(image_id: int, imgs: ImageService = Depends(get_image_service)):
+    """only for test"""
     updated_image = await imgs.increment_reference_count(image_id)
     if updated_image is None:
         raise HTTPException(status_code=404, detail="Image not found")

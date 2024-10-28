@@ -18,4 +18,4 @@ def test_increment_like_count(image_id, user_id=None):
         print(f"Updated like count for image {image_id} is {data['like_count']}")
 
 if __name__ == "__main__":
-    test_increment_like_count(1, 2)
+    test_increment_like_count(5, 2)
