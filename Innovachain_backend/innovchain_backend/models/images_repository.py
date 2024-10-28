@@ -2,8 +2,9 @@
 from decimal import Decimal
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import SQLAlchemyError
-from .model import Image, User
+from .model import Image, User, Likes
 from .user_stats_repository import UserStatsRepository
+from .likes_repository import LikesRepository
 from sqlalchemy import func, Numeric
 
 class ImageRepository:
@@ -11,6 +12,7 @@ class ImageRepository:
     def __init__(self, db: Session):
         self.db = db
         self.user_stats_repo = UserStatsRepository(db)
+        self.likes_repo = LikesRepository(db)
 
     async def create(self, filename: str, watermark: str, user_id: int, image_path: str, prompt: str, source_image_id: int, name: str, description: str):
         db_image = Image(
@@ -123,50 +125,34 @@ class ImageRepository:
         
         return list(reversed(source_ids))
 
-    async def increment_like_count(self, image_id: int):
+    async def increment_like_count_with_user(self, user_id: int, image_id: int):
         db_image = self.db.query(Image).filter(Image.id == image_id).first()
         if db_image:
-            db_image.like_count += 1
-            try:
-                await self.user_stats_repo.update_user_stats_likes(db_image.user_id, 1)
-                self.db.commit()
-                self.db.refresh(db_image)
-            except SQLAlchemyError as e:
-                self.db.rollback()
-                raise e
+            existing_like, increment = await self.likes_repo.create_like(user_id, image_id)
+            if increment:
+                db_image.like_count += 1
+                try:
+                    await self.user_stats_repo.update_user_stats_likes(db_image.user_id, 1)
+                    self.db.commit()
+                    self.db.refresh(db_image)
+                except SQLAlchemyError as e:
+                    self.db.rollback()
+                    raise e
         return db_image
 
-    async def decrement_like_count(self, image_id: int):
-        db_image = self.db.query(Image).filter(Image.id == image_id).first()
-        if db_image and db_image.like_count > 0:
-            db_image.like_count -= 1
-            try:
-                await self.user_stats_repo.update_user_stats_likes(db_image.user_id, -1)
-                self.db.commit()
-                self.db.refresh(db_image)
-            except SQLAlchemyError as e:
-                self.db.rollback()
-                raise e
-        return db_image
-
-    async def increment_reference_count(self, image_id: int):
+    async def decrement_like_count_with_user(self, user_id: int, image_id: int):
         db_image = self.db.query(Image).filter(Image.id == image_id).first()
         if db_image:
-            if db_image.reference_count == 0:
-                reference_count = (
-                    self.db.query(func.count(Image.id))
-                    .filter(Image.source_image_id == db_image.id)
-                    .scalar() or 0
-                )
-                db_image.reference_count = reference_count
-            db_image.reference_count += 1
-            try:
-                await self.user_stats_repo.update_user_stats_references(db_image.user_id, 1)
-                self.db.commit()
-                self.db.refresh(db_image)
-            except SQLAlchemyError as e:
-                self.db.rollback()
-                raise e
+            existing_like, decrement = await self.likes_repo.deactivate_like(user_id, image_id)
+            if decrement:
+                db_image.like_count -= 1
+                try:
+                    await self.user_stats_repo.update_user_stats_likes(db_image.user_id, -1)
+                    self.db.commit()
+                    self.db.refresh(db_image)
+                except SQLAlchemyError as e:
+                    self.db.rollback()
+                    raise e
         return db_image
 
     async def increment_reference_count(self, image_id: int):

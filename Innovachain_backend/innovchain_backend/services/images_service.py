@@ -33,6 +33,12 @@ class ImageService:
     async def decrement_like_count(self, image_id: int):
         return await self.repository.decrement_like_count(image_id)
 
+    async def increment_like_count_with_user(self, user_id: int, image_id: int):
+        return await self.repository.increment_like_count_with_user(user_id, image_id)
+
+    async def decrement_like_count_with_user(self, user_id: int, image_id: int):
+        return await self.repository.decrement_like_count_with_user(user_id, image_id)
+
     async def increment_reference_count(self, image_id: int):
         return await self.repository.increment_reference_count(image_id)
 
