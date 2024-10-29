@@ -27,6 +27,9 @@ export interface ImageType {
         wallet_address: string;
     };
     watermark: string;
+    like_count: number;
+    reference_count: number;
+    reward: number;
 }
 
 export interface ProductInfo {
@@ -44,6 +47,10 @@ export interface ProductInfo {
     description: string;
     created_at: string;
     updated_at: string;
+    like_count: number;
+    reference_count: number;
+    reward: number;
+    is_liked_by_user: boolean;
 }
 
 export interface ImagineResponse {
@@ -269,4 +276,27 @@ export async function rerollImage({
     });
 
     return response.data;
+}
+
+export async function likeImage({ imageId, userId }: { imageId: number; userId: number }) {
+    const url = `${API_URL}/images/${imageId}/like/increment?user_id=${userId}`;
+    const res = await api.post(url);
+
+    return res.data;
+}
+
+export async function unlikeImage({ imageId, userId }: { imageId: number; userId: number }) {
+    const url = `${API_URL}/images/${imageId}/like/decrement?user_id=${userId}`;
+
+    const res = await api.post(url);
+
+    return res.data;
+}
+
+export async function createUser({ wallet_address }: { wallet_address: string }) {
+    const url = `${API_URL}/users`;
+    const res = await api.post(url, {
+        wallet_address,
+    });
+    return res.data;
 }

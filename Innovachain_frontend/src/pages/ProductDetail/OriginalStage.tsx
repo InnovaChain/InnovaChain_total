@@ -1,14 +1,20 @@
 import clsx from "clsx";
+import { HeartIcon } from "lucide-react";
 import { twc } from "react-twc";
-import { HeartImg, UserImg } from "../../assets/gallery";
+import { UserImg } from "../../assets/gallery";
 import { Avatar2Img, AvatarImg } from "../../assets/product-detail";
 import { CardContainer } from "../../components/Card";
 import useProductInfoById from "../../hooks/useProductInfo";
 import { ProductInfo } from "../../utils/api";
+import { cn } from "../../utils/cn";
 import toShortAddress from "../../utils/toShortAddress";
+import { useLikeMutation, useUnlikeMutation } from "../../hooks/useLikeOrUnlikeMutation";
 
 const OriginalStage = ({ onClickRecreated, info }: { onClickRecreated?: () => void; info?: ProductInfo | null }) => {
     const { data: previous } = useProductInfoById({ imageId: info?.source_image_id });
+
+    const { mutateAsync: like } = useLikeMutation(info?.id);
+    const { mutateAsync: unlike } = useUnlikeMutation(info?.id);
 
     return (
         <CardContainer className="flex-1">
@@ -42,13 +48,27 @@ const OriginalStage = ({ onClickRecreated, info }: { onClickRecreated?: () => vo
                 </div>
             </div>
             <div className="flex justify-end gap-4 my-6">
-                <p className="text-[#8E8E8E] text-xl font-medium leading-[20px]">20</p>
+                <p className="text-[#8E8E8E] text-xl font-medium leading-[20px]">{info?.like_count}</p>
+                {/* <img className="w-[20px] h-[20px] stroke-red-600" src={HeartImg} /> */}
+
+                <HeartIcon
+                    size={20}
+                    className={cn(info?.is_liked_by_user ? "fill-red-500 stroke-none" : "fill-none stroke-[#8E8E8E]", "hover:cursor-pointer")}
+                    onClick={async () => {
+                        if (info === undefined || info === null) return;
+
+                        if (info.is_liked_by_user) {
+                            await unlike(info.id);
+                        } else {
+                            await like(info.id);
+                        }
+                    }}
+                />
+                <p className="text-[#8E8E8E] text-xl font-medium leading-[20px]">{info?.reference_count}</p>
                 <img className="w-[20px] h-[20px]" src={UserImg} />
-                <p className="text-[#8E8E8E] text-xl font-medium leading-[20px]">20</p>
-                <img className="w-[20px] h-[20px]" src={HeartImg} />
             </div>
             <div className="flex gap-2 justify-end">
-                <p className="text-[#8c8c8c]">Created at</p>
+                <p className="text-[#c99e9e]">Created at</p>
                 <p className="text-black">Jun 17, 2023 at 05:08</p>
             </div>
             <div className="mt-5 flex flex-col gap-2">

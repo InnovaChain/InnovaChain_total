@@ -24,7 +24,7 @@ const GalleryCards = () => {
 };
 
 const GalleryCard = ({ creator, image }: { creator: string; image: ImageType }) => {
-    const { name, created_at, id } = image;
+    const { name, created_at, id, like_count, reference_count } = image;
     const navigate = useNavigate();
 
     return (
@@ -39,11 +39,11 @@ const GalleryCard = ({ creator, image }: { creator: string; image: ImageType }) 
                     <p className="text-[#94A3B8] text-sm">{creator === "Anonymous user" ? "Anonymous user" : toShortAddress(creator)}</p>
                     <div className="flex gap-9 text-base font-medium text-[#8e8e8e]">
                         <div className="flex gap-2 items-center">
-                            <p>12</p>
+                            <p>{like_count}</p>
                             <img src={HeartImg} />
                         </div>
                         <div className="flex gap-2 items-center">
-                            <p>30</p>
+                            <p>{reference_count}</p>
                             <img src={UserImg} />
                         </div>
                     </div>
