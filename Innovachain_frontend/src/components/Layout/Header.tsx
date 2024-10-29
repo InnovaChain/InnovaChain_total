@@ -3,9 +3,14 @@ import { BrandImg, SearchImg } from "../../assets";
 import Container from "../Container";
 import { useNavigate } from "react-router-dom";
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
+import { useWallet } from "@solana/wallet-adapter-react";
+import { cn } from "../../utils/cn";
+import { UserIcon } from "lucide-react";
 
 const Header = () => {
     const navigate = useNavigate();
+    const { connected } = useWallet();
+
     return (
         <Container>
             <header className="flex justify-between mt-[46px]">
@@ -23,7 +28,21 @@ const Header = () => {
                 <div className="flex items-center gap-10">
                     <SearchInput />
                     {/* <w3m-button balance="hide" /> */}
-                    <WalletMultiButton style={{ height: "56px", borderRadius: "15px" }} />
+                    {!connected ? (
+                        <WalletMultiButton style={{ height: "56px", borderRadius: "15px" }} />
+                    ) : (
+                        <div className="flex justify-center items-center space-x-2">
+                            <WalletMultiButton style={{ height: "56px", borderRadius: "15px" }} />
+                            <button
+                                onClick={() => navigate("/user")}
+                                className={cn(
+                                    "size-[56px] p-3 font-semibold rounded-[15px] bg-[#512da8] hover:bg-[#1a202e] disabled:bg-gray-300 text-white justify-center items-center flex"
+                                )}
+                            >
+                                <UserIcon />
+                            </button>
+                        </div>
+                    )}
                 </div>
             </header>
         </Container>

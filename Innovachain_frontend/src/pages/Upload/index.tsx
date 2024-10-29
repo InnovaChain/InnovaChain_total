@@ -319,7 +319,7 @@ const CardSelector = ({
 
     useEffect(() => {
         onChange(selectedOption);
-    }, [selectedOption]);
+    }, [onChange, selectedOption]);
 
     return (
         <div className={clsx("relative", className)}>
