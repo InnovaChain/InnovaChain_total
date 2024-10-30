@@ -9,9 +9,14 @@ import { ProductInfo } from "../../utils/api";
 import { cn } from "../../utils/cn";
 import toShortAddress from "../../utils/toShortAddress";
 import { useLikeMutation, useUnlikeMutation } from "../../hooks/useLikeOrUnlikeMutation";
+import { useUserLikeStatusOfImage } from "../../hooks/useUserStats";
+import { useContext } from "react";
+import { UserContext } from "../../context/UserProvider";
 
 const OriginalStage = ({ onClickRecreated, info }: { onClickRecreated?: () => void; info?: ProductInfo | null }) => {
+    const { userId } = useContext(UserContext);
     const { data: previous } = useProductInfoById({ imageId: info?.source_image_id });
+    const { data: likeStatus, refetch } = useUserLikeStatusOfImage({ imageId: info?.id, userId: userId });
 
     const { mutateAsync: like } = useLikeMutation(info?.id);
     const { mutateAsync: unlike } = useUnlikeMutation(info?.id);
@@ -53,14 +58,14 @@ const OriginalStage = ({ onClickRecreated, info }: { onClickRecreated?: () => vo
 
                 <HeartIcon
                     size={20}
-                    className={cn(info?.is_liked_by_user ? "fill-red-500 stroke-none" : "fill-none stroke-[#8E8E8E]", "hover:cursor-pointer")}
+                    className={cn(likeStatus?.status ? "fill-red-500 stroke-none" : "fill-none stroke-[#8E8E8E]", "hover:cursor-pointer")}
                     onClick={async () => {
                         if (info === undefined || info === null) return;
 
-                        if (info.is_liked_by_user) {
-                            await unlike(info.id);
+                        if (likeStatus?.status) {
+                            await unlike(info.id).finally(() => refetch());
                         } else {
-                            await like(info.id);
+                            await like(info.id).finally(() => refetch());
                         }
                     }}
                 />

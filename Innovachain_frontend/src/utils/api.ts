@@ -300,3 +300,15 @@ export async function createUser({ wallet_address }: { wallet_address: string })
     });
     return res.data;
 }
+
+export async function getUserStats({ userId }: { userId: number | null }) {
+    const url = `${API_URL}/users/${userId}/stats`;
+    const res = await api.get(url);
+    return res.data;
+}
+
+export async function getUserLikeStatusOfImage({ imageId, userId }: { imageId: number; userId: number }) {
+    const url = `${API_URL}/images/${imageId}/like/status?user_id=${userId}`;
+    const res = await api.get(url);
+    return res.data;
+}
