@@ -23,7 +23,7 @@ const GalleryCards = () => {
     );
 };
 
-const GalleryCard = ({ creator, image }: { creator: string; image: ImageType }) => {
+export const GalleryCard = ({ creator, image }: { creator: string; image: ImageType }) => {
     const { name, created_at, id, like_count, reference_count } = image;
     const navigate = useNavigate();
 
