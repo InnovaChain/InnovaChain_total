@@ -10,6 +10,7 @@ import useProductInfoById from "../../hooks/useProductInfo";
 import toast from "react-hot-toast";
 import { useWallet } from "@solana/wallet-adapter-react";
 import useInsertWatermarkMutation from "../../hooks/useInsertWatermarkMutation";
+import useIncreaseReferenceMutation from "../../hooks/useIncreaseReferenceMutation";
 
 const GenerateStage = ({ imageId, revisedPrompt }: { imageId?: number; revisedPrompt: string }) => {
     const [customizedMakerText, setCustomizedMakerText] = useState<string>("");
@@ -17,6 +18,8 @@ const GenerateStage = ({ imageId, revisedPrompt }: { imageId?: number; revisedPr
 
     const { mutateAsync: confirmRecreate, isPending: isMinting } = useConfirmRecreateMutation();
     const { mutateAsync: insertWatermark } = useInsertWatermarkMutation();
+
+    const { mutateAsync: increaseReference } = useIncreaseReferenceMutation();
 
     const navigate = useNavigate();
 
@@ -89,6 +92,8 @@ const GenerateStage = ({ imageId, revisedPrompt }: { imageId?: number; revisedPr
                                 .catch((error: Error) => {
                                     console.error(error);
                                 });
+
+                            await increaseReference({ imageId: info.id }).then(() => console.log("Reference increased successfully"));
 
                             toast.success("Recreated and uploaded successfully");
 

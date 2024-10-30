@@ -312,3 +312,9 @@ export async function getUserLikeStatusOfImage({ imageId, userId }: { imageId: n
     const res = await api.get(url);
     return res.data;
 }
+
+export async function increaseReference({ imageId }: { imageId: number }) {
+    const url = `${API_URL}/images/${imageId}/reference/increment`;
+    const res = await api.post(url);
+    return res.data;
+}
