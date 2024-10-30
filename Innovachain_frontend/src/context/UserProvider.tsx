@@ -26,9 +26,5 @@ export default function UserProvider({ children }: { children: ReactNode }) {
         }
     }, [connected, createUser, publicKey]);
 
-    if (!userId) {
-        return null;
-    }
-
     return <UserContext.Provider value={{ userId }}>{children}</UserContext.Provider>;
 }
