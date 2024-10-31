@@ -295,16 +295,26 @@ export async function unlikeImage({ imageId, userId }: { imageId: number; userId
 
 export async function createUser({ wallet_address }: { wallet_address: string }) {
     const url = `${API_URL}/users`;
-    const res = await api.post(url, {
-        wallet_address,
+    // const res = await api.post(url, {
+    //     wallet_address,
+    // });
+    const res = await fetch(url, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            wallet_address,
+        }),
     });
-    return res.data;
+    return res.json();
 }
 
 export async function getUserStats({ userId }: { userId: number | null }) {
     const url = `${API_URL}/users/${userId}/stats`;
-    const res = await api.get(url);
-    return res.data;
+    // const res = await api.get(url);
+    const res = await fetch(url);
+    return res.json();
 }
 
 export async function getUserLikeStatusOfImage({ imageId, userId }: { imageId: number; userId: number }) {

@@ -17,43 +17,41 @@ export default function User() {
     const { data: userStats } = useUserStats({ userId });
 
     return (
-        <div className="text-white min-h-screen p-4 w-full mt-10 space-y-10 px-20 flex flex-col items-start justify-center">
-            <div className="w-full flex-col flex justify-between items-center space-x-20">
-                <div className="w-full flex items-center space-x-16">
-                    <Blockies seed={publicKey?.toBase58() ?? ""} size={40} scale={3} className="rounded-full" />
+        <div className="text-white min-h-screen p-4 w-full mt-10 space-y-10 px-20 flex flex-col items-start justify-start">
+            <div className="w-full flex items-center space-x-16">
+                <Blockies seed={publicKey?.toBase58() ?? ""} size={40} scale={3} className="rounded-full" />
 
-                    <div className="flex flex-col w-full space-y-2">
-                        <div className="flex w-full justify-start items-center">
-                            <div className="w-full">
-                                <h1 className="text-2xl font-bold">Address</h1>
-                                <p className="text-gray-400">{publicKey?.toBase58() ?? ""}</p>
-                            </div>
-
-                            <div className="w-full">
-                                <h1 className="text-2xl font-bold">Total rewards</h1>
-                                <p className="text-gray-400">{userStats?.total_rewards}</p>
-                            </div>
+                <div className="flex flex-col w-full space-y-2">
+                    <div className="flex w-full justify-start items-center">
+                        <div className="w-full">
+                            <h1 className="text-2xl font-bold">Address</h1>
+                            <p className="text-gray-400">{publicKey?.toBase58() ?? ""}</p>
                         </div>
 
-                        <Separator className="w-full bg-white" />
+                        <div className="w-full">
+                            <h1 className="text-2xl font-bold">Total rewards</h1>
+                            <p className="text-gray-400">{userStats?.total_rewards}</p>
+                        </div>
+                    </div>
 
-                        <div className="flex space-x-10 text-center">
-                            <div>
-                                <p className="text-2xl font-bold">{userStats?.total_likes}</p>
-                                <p className="text-sm text-gray-400">Likes</p>
-                            </div>
-                            <div>
-                                <p className="text-2xl font-bold">{userStats?.total_references}</p>
-                                <p className="text-sm text-gray-400">Cites</p>
-                            </div>
-                            <div>
-                                <p className="text-2xl font-bold">12K</p>
-                                <p className="text-sm text-gray-400">Followers</p>
-                            </div>
-                            <div>
-                                <p className="text-2xl font-bold">587</p>
-                                <p className="text-sm text-gray-400">Followings</p>
-                            </div>
+                    <Separator className="w-full bg-white" />
+
+                    <div className="flex space-x-10 text-center">
+                        <div>
+                            <p className="text-2xl font-bold">{userStats?.total_likes}</p>
+                            <p className="text-sm text-gray-400">Likes</p>
+                        </div>
+                        <div>
+                            <p className="text-2xl font-bold">{userStats?.total_references}</p>
+                            <p className="text-sm text-gray-400">Cites</p>
+                        </div>
+                        <div>
+                            <p className="text-2xl font-bold">12K</p>
+                            <p className="text-sm text-gray-400">Followers</p>
+                        </div>
+                        <div>
+                            <p className="text-2xl font-bold">587</p>
+                            <p className="text-sm text-gray-400">Followings</p>
                         </div>
                     </div>
                 </div>
