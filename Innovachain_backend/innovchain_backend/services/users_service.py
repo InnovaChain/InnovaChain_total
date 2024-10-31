@@ -13,6 +13,9 @@ class UserService:
     async def get_user_by_id(self, user_id: int) -> Optional[User]:
         return await self.repository.get_user_by_id(user_id)
 
+    async def get_user_images_by_id(self, user_id: int) -> Optional[User]:
+        return await self.repository.get_user_images_by_id(user_id)
+
     async def get_user_by_wallet_address(self, wallet_address: str) -> Optional[User]:
         return await self.repository.get_user_by_wallet_address(wallet_address)
 

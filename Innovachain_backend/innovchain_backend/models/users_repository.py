@@ -1,7 +1,7 @@
 # from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import SQLAlchemyError
-from .model import User
+from .model import User, Image
 
 class UserRepository:
     def __init__(self, db_session: Session):
@@ -13,6 +13,13 @@ class UserRepository:
 
     async def get_user_by_id(self, user_id: int):
         return self.db_session.get(User, user_id)
+
+    async def get_user_images_by_id(self, user_id: int):
+        user = self.db_session.query(User).filter(User.id == user_id).first()
+        if user is None:
+            return None
+        user.images = self.db_session.query(Image).filter(Image.user_id == user_id).all()
+        return user
 
     async def get_user_by_wallet_address(self, wallet_address: str):
         result = self.db_session.query(User).filter(User.wallet_address == wallet_address).first()
