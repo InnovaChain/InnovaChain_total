@@ -12,7 +12,8 @@ export default function User() {
     const { publicKey } = useWallet();
 
     const { userId } = useContext(UserContext);
-    const { data } = useSWR<ImageType[]>("getImages", getImages);
+    const { data: creations } = useSWR<ImageType[]>("getImages", getImages);
+    const userCreations = creations?.filter((image) => image.user_id === userId);
 
     const { data: userStats } = useUserStats({ userId });
 
@@ -57,19 +58,25 @@ export default function User() {
                 </div>
             </div>
 
-            <div className="w-full">
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                    {data
-                        ?.filter((image) => image.user_id === userId)
-                        .map((image) => (
-                            <GalleryCard
-                                creator={image.user.wallet_address && image.user.wallet_address !== "" ? image.user.wallet_address : "Anonymous user"}
-                                key={image.id}
-                                image={image}
-                            />
-                        ))}
+            {userCreations?.length === 0 ? (
+                <div className="w-full h-full flex justify-center items-center text-gray-500 pt-40">No collection found</div>
+            ) : (
+                <div className="w-full">
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                        {userCreations
+                            ?.filter((image) => image.user_id === userId)
+                            .map((image) => (
+                                <GalleryCard
+                                    creator={
+                                        image.user.wallet_address && image.user.wallet_address !== "" ? image.user.wallet_address : "Anonymous user"
+                                    }
+                                    key={image.id}
+                                    image={image}
+                                />
+                            ))}
+                    </div>
                 </div>
-            </div>
+            )}
         </div>
     );
 }
