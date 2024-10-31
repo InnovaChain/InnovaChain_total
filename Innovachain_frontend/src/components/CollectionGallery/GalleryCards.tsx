@@ -1,4 +1,3 @@
-import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
 import useSWR from "swr";
 import { HeartImg, UserImg } from "../../assets/gallery";
@@ -24,7 +23,7 @@ const GalleryCards = () => {
 };
 
 export const GalleryCard = ({ creator, image }: { creator: string; image: ImageType }) => {
-    const { name, created_at, id, like_count, reference_count } = image;
+    const { name, id, like_count, reference_count, reward } = image;
     const navigate = useNavigate();
 
     return (
@@ -32,7 +31,8 @@ export const GalleryCard = ({ creator, image }: { creator: string; image: ImageT
             <img className="w-full h-auto rounded-xl" src={`${API_URL}/images/${id}`} />
             <div className="flex justify-between items-center">
                 <p className="text-[#141414] text-xl font-semibold">{name}</p>
-                <p className="text-[#94A3B8] text-xs font-normal">{dayjs(created_at).format("YYYY-MM-DD HH:mm")}</p>
+                {/* <p className="text-[#94A3B8] text-xs font-normal">{dayjs(created_at).format("YYYY-MM-DD HH:mm")}</p> */}
+                <p className="text-[#141414] text-sm font-normal">Reward: {reward}</p>
             </div>
             <div className="flex justify-between items-center">
                 <div className="flex flex-col gap-2">
