@@ -358,3 +358,15 @@ async def get_like_status(image_id: int, user_id: int, likes_service: LikesServi
     if like_record is not None:
         return {"status": True}
     return {"status": False}
+
+@app.post("/images/{image_id}/update_reward")
+async def update_image_reward(
+    image_id: int, 
+    reward: int,
+    imgs: ImageService = Depends(get_image_service),
+):
+    try:
+        updated_image = await imgs.update_image_reward(image_id, reward)
+        return updated_image
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail="Internal error")
