@@ -17,6 +17,9 @@ class ImageService:
 
     async def update_image(self, image_id: int, prompt: str):
         return await self.repository.update(image_id, prompt)
+    
+    async def update_image_owner(self, image_id: int, user_id: str):
+        return await self.repository.update_owner(image_id, user_id)
 
     async def delete_image(self, image_id: int):
         return await self.repository.delete(image_id)

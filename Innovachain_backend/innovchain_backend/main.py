@@ -370,3 +370,21 @@ async def update_image_reward(
         return updated_image
     except Exception as exc:
         raise HTTPException(status_code=500, detail="Internal error")
+
+@app.post("/images/{image_id}/update_owner")
+async def update_image_owner(
+    image_id: int, 
+    wallet_address: str, 
+    imgs: ImageService = Depends(get_image_service),
+    us: UserService = Depends(get_user_service),
+):
+    if wallet_address is None:
+        raise HTTPException(status_code=400, detail="Missing required field 'wallet_address'")
+    
+    user = await us.get_user_by_wallet_address(wallet_address)
+    
+    if user is None:
+        raise HTTPException(status_code=404, detail="User not found") 
+    
+    updated_image = await imgs.update_image_owner(image_id, user.id)
+    return updated_image

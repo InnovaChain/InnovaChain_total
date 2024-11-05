@@ -89,7 +89,19 @@ class ImageRepository:
                 self.db.rollback()
                 raise e
         return db_image
-
+    
+    async def update_owner(self, image_id: int, user_id: int):
+        db_image = self.db.query(Image).filter(Image.id == image_id).first()
+        if db_image:
+            db_image.user_id = user_id
+            try:
+                self.db.commit()
+                self.db.refresh(db_image)
+            except SQLAlchemyError as e:
+                self.db.rollback()
+                raise e
+        return db_image
+   
     async def delete(self, image_id: int):
         db_image = self.db.query(Image).filter(Image.id == image_id).first()
         if db_image:
