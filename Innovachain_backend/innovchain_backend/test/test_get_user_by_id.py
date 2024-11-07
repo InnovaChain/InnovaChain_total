@@ -1,6 +1,6 @@
 import requests
 
-def test_read_image(user_id):
+def test_get_user_by_id(user_id):
     url = f"http://localhost:8000/users/{user_id}"
     response = requests.get(url)
 
@@ -12,4 +12,4 @@ def test_read_image(user_id):
         print(f"Error message: {response.text}")
 
 if __name__ == "__main__":
-    test_read_image(1)
+    test_get_user_by_id(2)
