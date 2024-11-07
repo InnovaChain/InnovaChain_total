@@ -262,7 +262,7 @@ async def get_user_images_by_id(
     for img in user.images:
         image_detail = await imgs.get_image(img.id)
         if not image_detail:
-            continue  # 如果图片不存在，则跳过
+            continue
         is_liked_by_user = await lks.get_like(user_id, img.id) is not None
         detailed_images.append({
             "user_id": user.id,
