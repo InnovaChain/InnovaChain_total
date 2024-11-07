@@ -319,3 +319,9 @@ export async function increaseReference({ imageId }: { imageId: number }) {
     const res = await api.post(url);
     return res.data;
 }
+
+export async function getUserImages({ userId }: { userId: number }) {
+    const url = `${API_URL}/users/${userId}`;
+    const res = await api.get(url);
+    return res.data;
+}

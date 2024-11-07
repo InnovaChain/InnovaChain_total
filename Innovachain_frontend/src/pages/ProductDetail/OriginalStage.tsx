@@ -12,6 +12,7 @@ import { useLikeMutation, useUnlikeMutation } from "../../hooks/useLikeOrUnlikeM
 import { useUserLikeStatusOfImage } from "../../hooks/useUserStats";
 import { useContext } from "react";
 import { UserContext } from "../../context/UserProvider";
+import MultiProgress from "react-multi-progress";
 
 const OriginalStage = ({ onClickRecreated, info }: { onClickRecreated?: () => void; info?: ProductInfo | null }) => {
     const { userId } = useContext(UserContext);
@@ -22,7 +23,7 @@ const OriginalStage = ({ onClickRecreated, info }: { onClickRecreated?: () => vo
     const { mutateAsync: unlike } = useUnlikeMutation(info?.id);
 
     return (
-        <CardContainer className="flex-1">
+        <CardContainer className="flex-1 relative">
             {/* Choice Card */}
             <div className="flex justify-between items-end">
                 <h3 className="text-[#292B39] text-[50px] font-semibold font-poppins leading-[35px]">{info?.name}</h3>
@@ -52,6 +53,9 @@ const OriginalStage = ({ onClickRecreated, info }: { onClickRecreated?: () => vo
                     </p>
                 </div>
             </div>
+
+            <Progress />
+
             <div className="flex justify-end gap-4 my-6">
                 <p className="text-[#8E8E8E] text-xl font-medium leading-[20px]">{info?.like_count}</p>
                 {/* <img className="w-[20px] h-[20px] stroke-red-600" src={HeartImg} /> */}
@@ -76,7 +80,8 @@ const OriginalStage = ({ onClickRecreated, info }: { onClickRecreated?: () => vo
                 <p className="text-[#c99e9e]">Created at</p>
                 <p className="text-black">Jun 17, 2023 at 05:08</p>
             </div>
-            <div className="mt-5 flex flex-col gap-2">
+
+            <div className="mt-5 flex flex-col gap-2 absolute bottom-10 left-10 right-10">
                 <DarkButton>Purchase</DarkButton>
                 <DarkButton className="w-full h-20 rounded-[20px] bg-black text-white font-bold  text-lg" onClick={onClickRecreated}>
                     Recreate
@@ -89,5 +94,48 @@ const DarkButton = twc.div`
   w-full h-20 rounded-[20px] bg-black text-white font-bold  text-lg
   flex justify-center items-center hover:cursor-pointer 
 `;
+
+const Progress = () => {
+    return (
+        <div className="w-full flex flex-col space-y-3 my-6">
+            <MultiProgress
+                transitionTime={1.2}
+                elements={[
+                    {
+                        value: 60,
+                        color: "#5FDFE9",
+                    },
+                    {
+                        value: 40,
+                        color: "#748BCF",
+                    },
+                ]}
+                height={15}
+                backgroundColor="white"
+                className="w-full"
+            />
+
+            <div className="text-[#8D8D8D] grid grid-cols-2 gap-3">
+                <span className="flex items-center space-x-3">
+                    <span className="rounded-full size-4 bg-[#5FDFE9]" />
+                    <p>Image</p>
+                    <p>60%</p>
+                </span>
+
+                <span className="flex items-center space-x-3">
+                    <span className="rounded-full size-4 bg-[#748BCF]" />
+                    <p>Model</p>
+                    <p>40%</p>
+                </span>
+
+                <span className="flex items-center space-x-3">
+                    <span className="rounded-full size-4 bg-[#8C8C8C]" />
+                    <p>Goods</p>
+                    <p>0%</p>
+                </span>
+            </div>
+        </div>
+    );
+};
 
 export default OriginalStage;

@@ -6,7 +6,12 @@ export function useUserStats({ userId }: { userId: number | null }) {
         queryKey: ["userStats", userId],
         queryFn: async () => {
             if (!userId) {
-                return;
+                return {
+                    total_likes: 0,
+                    total_references: 0,
+                    total_rewards: 0,
+                    user_id: 0,
+                };
             }
             const response = await getUserStats({ userId });
             return response as {
