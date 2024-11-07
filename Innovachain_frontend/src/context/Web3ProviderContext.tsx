@@ -16,48 +16,48 @@ const projectId = "60777a9de1bd0caa055c217923b7498e";
 
 // 2. Create wagmiConfig
 const metadata = {
-  name: "InnovaChain",
-  description: "",
-  url: "", // origin must match your domain & subdomain
-  icons: [LogoImg],
+    name: "ArtCycle",
+    description: "",
+    url: "", // origin must match your domain & subdomain
+    icons: [LogoImg],
 };
 
 const isMainnet = import.meta.env.VITE_INNOVA_CHAIN_ENV !== "devnet";
 export const chain = isMainnet ? mainnet : sepolia;
 const chains = [chain] as const;
 const config = defaultWagmiConfig({
-  chains,
-  projectId,
-  metadata,
-  transports: isMainnet
-    ? {
-        [mainnet.id]: http(import.meta.env.VITE_ETHEREUM_MAINNET_RPC_URL),
-      }
-    : {
-        [sepolia.id]: http(import.meta.env.VITE_ETHEREUM_TESTNET_RPC_URL),
-      },
-  storage: createStorage({
-    key: WAGMI_STORAGE_KEY,
-    storage: localStorage,
-  }),
+    chains,
+    projectId,
+    metadata,
+    transports: isMainnet
+        ? {
+              [mainnet.id]: http(import.meta.env.VITE_ETHEREUM_MAINNET_RPC_URL),
+          }
+        : {
+              [sepolia.id]: http(import.meta.env.VITE_ETHEREUM_TESTNET_RPC_URL),
+          },
+    storage: createStorage({
+        key: WAGMI_STORAGE_KEY,
+        storage: localStorage,
+    }),
 });
 
 // 3. Create modal
 createWeb3Modal({
-  wagmiConfig: config,
-  projectId,
-  enableAnalytics: true, // Optional - defaults to your Cloud configuration
-  enableOnramp: true, // Optional - false as default
-  themeMode: "light",
-  themeVariables: {
-    "--w3m-border-radius-master": "2px",
-  },
+    wagmiConfig: config,
+    projectId,
+    enableAnalytics: true, // Optional - defaults to your Cloud configuration
+    enableOnramp: true, // Optional - false as default
+    themeMode: "light",
+    themeVariables: {
+        "--w3m-border-radius-master": "2px",
+    },
 });
 
 export function Web3ModalProvider({ children }: { children: React.ReactNode }) {
-  return (
-    <WagmiProvider config={config}>
-      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
-    </WagmiProvider>
-  );
+    return (
+        <WagmiProvider config={config}>
+            <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+        </WagmiProvider>
+    );
 }

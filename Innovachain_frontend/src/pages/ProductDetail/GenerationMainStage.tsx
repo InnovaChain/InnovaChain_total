@@ -39,7 +39,7 @@ const GenerationMainStage = ({ isShowTshirt = false, creator, name }: { isShowTs
             {/* <img className="w-full h-auto rounded-[20px] mt-10" src={`${API_URL}/images/${id}`} /> */}
             <div className="relative w-full h-auto mt-10">
                 <Watermark
-                    content={["InnovaChain", "Solana Radar"]}
+                    content={["ArtCycle", "Solana Radar"]}
                     gapY={220}
                     gapX={120}
                     width={80}
