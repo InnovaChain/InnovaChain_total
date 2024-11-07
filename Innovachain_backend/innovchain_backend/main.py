@@ -248,15 +248,50 @@ async def set_all_images_inactive(imgs: ImageService = Depends(get_image_service
 
 
 @app.get("/users/{user_id}")
-async def get_user_images_by_id(user_id: int, us: UserService = Depends(get_user_service)):
+async def get_user_images_by_id(
+    user_id: int, 
+    us: UserService = Depends(get_user_service),
+    imgs: ImageService = Depends(get_image_service),
+    lks: LikesService = Depends(get_likes_service)
+):
     user = await us.get_user_images_by_id(user_id)
-    print(user.id)
     if user is None:
         raise HTTPException(status_code=404, detail="User not found")
+    
+    detailed_images = []
+    for img in user.images:
+        image_detail = await imgs.get_image(img.id)
+        if not image_detail:
+            continue  # 如果图片不存在，则跳过
+        is_liked_by_user = await lks.get_like(user_id, img.id) is not None
+        detailed_images.append({
+            "user_id": user.id,
+            "filename": image_detail.filename,
+            "prompt": image_detail.prompt,
+            "watermark": image_detail.watermark,
+            "description": image_detail.description,
+            "created_at": image_detail.created_at,
+            "reference_count": image_detail.reference_count,
+            "like_count": image_detail.like_count,
+            "id": image_detail.id,
+            "image_path": image_detail.image_path,
+            "source_image_id": image_detail.source_image_id,
+            "name": image_detail.name,
+            "is_active": image_detail.is_active,
+            "updated_at": image_detail.updated_at,
+            "reward": image_detail.reward,
+            "user": {
+                "id": user.id,
+                "wallet_address": user.wallet_address
+            },
+            "is_liked_by_user": is_liked_by_user
+        })
+
     user_info = {
         "id": user.id,
         "wallet_address": user.wallet_address,
-        "images": [img.id for img in user.images]
+        "images": [img.id for img in user.images],
+        "detailed_images": detailed_images
     }
     return user_info
 
