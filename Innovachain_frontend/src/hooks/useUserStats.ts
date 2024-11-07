@@ -29,7 +29,9 @@ export function useUserLikeStatusOfImage({ imageId, userId }: { imageId: number 
         queryKey: ["userLikeStatusOfImage", imageId, userId],
         queryFn: async () => {
             if (!userId || !imageId) {
-                return;
+                return {
+                    status: false,
+                };
             }
 
             const response = await getUserLikeStatusOfImage({ imageId, userId });
@@ -37,5 +39,6 @@ export function useUserLikeStatusOfImage({ imageId, userId }: { imageId: number 
                 status: boolean;
             };
         },
+        enabled: !!userId && !!imageId,
     });
 }
