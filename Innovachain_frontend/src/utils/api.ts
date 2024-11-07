@@ -323,5 +323,10 @@ export async function increaseReference({ imageId }: { imageId: number }) {
 export async function getUserImages({ userId }: { userId: number }) {
     const url = `${API_URL}/users/${userId}`;
     const res = await api.get(url);
-    return res.data;
+    return res.data as {
+        id: number;
+        wallet_address: string;
+        images: number[];
+        detailed_images: ImageType[];
+    };
 }

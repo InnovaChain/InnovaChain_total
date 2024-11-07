@@ -1,21 +1,18 @@
 import { useWallet } from "@solana/wallet-adapter-react";
 import { useContext } from "react";
 import Blockies from "react-blockies";
-import useSWR from "swr";
 import { GalleryCard } from "../../components/CollectionGallery/GalleryCards";
 import { Separator } from "../../components/ui/separator";
 import { UserContext } from "../../context/UserProvider";
+import useUserCreations from "../../hooks/useUserCreations";
 import { useUserStats } from "../../hooks/useUserStats";
-import { getImages, ImageType } from "../../utils/api";
 
 export default function User() {
     const { publicKey } = useWallet();
 
     const { userId } = useContext(UserContext);
-    const { data: creations } = useSWR<ImageType[]>("getImages", getImages);
-    const userCreations = creations?.filter((image) => image.user_id === userId);
 
-    // const { data: ss } = useUserCreations();
+    const { data: userCreations } = useUserCreations();
 
     const { data: userStats } = useUserStats({ userId });
 
@@ -60,14 +57,13 @@ export default function User() {
                 </div>
             </div>
 
-            {/* {JSON.stringify(ss)} */}
-            {userCreations?.length === 0 ? (
+            {userCreations?.detailed_images.length === 0 ? (
                 <div className="w-full h-full flex justify-center items-center text-gray-500 pt-40">No collection found</div>
             ) : (
                 <div className="w-full">
                     <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                        {userCreations
-                            ?.filter((image) => image.user_id === userId)
+                        {userCreations?.detailed_images
+                            .filter((image) => image.user_id === userId)
                             .map((image) => (
                                 <GalleryCard
                                     creator={

@@ -1,19 +1,18 @@
 import clsx from "clsx";
 import { HeartIcon } from "lucide-react";
+import { useContext } from "react";
 import { twc } from "react-twc";
 import { UserImg } from "../../assets/gallery";
 import { Avatar2Img, AvatarImg } from "../../assets/product-detail";
 import { CardContainer } from "../../components/Card";
+import Progress from "../../components/Progress";
+import { UserContext } from "../../context/UserProvider";
+import { useLikeMutation, useUnlikeMutation } from "../../hooks/useLikeOrUnlikeMutation";
 import useProductInfoById from "../../hooks/useProductInfo";
+import { useUserLikeStatusOfImage } from "../../hooks/useUserStats";
 import { ProductInfo } from "../../utils/api";
 import { cn } from "../../utils/cn";
 import toShortAddress from "../../utils/toShortAddress";
-import { useLikeMutation, useUnlikeMutation } from "../../hooks/useLikeOrUnlikeMutation";
-import { useUserLikeStatusOfImage } from "../../hooks/useUserStats";
-import { useContext } from "react";
-import { UserContext } from "../../context/UserProvider";
-import MultiProgress from "react-multi-progress";
-import Progress from "../../components/Progress";
 
 const OriginalStage = ({
     onClickPurchase,
