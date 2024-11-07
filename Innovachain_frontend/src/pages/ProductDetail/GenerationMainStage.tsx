@@ -13,7 +13,7 @@ import toShortAddress from "../../utils/toShortAddress";
 // import { readImageInfo } from "../../utils/api";
 import Watermark from "@uiw/react-watermark";
 
-const GenerationMainStage = ({ creator, name }: { creator?: string; name?: string }) => {
+const GenerationMainStage = ({ isShowTshirt = false, creator, name }: { isShowTshirt: boolean; creator?: string; name?: string }) => {
     const { id } = useParams();
     // const { data: imageInfo } = useSWR(`readImageInfo__${id}`, () => id ? readImageInfo(Number(id)): undefined);
     const { isLoading, imagineResponse, upscaleDone, options } = useContext(RecreateContext);
@@ -49,11 +49,22 @@ const GenerationMainStage = ({ creator, name }: { creator?: string; name?: strin
                     fontFamily="Impact, fantasy"
                     fontStyle="oblique"
                 >
-                    <img
-                        className="w-full h-auto rounded-[20px] aspect-square"
-                        src={isRecreated ? imagineResponse.uri : `${API_URL}/images/${id}`}
-                        alt="image"
-                    />
+                    {isShowTshirt ? (
+                        <div className="relative">
+                            <img className="w-full h-auto rounded-[20px] aspect-square" src="/tshirt.jpg" alt="image" />
+                            <img
+                                className="w-[30%] h-auto rounded-[20px] aspect-square absolute top-[10%] left-[50%] transform translate-x-[-50%] -translate-y-[-50%]"
+                                src={isRecreated ? imagineResponse.uri : `${API_URL}/images/${id}`}
+                                alt="image"
+                            />
+                        </div>
+                    ) : (
+                        <img
+                            className="w-full h-auto rounded-[20px] aspect-square"
+                            src={isRecreated ? imagineResponse.uri : `${API_URL}/images/${id}`}
+                            alt="image"
+                        />
+                    )}
 
                     {isLoading && (
                         <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 rounded-[20px]">

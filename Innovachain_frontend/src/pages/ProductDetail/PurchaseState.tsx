@@ -1,9 +1,15 @@
 import { twc } from "react-twc";
 import { CardContainer } from "../../components/Card";
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { cn } from "../../utils/cn";
 
-export default function PurchaseStage({ onClickPay }: { onClickPay?: () => void }) {
+export default function PurchaseStage({
+    setIsShowTshirt,
+    onClickPay,
+}: {
+    setIsShowTshirt: Dispatch<SetStateAction<boolean>>;
+    onClickPay?: () => void;
+}) {
     const [assetType, setAssetType] = useState<"Ownership" | "Clothes">("Ownership");
 
     const [size, setSize] = useState<"S" | "M" | "L" | "XL" | "XXL" | "XXXL" | undefined>(undefined);
@@ -11,8 +17,11 @@ export default function PurchaseStage({ onClickPay }: { onClickPay?: () => void 
     useEffect(() => {
         if (assetType === "Ownership") {
             setSize(undefined);
+            setIsShowTshirt(false);
+        } else {
+            setIsShowTshirt(true);
         }
-    }, [assetType]);
+    }, [assetType, setIsShowTshirt]);
 
     return (
         <CardContainer className="flex-1 p-10 relative">

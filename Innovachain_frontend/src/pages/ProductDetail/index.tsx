@@ -62,7 +62,8 @@ export const RecreateContext = createContext<{
 });
 
 const ProductDetail = () => {
-    const [stage, setStage] = useState<"Original" | "GenerationPrompt" | "Generate" | "Purchase" | "Pay">("Original");
+    const [stage, setStage] = useState<"Original" | "GenerationPrompt" | "Generate" | "Purchase" | "PurchaseTshirt" | "Pay">("Original");
+    const [isShowTshirt, setIsShowTshirt] = useState<boolean>(false);
     const { id } = useParams<{ id: string }>();
 
     const { data: info } = useProductInfoById({ imageId: parseInt(id!) });
@@ -138,9 +139,9 @@ const ProductDetail = () => {
                         setUpscaleDone,
                     }}
                 >
-                    <GenerationGallery id={info?.id} />
+                    {stage !== "Purchase" && <GenerationGallery id={info?.id} />}
 
-                    <GenerationMainStage creator={info?.user.wallet_address} name={info?.name} />
+                    <GenerationMainStage isShowTshirt={isShowTshirt} creator={info?.user.wallet_address} name={info?.name} />
 
                     {stage === "Original" && (
                         <OriginalStage
@@ -149,7 +150,7 @@ const ProductDetail = () => {
                             info={info}
                         />
                     )}
-                    {stage === "Purchase" && <PurchaseStage onClickPay={() => setStage("Pay")} />}
+                    {stage === "Purchase" && <PurchaseStage setIsShowTshirt={setIsShowTshirt} onClickPay={() => setStage("Pay")} />}
 
                     {stage === "GenerationPrompt" && (
                         <GenerationPromptStage
