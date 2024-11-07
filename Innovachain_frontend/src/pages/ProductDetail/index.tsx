@@ -12,6 +12,7 @@ import GenerateStage from "./GenerateStage";
 import { ImagineResponse } from "../../utils/api";
 // import mockImagineResponse from "./mockImagine.json";
 import { getUIdsVIdsAndRecreateId } from "../../utils/getUV";
+import PurchaseStage from "./PurchaseState";
 
 export const RecreateContext = createContext<{
     isStarted: boolean;
@@ -61,7 +62,7 @@ export const RecreateContext = createContext<{
 });
 
 const ProductDetail = () => {
-    const [stage, setStage] = useState<"Original" | "GenerationPrompt" | "Generate">("Original");
+    const [stage, setStage] = useState<"Original" | "GenerationPrompt" | "Generate" | "Purchase" | "Pay">("Original");
     const { id } = useParams<{ id: string }>();
 
     const { data: info } = useProductInfoById({ imageId: parseInt(id!) });
@@ -138,9 +139,18 @@ const ProductDetail = () => {
                     }}
                 >
                     <GenerationGallery id={info?.id} />
+
                     <GenerationMainStage creator={info?.user.wallet_address} name={info?.name} />
 
-                    {stage === "Original" && <OriginalStage onClickRecreated={() => setStage("GenerationPrompt")} info={info} />}
+                    {stage === "Original" && (
+                        <OriginalStage
+                            onClickPurchase={() => setStage("Purchase")}
+                            onClickRecreated={() => setStage("GenerationPrompt")}
+                            info={info}
+                        />
+                    )}
+                    {stage === "Purchase" && <PurchaseStage onClickPay={() => setStage("Pay")} />}
+
                     {stage === "GenerationPrompt" && (
                         <GenerationPromptStage
                             onClickGenerate={() => setStage("Generate")}

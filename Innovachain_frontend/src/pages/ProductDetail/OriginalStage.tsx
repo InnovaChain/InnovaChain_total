@@ -14,7 +14,15 @@ import { useContext } from "react";
 import { UserContext } from "../../context/UserProvider";
 import MultiProgress from "react-multi-progress";
 
-const OriginalStage = ({ onClickRecreated, info }: { onClickRecreated?: () => void; info?: ProductInfo | null }) => {
+const OriginalStage = ({
+    onClickPurchase,
+    onClickRecreated,
+    info,
+}: {
+    onClickPurchase?: () => void;
+    onClickRecreated?: () => void;
+    info?: ProductInfo | null;
+}) => {
     const { userId } = useContext(UserContext);
     const { data: previous } = useProductInfoById({ imageId: info?.source_image_id });
     const { data: likeStatus, refetch } = useUserLikeStatusOfImage({ imageId: info?.id, userId: userId });
@@ -23,7 +31,7 @@ const OriginalStage = ({ onClickRecreated, info }: { onClickRecreated?: () => vo
     const { mutateAsync: unlike } = useUnlikeMutation(info?.id);
 
     return (
-        <CardContainer className="flex-1 relative">
+        <CardContainer className="flex-1 relative space-y-4">
             {/* Choice Card */}
             <div className="flex justify-between items-end">
                 <h3 className="text-[#292B39] text-[50px] font-semibold font-poppins leading-[35px]">{info?.name}</h3>
@@ -31,7 +39,7 @@ const OriginalStage = ({ onClickRecreated, info }: { onClickRecreated?: () => vo
                     <button className={clsx("bg-[#0066D4] px-2 py-1 rounded-full text-white font-medium")}>Verified</button>
                 </div>
             </div>
-            <p className="text-[#888888B2] text-xl mt-10 mb-20">{info?.description}</p>
+            <p className="text-[#888888B2] text-xl">{info?.description}</p>
             {info?.source_image_id && (
                 <div className="flex gap-2">
                     <img className="w-[65px] h-[65px] rounded-full" src={Avatar2Img} />
@@ -81,8 +89,10 @@ const OriginalStage = ({ onClickRecreated, info }: { onClickRecreated?: () => vo
                 <p className="text-black">Jun 17, 2023 at 05:08</p>
             </div>
 
-            <div className="mt-5 flex flex-col gap-2 absolute bottom-10 left-10 right-10">
-                <DarkButton>Purchase</DarkButton>
+            <div className="mt-auto flex flex-col gap-2 pt-5">
+                <DarkButton className="w-full h-20 rounded-[20px] bg-black text-white font-bold  text-lg" onClick={onClickPurchase}>
+                    Purchase
+                </DarkButton>
                 <DarkButton className="w-full h-20 rounded-[20px] bg-black text-white font-bold  text-lg" onClick={onClickRecreated}>
                     Recreate
                 </DarkButton>
