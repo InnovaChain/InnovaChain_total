@@ -3,6 +3,7 @@
 *.jpeg
 *.jpg
 innovachain.db
+**/innovachain.db
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
