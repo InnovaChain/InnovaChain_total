@@ -105,7 +105,7 @@
 <!-- ABOUT THE PROJECT -->
 
 # 1. About The Project
-Our platform helps creators protect their intellectual property in the world of AI-generated content. With the rise of AI image generation tools, it’s become very easy for anyone to replicate others art without permission, leading to issues of copyright infringement. Innovachain transforming AI-Generated content into secure, traceable, collaborative creations, which create a new generation of creator ecosystem.
+Our platform helps creators protect their intellectual property in the world of AI-generated content. With the rise of AI image generation tools, it’s become very easy for anyone to replicate others art without permission, leading to issues of copyright infringement. ArtCycle transforming AI-Generated content into secure, traceable, collaborative creations, which create a new generation of creator ecosystem.
 
 ![demopage](./images/demopage.png)
 
@@ -194,7 +194,7 @@ Ensure that your system has Python 3.7+ installed. Follow these steps to set up 
 
 #### 2.1.1.3. Database Initialization
 
-Innovachain uses SQLAlchemy as the ORM and Alembic for database migration management. Follow these steps to initialize the database:
+ArtCycle uses SQLAlchemy as the ORM and Alembic for database migration management. Follow these steps to initialize the database:
 
 1. **Initialize Alembic**:
 
@@ -222,7 +222,7 @@ Innovachain uses SQLAlchemy as the ORM and Alembic for database migration manage
 
 #### 2.1.1.4. Running the Application
 
-After completing the above steps, you can start the Innovachain application using the following command:
+After completing the above steps, you can start the ArtCycle application using the following command:
 
 ```
 uvicorn main:app --reload
