@@ -4,7 +4,7 @@ import { CardContainer } from "../../components/Card";
 import { useSelectedAssetStore } from "../../store/useSelectedAssetStore";
 import { cn } from "../../utils/cn";
 
-export default function PurchaseStage({ onClickPay }: { onClickPay?: () => void }) {
+export default function PurchaseStage() {
     // const [selectedAsset, setSelectedAsset] = useState<"Ownership" | "Clothes" | "Cards" | "Stickers">("Ownership");
     const { selectedAsset, setSelectedAsset, resetSelectedAsset } = useSelectedAssetStore();
 
@@ -118,12 +118,7 @@ export default function PurchaseStage({ onClickPay }: { onClickPay?: () => void 
                             href="https://docs.google.com/forms/d/e/1FAIpQLSeWMcZjJNDWtG02tx3VJaSsmaxyvigfHS49ej45DAHpMMK-gg/viewform?usp=sf_link"
                             target="_blank"
                         >
-                            <DarkButton
-                                className=" h-14"
-                                // onClick={onClickPay}
-                            >
-                                Pay
-                            </DarkButton>
+                            <DarkButton className=" h-14">Pay</DarkButton>
                         </a>
                     </div>
                 </div>

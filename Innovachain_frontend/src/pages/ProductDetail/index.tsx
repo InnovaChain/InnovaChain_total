@@ -150,7 +150,7 @@ const ProductDetail = () => {
                             info={info}
                         />
                     )}
-                    {stage === "Purchase" && <PurchaseStage onClickPay={() => setStage("Pay")} />}
+                    {stage === "Purchase" && <PurchaseStage />}
 
                     {stage === "GenerationPrompt" && (
                         <GenerationPromptStage

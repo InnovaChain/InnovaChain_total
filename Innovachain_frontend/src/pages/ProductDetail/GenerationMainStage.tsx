@@ -19,7 +19,7 @@ const GenerationMainStage = ({ creator, name }: { creator?: string; name?: strin
     // const { data: imageInfo } = useSWR(`readImageInfo__${id}`, () => id ? readImageInfo(Number(id)): undefined);
     const { isLoading, imagineResponse, upscaleDone, options } = useContext(RecreateContext);
 
-    const { selectedAsset, setSelectedAsset, resetSelectedAsset } = useSelectedAssetStore();
+    const { selectedAsset } = useSelectedAssetStore();
 
     const isRecreated = imagineResponse?.uri !== undefined;
 
