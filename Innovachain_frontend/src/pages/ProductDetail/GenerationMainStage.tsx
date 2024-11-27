@@ -12,11 +12,14 @@ import toShortAddress from "../../utils/toShortAddress";
 // import useSWR from "swr";
 // import { readImageInfo } from "../../utils/api";
 import Watermark from "@uiw/react-watermark";
+import { useSelectedAssetStore } from "../../store/useSelectedAssetStore";
 
-const GenerationMainStage = ({ isShowTshirt = false, creator, name }: { isShowTshirt: boolean; creator?: string; name?: string }) => {
+const GenerationMainStage = ({ creator, name }: { creator?: string; name?: string }) => {
     const { id } = useParams();
     // const { data: imageInfo } = useSWR(`readImageInfo__${id}`, () => id ? readImageInfo(Number(id)): undefined);
     const { isLoading, imagineResponse, upscaleDone, options } = useContext(RecreateContext);
+
+    const { selectedAsset, setSelectedAsset, resetSelectedAsset } = useSelectedAssetStore();
 
     const isRecreated = imagineResponse?.uri !== undefined;
 
@@ -49,11 +52,29 @@ const GenerationMainStage = ({ isShowTshirt = false, creator, name }: { isShowTs
                     fontFamily="Impact, fantasy"
                     fontStyle="oblique"
                 >
-                    {isShowTshirt ? (
+                    {selectedAsset === "Clothes" ? (
                         <div className="relative">
-                            <img className="w-full h-auto rounded-[20px] aspect-square" src="/tshirt.jpg" alt="image" />
+                            <img className="w-full h-auto rounded-[20px] aspect-square" src="/tshirt.jpg" alt="tshirt" />
                             <img
-                                className="w-[30%] h-auto rounded-[20px] aspect-square absolute top-[10%] left-[50%] transform translate-x-[-50%] -translate-y-[-50%]"
+                                className="w-[40%] h-auto aspect-square absolute top-[10%] left-[50%] transform translate-x-[-56%] -translate-y-[-50%]"
+                                src={isRecreated ? imagineResponse.uri : `${API_URL}/images/${id}`}
+                                alt="image"
+                            />
+                        </div>
+                    ) : selectedAsset === "Cards" ? (
+                        <div className="relative">
+                            <img className="w-full h-auto rounded-[20px]" src="/card.png" alt="card" />
+                            <img
+                                className="w-[60%] h-auto rounded-[10px] aspect-square absolute top-[-1%] left-[50%] transform translate-x-[-50%] -translate-y-[-23%] shadow-xl border-[5px] border-white rotate-[-0.2deg]"
+                                src={isRecreated ? imagineResponse.uri : `${API_URL}/images/${id}`}
+                                alt="image"
+                            />
+                        </div>
+                    ) : selectedAsset === "Stickers" ? (
+                        <div className="relative">
+                            <img className="w-full h-auto rounded-[20px]" src="/sticker.png" alt="sticker" />
+                            <img
+                                className="w-[37%] h-auto aspect-square absolute top-[-1%] left-[50%] transform translate-x-[-40%] -translate-y-[-68%] shadow-md rotate-[13deg]"
                                 src={isRecreated ? imagineResponse.uri : `${API_URL}/images/${id}`}
                                 alt="image"
                             />

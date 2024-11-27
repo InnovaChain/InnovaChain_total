@@ -1,27 +1,26 @@
+import { useEffect, useState } from "react";
 import { twc } from "react-twc";
 import { CardContainer } from "../../components/Card";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { useSelectedAssetStore } from "../../store/useSelectedAssetStore";
 import { cn } from "../../utils/cn";
 
-export default function PurchaseStage({
-    setIsShowTshirt,
-    onClickPay,
-}: {
-    setIsShowTshirt: Dispatch<SetStateAction<boolean>>;
-    onClickPay?: () => void;
-}) {
-    const [assetType, setAssetType] = useState<"Ownership" | "Clothes">("Ownership");
+export default function PurchaseStage({ onClickPay }: { onClickPay?: () => void }) {
+    // const [selectedAsset, setSelectedAsset] = useState<"Ownership" | "Clothes" | "Cards" | "Stickers">("Ownership");
+    const { selectedAsset, setSelectedAsset, resetSelectedAsset } = useSelectedAssetStore();
 
     const [size, setSize] = useState<"S" | "M" | "L" | "XL" | "XXL" | "XXXL" | undefined>(undefined);
 
     useEffect(() => {
-        if (assetType === "Ownership") {
+        if (selectedAsset === "Ownership") {
             setSize(undefined);
-            setIsShowTshirt(false);
-        } else {
-            setIsShowTshirt(true);
         }
-    }, [assetType, setIsShowTshirt]);
+    }, [selectedAsset]);
+
+    useEffect(() => {
+        return () => {
+            resetSelectedAsset();
+        };
+    }, [resetSelectedAsset]);
 
     return (
         <CardContainer className="flex-1 p-10 relative">
@@ -32,22 +31,36 @@ export default function PurchaseStage({
 
                     <div className="flex flex-col space-y-4 mt-6">
                         <Select
-                            onClick={() => setAssetType("Ownership")}
-                            className={cn(assetType === "Ownership" ? "border-[#0066D4]" : "border-[#AAAAAA]")}
+                            onClick={() => setSelectedAsset("Ownership")}
+                            className={cn(selectedAsset === "Ownership" ? "border-[#0066D4]" : "border-[#AAAAAA]")}
                         >
                             <p>Ownership</p>
                         </Select>
 
                         <Select
-                            onClick={() => setAssetType("Clothes")}
-                            className={cn(assetType === "Clothes" ? "border-[#0066D4]" : "border-[#AAAAAA]")}
+                            onClick={() => setSelectedAsset("Clothes")}
+                            className={cn(selectedAsset === "Clothes" ? "border-[#0066D4]" : "border-[#AAAAAA]")}
                         >
                             <p>Clothes</p>
+                        </Select>
+
+                        <Select
+                            onClick={() => setSelectedAsset("Cards")}
+                            className={cn(selectedAsset === "Cards" ? "border-[#0066D4]" : "border-[#AAAAAA]")}
+                        >
+                            <p>Cards</p>
+                        </Select>
+
+                        <Select
+                            onClick={() => setSelectedAsset("Stickers")}
+                            className={cn(selectedAsset === "Stickers" ? "border-[#0066D4]" : "border-[#AAAAAA]")}
+                        >
+                            <p>Stickers</p>
                         </Select>
                     </div>
                 </div>
 
-                {assetType === "Clothes" && (
+                {selectedAsset === "Clothes" && (
                     <div className="flex flex-col h-[350px]">
                         <h1 className="text-xl font-semibold">Size</h1>
                         <h2 className="text-md font-medium text-[#0066D4]">Which size is right for you?</h2>
@@ -81,7 +94,7 @@ export default function PurchaseStage({
                 )}
 
                 <div className="flex justify-end absolute bottom-0 left-0 right-0 bg-[#DBDBE0] h-[20%] rounded-b-[30px] items-center p-5 space-y-3 w-full">
-                    {size && (
+                    {selectedAsset !== "Ownership" && (
                         <div className="flex flex-col mr-auto font-medium">
                             <p className="text-lg font-bold">Delivery</p>
                             <p>Sun 10/11/2024-ETA</p>
@@ -92,11 +105,26 @@ export default function PurchaseStage({
                     <div className="flex flex-col ml-auto space-y-2">
                         <div className="ml-auto font-semibold flex space-x-2">
                             <p className="text-[#8C8C8C]">Total: </p>
-                            <p>1.68 SOL</p>
+                            {selectedAsset === "Ownership" ? (
+                                <p>1.68 SOL</p>
+                            ) : (
+                                <p>
+                                    ￥
+                                    {selectedAsset === "Stickers" ? "3" : selectedAsset === "Cards" ? "7" : selectedAsset === "Clothes" ? "70" : 1.68}
+                                </p>
+                            )}
                         </div>
-                        <DarkButton className=" h-14" onClick={onClickPay}>
-                            Pay
-                        </DarkButton>
+                        <a
+                            href="https://docs.google.com/forms/d/e/1FAIpQLSeWMcZjJNDWtG02tx3VJaSsmaxyvigfHS49ej45DAHpMMK-gg/viewform?usp=sf_link"
+                            target="_blank"
+                        >
+                            <DarkButton
+                                className=" h-14"
+                                // onClick={onClickPay}
+                            >
+                                Pay
+                            </DarkButton>
+                        </a>
                     </div>
                 </div>
             </div>

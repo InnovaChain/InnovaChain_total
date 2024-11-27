@@ -1,15 +1,15 @@
+import { createContext, Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { twc } from "react-twc";
 import { BackImg } from "../../assets";
 import Container from "../../components/Container";
-import { twc } from "react-twc";
+import useProductInfoById from "../../hooks/useProductInfo";
+import { ImagineResponse } from "../../utils/api";
+import GenerateStage from "./GenerateStage";
 import GenerationGallery from "./GenerationGallery";
 import GenerationMainStage from "./GenerationMainStage";
 import GenerationPromptStage from "./GenerationPromptStage";
 import OriginalStage from "./OriginalStage";
-import { createContext, Dispatch, SetStateAction, useEffect, useState } from "react";
-import useProductInfoById from "../../hooks/useProductInfo";
-import GenerateStage from "./GenerateStage";
-import { ImagineResponse } from "../../utils/api";
 // import mockImagineResponse from "./mockImagine.json";
 import { getUIdsVIdsAndRecreateId } from "../../utils/getUV";
 import PurchaseStage from "./PurchaseState";
@@ -63,7 +63,7 @@ export const RecreateContext = createContext<{
 
 const ProductDetail = () => {
     const [stage, setStage] = useState<"Original" | "GenerationPrompt" | "Generate" | "Purchase" | "PurchaseTshirt" | "Pay">("Original");
-    const [isShowTshirt, setIsShowTshirt] = useState<boolean>(false);
+
     const { id } = useParams<{ id: string }>();
 
     const { data: info } = useProductInfoById({ imageId: parseInt(id!) });
@@ -141,7 +141,7 @@ const ProductDetail = () => {
                 >
                     {stage !== "Purchase" && <GenerationGallery id={info?.id} />}
 
-                    <GenerationMainStage isShowTshirt={isShowTshirt} creator={info?.user.wallet_address} name={info?.name} />
+                    <GenerationMainStage creator={info?.user.wallet_address} name={info?.name} />
 
                     {stage === "Original" && (
                         <OriginalStage
@@ -150,7 +150,7 @@ const ProductDetail = () => {
                             info={info}
                         />
                     )}
-                    {stage === "Purchase" && <PurchaseStage setIsShowTshirt={setIsShowTshirt} onClickPay={() => setStage("Pay")} />}
+                    {stage === "Purchase" && <PurchaseStage onClickPay={() => setStage("Pay")} />}
 
                     {stage === "GenerationPrompt" && (
                         <GenerationPromptStage
