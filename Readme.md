@@ -35,7 +35,7 @@
   <a href="https://github.com/github_username/repo_name">
     <img src="images/logo.png" alt="Logo" width="287" height="80">
   </a>
-<h3 align="center">InnovaChain</h3>
+<h3 align="center">ArtCycle</h3>
 
   <p align="center">
     project_description
