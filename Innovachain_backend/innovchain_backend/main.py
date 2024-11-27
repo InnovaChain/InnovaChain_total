@@ -345,9 +345,9 @@ async def decrement_image_like_count(
 
 
 @app.post("/images/{image_id}/reference/increment")
-async def increment_image_reference_count(image_id: int, imgs: ImageService = Depends(get_image_service)):
+async def increment_image_reference_count(image_id: int, count: int, imgs: ImageService = Depends(get_image_service)):
     """only for test"""
-    updated_image = await imgs.increment_reference_count(image_id)
+    updated_image = await imgs.increment_reference_count_by(image_id, count)
     if updated_image is None:
         raise HTTPException(status_code=404, detail="Image not found")
     

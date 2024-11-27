@@ -45,5 +45,8 @@ class ImageService:
     async def increment_reference_count(self, image_id: int):
         return await self.repository.increment_reference_count(image_id)
 
+    async def increment_reference_count_by(self, image_id: int, count: int):
+        return await self.repository.increment_reference_count_by(image_id, count)
+
     async def update_image_reward(self, image_id: int, reward: float):
         return await self.repository.update_image_reward(image_id, reward)
