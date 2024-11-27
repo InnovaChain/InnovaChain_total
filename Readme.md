@@ -33,7 +33,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/github_username/repo_name">
-    <img src="images/logo.png" alt="Logo" width="287" height="80">
+    <img src="images/logo_v2.png" alt="Logo" width="287" height="80">
   </a>
 <h3 align="center">ArtCycle</h3>
 
@@ -105,7 +105,7 @@
 <!-- ABOUT THE PROJECT -->
 
 # 1. About The Project
-Our platform helps creators protect their intellectual property in the world of AI-generated content. With the rise of AI image generation tools, it’s become very easy for anyone to replicate others art without permission, leading to issues of copyright infringement. ArtCycle transforming AI-Generated content into secure, traceable, collaborative creations, which create a new generation of creator ecosystem.
+ArtCycle (former named Innovachain) as a platform helps creators protect their intellectual property in the world of AI-generated content. With the rise of AI image generation tools, it’s become very easy for anyone to replicate others art without permission, leading to issues of copyright infringement. ArtCycle transforming AI-Generated content into secure, traceable, collaborative creations, which create a new generation of creator ecosystem.
 
 ![demopage](./images/demopage.png)
 
