@@ -162,8 +162,8 @@ async def upload_image(
     
     # Check if source_image_id is provided and not equal to 0
     if source_image_id is not None and source_image_id != 0:
-        await increment_image_reference_count(source_image_id, imgs)
-        
+        await increment_image_reference_count(source_image_id, 1, imgs)
+
     db_image = await imgs.create_image(
         filename=unique_filename,
         watermark=processor.watermark_text,
