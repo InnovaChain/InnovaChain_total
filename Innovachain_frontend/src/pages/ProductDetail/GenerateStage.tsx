@@ -19,7 +19,7 @@ const GenerateStage = ({ imageId, revisedPrompt }: { imageId?: number; revisedPr
     const { mutateAsync: confirmRecreate, isPending: isMinting } = useConfirmRecreateMutation();
     const { mutateAsync: insertWatermark } = useInsertWatermarkMutation();
 
-    const { mutateAsync: increaseReference } = useIncreaseReferenceMutation();
+    // const { mutateAsync: increaseReference } = useIncreaseReferenceMutation();
 
     const navigate = useNavigate();
 
@@ -93,7 +93,7 @@ const GenerateStage = ({ imageId, revisedPrompt }: { imageId?: number; revisedPr
                                     console.error(error);
                                 });
 
-                            await increaseReference({ imageId: info.id }).then(() => console.log("Reference increased successfully"));
+                            // await increaseReference({ imageId: info.id }).then(() => console.log("Reference increased successfully"));
 
                             toast.success("Recreated and uploaded successfully");
 
