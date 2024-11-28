@@ -1,16 +1,15 @@
-import clsx from "clsx";
-import { CardContainer } from "../../components/Card";
-import { twc } from "react-twc";
-import { useContext, useState } from "react";
-import { useConfirmRecreateMutation, useImagineMutation } from "../../hooks/useRecreateMutation";
-import { RecreateContext } from ".";
-import { getUIdsVIdsAndRecreateId } from "../../utils/getUV";
-import { useNavigate, useParams } from "react-router-dom";
-import useProductInfoById from "../../hooks/useProductInfo";
-import toast from "react-hot-toast";
 import { useWallet } from "@solana/wallet-adapter-react";
+import clsx from "clsx";
+import { useContext, useState } from "react";
+import toast from "react-hot-toast";
+import { useNavigate, useParams } from "react-router-dom";
+import { twc } from "react-twc";
+import { RecreateContext } from ".";
+import { CardContainer } from "../../components/Card";
 import useInsertWatermarkMutation from "../../hooks/useInsertWatermarkMutation";
-import useIncreaseReferenceMutation from "../../hooks/useIncreaseReferenceMutation";
+import useProductInfoById from "../../hooks/useProductInfo";
+import { useConfirmRecreateMutation, useImagineMutation } from "../../hooks/useRecreateMutation";
+import { getUIdsVIdsAndRecreateId } from "../../utils/getUV";
 
 const GenerateStage = ({ imageId, revisedPrompt }: { imageId?: number; revisedPrompt: string }) => {
     const [customizedMakerText, setCustomizedMakerText] = useState<string>("");
