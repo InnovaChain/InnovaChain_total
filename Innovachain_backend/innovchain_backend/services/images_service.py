@@ -9,6 +9,9 @@ class ImageService:
     async def get_image(self, image_id: int):
         return await self.repository.get(image_id)
 
+    async def get_total_count(self):
+        return await self.repository.get_total_count()
+
     async def get_images(self, skip: int = 0, limit: int = 100):
         return await self.repository.list(skip, limit)
 

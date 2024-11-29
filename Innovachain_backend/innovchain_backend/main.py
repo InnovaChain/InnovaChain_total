@@ -177,6 +177,13 @@ async def upload_image(
     return {"filename": unique_filename, "image_id": db_image.id, "watermark": processor.watermark_text}
 
 
+@app.get("/images/count/")
+async def get_images_count(imgs: ImageService = Depends(get_image_service)):
+    total_images = await imgs.get_total_count()
+    
+    return {"total_count": total_images}
+
+
 @app.get("/images/")
 async def read_images(skip: int = 0, limit: int = 1000, user_id: Optional[int] = None, imgs: ImageService = Depends(get_image_service), lks: LikesService = Depends(get_likes_service)):
     images = await imgs.get_images(skip=skip, limit=limit)

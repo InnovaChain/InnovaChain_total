@@ -5,7 +5,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from .model import Image, User, Likes
 from .user_stats_repository import UserStatsRepository
 from .likes_repository import LikesRepository
-from sqlalchemy import func, Numeric
+from sqlalchemy import func, Numeric, select
 
 class ImageRepository:
 
@@ -47,6 +47,10 @@ class ImageRepository:
             image.user = user
         
         return image
+
+    async def get_total_count(self):
+        result = self.db.execute(select(func.count()).select_from(Image))
+        return result.scalar() or 0 
 
     async def list_all(self):
         images_with_users = self.db.execute(
