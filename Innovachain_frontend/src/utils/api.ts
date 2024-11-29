@@ -165,8 +165,8 @@ export async function uploadImage({ file, image_url, walletAddress, name, descri
     return response.data;
 }
 
-export async function getImages(): Promise<ImageType[]> {
-    const url = "/images/";
+export async function getImages({ skip = 0, limit = 50 }: { skip: number; limit: number }): Promise<ImageType[]> {
+    const url = `/images?skip=${skip}&limit=${limit}`;
     const response = await api.get<ImageType[]>(url);
 
     return response.data;
@@ -329,4 +329,10 @@ export async function getUserImages({ userId }: { userId: number }) {
         images: number[];
         detailed_images: ImageType[];
     };
+}
+
+export async function getTotalImagesCount() {
+    const url = `${API_URL}/images/count/`; // closing slash is important
+    const res = await api.get(url);
+    return res.data as { total_count: number };
 }
