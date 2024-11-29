@@ -166,7 +166,7 @@ export async function uploadImage({ file, image_url, walletAddress, name, descri
 }
 
 export async function getImages({ skip = 0, limit = 50 }: { skip: number; limit: number }): Promise<ImageType[]> {
-    const url = `/images?skip=${skip}&limit=${limit}`;
+    const url = `${API_URL}/images?skip=${skip}&limit=${limit}`;
     const response = await api.get<ImageType[]>(url);
 
     return response.data;
