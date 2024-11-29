@@ -178,7 +178,7 @@ async def upload_image(
 
 
 @app.get("/images/")
-async def read_images(skip: int = 0, limit: int = 100, user_id: Optional[int] = None, imgs: ImageService = Depends(get_image_service), lks: LikesService = Depends(get_likes_service)):
+async def read_images(skip: int = 0, limit: int = 1000, user_id: Optional[int] = None, imgs: ImageService = Depends(get_image_service), lks: LikesService = Depends(get_likes_service)):
     images = await imgs.get_images(skip=skip, limit=limit)
 
     for image in images:
