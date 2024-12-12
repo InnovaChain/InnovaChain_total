@@ -9,6 +9,7 @@ export default defineConfig(({ mode }) => {
     return {
         plugins: [
             // reactSWC(),
+            // basicSsl(),
             react(),
             env.VITE_DISABLED_POLYFILLS === "true"
                 ? []

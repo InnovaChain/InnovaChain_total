@@ -1,23 +1,81 @@
+import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useSWR from "swr";
 import { HeartImg, UserImg } from "../../assets/gallery";
 import { API_URL } from "../../constants";
+import useTotalImagesCount from "../../hooks/useTotalImagesCount";
 import { getImages, ImageType } from "../../utils/api";
 import toShortAddress from "../../utils/toShortAddress";
+import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "../ui/pagination";
+import { cn } from "../../utils/cn";
 
 const GalleryCards = () => {
-    const { data } = useSWR<ImageType[]>("getImages", getImages);
+    const { data: count, isFetched } = useTotalImagesCount();
+    const [pagination, setPagination] = useState<{ page: number; pageSize: number }>({ page: 0, pageSize: 40 });
+
+    const skip = useMemo(() => pagination.page * pagination.pageSize, [pagination]);
+
+    const { data } = useSWR<ImageType[]>([`getImages`, skip, pagination.pageSize], () => getImages({ skip, limit: pagination.pageSize }));
+
     console.log(data);
     if (!data) return null;
     return (
-        <div className="grid grid-cols-3 xl:grid-cols-4 gap-10">
-            {data.map((image) => (
-                <GalleryCard
-                    creator={image.user.wallet_address && image.user.wallet_address !== "" ? image.user.wallet_address : "Anonymous user"}
-                    key={image.id}
-                    image={image}
-                />
-            ))}
+        <div className="flex flex-col space-y-10 justify-center items-center">
+            <div className="grid grid-cols-3 xl:grid-cols-4 gap-10 pt-10" id="gallery">
+                {data.map((image) => (
+                    <GalleryCard
+                        creator={image.user.wallet_address && image.user.wallet_address !== "" ? image.user.wallet_address : "Anonymous user"}
+                        key={image.id}
+                        image={image}
+                    />
+                ))}
+            </div>
+
+            {isFetched && count && (
+                <Pagination>
+                    <PaginationContent>
+                        <PaginationItem className={cn(pagination.page === 0 ? "cursor-not-allowed text-gray-500" : "cursor-pointer")}>
+                            <PaginationPrevious
+                                {...(pagination.page >= 0 && {
+                                    href: "#gallery",
+                                })}
+                                onClick={() => {
+                                    if (pagination.page === 0) return;
+                                    setPagination({ ...pagination, page: pagination.page - 1 });
+                                }}
+                            />
+                        </PaginationItem>
+
+                        {Array.from({ length: Math.ceil(count / pagination.pageSize) }, (_, i) => (
+                            <PaginationItem key={i}>
+                                <PaginationLink
+                                    href="#gallery"
+                                    isActive={i === pagination.page}
+                                    onClick={() => setPagination({ ...pagination, page: i })}
+                                >
+                                    {i + 1}
+                                </PaginationLink>
+                            </PaginationItem>
+                        ))}
+
+                        <PaginationItem
+                            className={cn(
+                                pagination.page === Math.ceil(count / pagination.pageSize) - 1 ? "cursor-not-allowed text-gray-500" : "cursor-pointer"
+                            )}
+                        >
+                            <PaginationNext
+                                {...(pagination.page <= Math.ceil(count / pagination.pageSize) - 1 && {
+                                    href: "#gallery",
+                                })}
+                                onClick={() => {
+                                    if (pagination.page === Math.ceil(count / pagination.pageSize) - 1) return;
+                                    setPagination({ ...pagination, page: pagination.page + 1 });
+                                }}
+                            />
+                        </PaginationItem>
+                    </PaginationContent>
+                </Pagination>
+            )}
         </div>
     );
 };
