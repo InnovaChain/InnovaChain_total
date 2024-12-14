@@ -4,7 +4,7 @@ import toShortAddress from "../utils/toShortAddress";
 export default function MantleButton() {
     return (
         <ConnectKitButton.Custom>
-            {({ isConnected, isConnecting, show, hide, address, ensName, chain }) => {
+            {({ isConnected, show, address }) => {
                 return (
                     <button
                         onClick={show}
