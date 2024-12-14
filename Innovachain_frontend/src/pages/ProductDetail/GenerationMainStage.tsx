@@ -42,7 +42,7 @@ const GenerationMainStage = ({ creator, name }: { creator?: string; name?: strin
             {/* <img className="w-full h-auto rounded-[20px] mt-10" src={`${API_URL}/images/${id}`} /> */}
             <div className="relative w-full h-auto mt-10">
                 <Watermark
-                    content={["ArtCycle", "Solana Radar"]}
+                    content={["ArtCycle", "Mantle APAC Hackathon"]}
                     gapY={220}
                     gapX={120}
                     width={80}
