@@ -64,3 +64,9 @@ $ forge --help
 $ anvil --help
 $ cast --help
 ```
+
+## Contract Addresses
+
+### Mantle Testnet
+
+- **ArtCycleContract**: [0xf9277eFbf823732B6aFe2f7af229E35AEe8f5847](https://sepolia.mantlescan.xyz/tx/0x07af67d377185c6d90516a6a21854bc315f62d0661f31bbbe59f73f5aa82600c)
