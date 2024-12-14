@@ -5,7 +5,7 @@ import { useMutation } from "@tanstack/react-query";
 
 const PROGRAM_ID = new PublicKey("5SutcEVK2AZzpo7JG82kefScv9W6UjGLLaqRoC1feSXZ");
 
-export default function useInsertWatermarkMutation() {
+export default function useInsertSolanaWatermarkMutation() {
     const { connection } = useConnection();
     const { publicKey, signAllTransactions, signTransaction } = useWallet();
 

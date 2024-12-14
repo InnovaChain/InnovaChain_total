@@ -1,4 +1,3 @@
-import { useWallet } from "@solana/wallet-adapter-react";
 import clsx from "clsx";
 import { useCallback, useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
@@ -9,7 +8,8 @@ import { CardContainer } from "../../components/Card";
 import Container from "../../components/Container";
 import useUploadMutation from "../../hooks/useUploadMutation";
 
-import useInsertWatermarkMutation from "../../hooks/useInsertWatermarkMutation";
+import { useAccount } from "wagmi";
+import useInsertMantleWatermarkMutation from "../../hooks/useInsertWatermark/mantle/useInsertMantleWatermarkMutation";
 
 const Upload = () => {
     const [name, setName] = useState("");
@@ -22,11 +22,11 @@ const Upload = () => {
 
     const [sourceImage, setSourceImage] = useState<File | null>(null);
 
-    const { publicKey, connected } = useWallet();
+    const { address, isConnected: connected } = useAccount();
 
     const { mutateAsync: uploadImage, isPending } = useUploadMutation();
 
-    const { mutateAsync: insertWatermark } = useInsertWatermarkMutation();
+    const { mutateAsync: insertWatermark } = useInsertMantleWatermarkMutation();
 
     async function onClickUpload() {
         if (!name) {
@@ -41,7 +41,7 @@ const Upload = () => {
             toast.error("Please upload a source image");
             return;
         }
-        if (!connected || !publicKey) {
+        if (!connected || !address) {
             toast.error("Please connect your wallet");
             return;
         }
@@ -50,7 +50,7 @@ const Upload = () => {
                 name,
                 description,
                 file: sourceImage,
-                walletAddress: publicKey.toBase58(),
+                walletAddress: address,
             });
 
             await insertWatermark({ watermark: res.uploadResponse.watermark })
@@ -117,7 +117,7 @@ const Upload = () => {
                                 className="mt-5"
                                 placeholder="Your Address"
                                 disabled
-                                value={publicKey?.toBase58() ?? ""}
+                                value={address ?? ""}
                                 // onChange={(e) => setCopyrightOwner(e.target.value)}
                             />
                         </div>

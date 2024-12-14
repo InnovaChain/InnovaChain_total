@@ -1,6 +1,6 @@
-import { useWallet } from "@solana/wallet-adapter-react";
 import { useContext } from "react";
 import Blockies from "react-blockies";
+import { useAccount } from "wagmi";
 import { GalleryCard } from "../../components/CollectionGallery/GalleryCards";
 import { Separator } from "../../components/ui/separator";
 import { UserContext } from "../../context/UserProvider";
@@ -8,7 +8,7 @@ import useUserCreations from "../../hooks/useUserCreations";
 import { useUserStats } from "../../hooks/useUserStats";
 
 export default function User() {
-    const { publicKey } = useWallet();
+    const { address } = useAccount();
 
     const { userId } = useContext(UserContext);
 
@@ -19,13 +19,13 @@ export default function User() {
     return (
         <div className="text-white min-h-screen p-4 w-full mt-10 space-y-10 px-20 flex flex-col items-start justify-start">
             <div className="w-full flex items-center space-x-16">
-                <Blockies seed={publicKey?.toBase58() ?? ""} size={40} scale={3} className="rounded-full" />
+                <Blockies seed={address ?? ""} size={40} scale={3} className="rounded-full" />
 
                 <div className="flex flex-col w-full space-y-2">
                     <div className="flex w-full justify-start items-center">
                         <div className="w-full">
                             <h1 className="text-2xl font-bold">Address</h1>
-                            <p className="text-gray-400">{publicKey?.toBase58() ?? ""}</p>
+                            <p className="text-gray-400">{address ?? ""}</p>
                         </div>
 
                         <div className="w-full">

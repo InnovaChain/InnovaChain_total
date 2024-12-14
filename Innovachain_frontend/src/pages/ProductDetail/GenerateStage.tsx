@@ -1,12 +1,12 @@
-import { useWallet } from "@solana/wallet-adapter-react";
 import clsx from "clsx";
 import { useContext, useState } from "react";
 import toast from "react-hot-toast";
 import { useNavigate, useParams } from "react-router-dom";
 import { twc } from "react-twc";
+import { useAccount } from "wagmi";
 import { RecreateContext } from ".";
 import { CardContainer } from "../../components/Card";
-import useInsertWatermarkMutation from "../../hooks/useInsertWatermarkMutation";
+import useInsertMantleWatermarkMutation from "../../hooks/useInsertWatermark/mantle/useInsertMantleWatermarkMutation";
 import useProductInfoById from "../../hooks/useProductInfo";
 import { useConfirmRecreateMutation, useImagineMutation } from "../../hooks/useRecreateMutation";
 import { getUIdsVIdsAndRecreateId } from "../../utils/getUV";
@@ -16,7 +16,7 @@ const GenerateStage = ({ imageId, revisedPrompt }: { imageId?: number; revisedPr
     const { mutateAsync: imagineImage, isPending } = useImagineMutation();
 
     const { mutateAsync: confirmRecreate, isPending: isMinting } = useConfirmRecreateMutation();
-    const { mutateAsync: insertWatermark } = useInsertWatermarkMutation();
+    const { mutateAsync: insertWatermark } = useInsertMantleWatermarkMutation();
 
     // const { mutateAsync: increaseReference } = useIncreaseReferenceMutation();
 
@@ -28,7 +28,7 @@ const GenerateStage = ({ imageId, revisedPrompt }: { imageId?: number; revisedPr
 
     const { data: info } = useProductInfoById({ imageId: parseInt(id!) });
 
-    const { publicKey } = useWallet();
+    const { address } = useAccount();
 
     return (
         <CardContainer className="flex-1">
@@ -79,7 +79,7 @@ const GenerateStage = ({ imageId, revisedPrompt }: { imageId?: number; revisedPr
 
                             const res = await confirmRecreate({
                                 imageUrl: imagineResponse.proxy_url,
-                                walletAddress: publicKey?.toBase58() ?? "",
+                                walletAddress: address ?? "",
                                 name: info.name,
                                 description: customizedMakerText,
                                 revisedPrompt: revisedPrompt,

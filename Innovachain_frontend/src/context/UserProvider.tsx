@@ -1,5 +1,5 @@
-import { useWallet } from "@solana/wallet-adapter-react";
 import { createContext, ReactNode, useEffect, useState } from "react";
+import { useAccount } from "wagmi";
 import useCreateUserMutation from "../hooks/useCreateUserMutation";
 
 export const UserContext = createContext<{
@@ -9,22 +9,22 @@ export const UserContext = createContext<{
 });
 
 export default function UserProvider({ children }: { children: ReactNode }) {
-    const { connected, publicKey } = useWallet();
+    const { isConnected: connected, address } = useAccount();
 
     const { mutateAsync: createUser } = useCreateUserMutation();
 
     const [userId, setUserId] = useState<number | null>(null);
 
     useEffect(() => {
-        const createUserUponConnection = async (wallet_address: string) => {
+        const createUserUponConnection = async (wallet_address: `0x${string}`) => {
             const user = await createUser(wallet_address);
             setUserId(user.user_id);
         };
 
-        if (connected && publicKey !== null) {
-            createUserUponConnection(publicKey.toBase58());
+        if (connected && address !== null) {
+            createUserUponConnection(address!);
         }
-    }, [connected, createUser, publicKey]);
+    }, [connected, createUser, address]);
 
     return <UserContext.Provider value={{ userId }}>{children}</UserContext.Provider>;
 }

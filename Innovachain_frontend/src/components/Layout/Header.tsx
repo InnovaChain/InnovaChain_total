@@ -1,15 +1,15 @@
+import { useNavigate } from "react-router-dom";
 import { twc } from "react-twc";
 import { BrandImg, SearchImg } from "../../assets";
 import Container from "../Container";
-import { useNavigate } from "react-router-dom";
-import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
-import { useWallet } from "@solana/wallet-adapter-react";
-import { cn } from "../../utils/cn";
 import { UserIcon } from "lucide-react";
+import { useAccount } from "wagmi";
+import { cn } from "../../utils/cn";
+import MantleButton from "../MantleButton";
 
 const Header = () => {
     const navigate = useNavigate();
-    const { connected } = useWallet();
+    const { isConnected } = useAccount();
 
     return (
         <Container>
@@ -28,11 +28,13 @@ const Header = () => {
                 <div className="flex items-center gap-10">
                     <SearchInput />
                     {/* <w3m-button balance="hide" /> */}
-                    {!connected ? (
-                        <WalletMultiButton style={{ height: "56px", borderRadius: "15px" }} />
+                    {!isConnected ? (
+                        <MantleButton />
                     ) : (
                         <div className="flex justify-center items-center space-x-2">
-                            <WalletMultiButton style={{ height: "56px", borderRadius: "15px" }} />
+                            {/* <WalletMultiButton style={{ height: "56px", borderRadius: "15px" }} /> */}
+                            <MantleButton />
+
                             <button
                                 onClick={() => navigate("/user")}
                                 className={cn(

@@ -30,6 +30,7 @@
         "buffer": "^6.0.3",
         "class-variance-authority": "^0.7.0",
         "clsx": "^2.1.1",
+        "connectkit": "^1.8.2",
         "dayjs": "^1.11.13",
         "lucide-react": "^0.447.0",
         "react": "^18.3.1",
@@ -43,9 +44,9 @@
         "react-use": "^17.5.1",
         "swr": "^2.2.5",
         "tailwind-merge": "^2.5.3",
-        "viem": "^2.21.6",
+        "viem": "^2.21.11",
         "vite-plugin-node-polyfills": "^0.22.0",
-        "wagmi": "^2.12.11",
+        "wagmi": "^2.12.13",
         "zustand": "^5.0.1"
     },
     "devDependencies": {

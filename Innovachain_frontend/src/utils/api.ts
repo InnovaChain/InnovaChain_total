@@ -298,7 +298,7 @@ export async function unlikeImage({ imageId, userId }: { imageId: number; userId
     return res.data;
 }
 
-export async function createUser({ wallet_address }: { wallet_address: string }) {
+export async function createUser({ wallet_address }: { wallet_address: `0x${string}` }) {
     const url = `${API_URL}/users/`;
     const res = await api.post(url, {
         wallet_address,
